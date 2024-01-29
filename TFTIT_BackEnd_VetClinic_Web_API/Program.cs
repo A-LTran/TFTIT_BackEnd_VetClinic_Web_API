@@ -1,7 +1,7 @@
 
-namespace TFTIT_BackEnd_VetClinic_Web_API
+namespace TFTIC_BackEnd_VetClinic_Web_API
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -13,6 +13,9 @@ namespace TFTIT_BackEnd_VetClinic_Web_API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddScoped<IUserRepository_BLL, UserService_BLL>();
+            builder.Services.AddScoped<IUserRepository_DAL, UserService_DAL>();
 
             var app = builder.Build();
 

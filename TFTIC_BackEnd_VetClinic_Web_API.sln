@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TFTIT_BackEnd_VetClinic_Web_API", "TFTIT_BackEnd_VetClinic_Web_API\TFTIT_BackEnd_VetClinic_Web_API.csproj", "{1BC03BCE-1E17-4893-90D0-16AA1F8DCFD3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TFTIC_BackEnd_VetClinic_Web_API", "TFTIT_BackEnd_VetClinic_Web_API\TFTIC_BackEnd_VetClinic_Web_API.csproj", "{1BC03BCE-1E17-4893-90D0-16AA1F8DCFD3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{AADDF8A1-2656-44D7-916D-333818D0804F}"
 EndProject

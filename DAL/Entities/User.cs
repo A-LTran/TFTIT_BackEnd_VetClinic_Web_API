@@ -1,15 +1,24 @@
 ﻿namespace DAL.Entities
 {
-    internal class User
-    {
-        internal Guid UserId { get; set; } = Guid.NewGuid();
-        internal string LastName { get; set; } = default!;
-        internal string FirstName { get; set; } = default!;
-        internal string Email { get; set; } = default!;
-        internal string Phone { get; set; } = default!;
-        internal string Mobile { get; set; } = default!;
-        internal DateTime BirthDate { get; set; }
-        internal string UserPassword { get; set; } = default!;
+    public class User : Person
 
+    {
+        public User()
+        {
+
+        }
+        public User(Guid userId, string lastName, string firstName, string email, string phone, string mobile, DateTime birthDate, string userPassword, Guid addressId)
+        {
+            UserId = userId;
+            LastName = lastName;
+            FirstName = firstName;
+            Email = email;
+            Phone = phone;
+            Mobile = mobile;
+            BirthDate = birthDate;
+            UserPassword = userPassword;
+            AddressId = addressId;
+        }
+        public string UserPassword { get; set; } = default!;
     }
 }

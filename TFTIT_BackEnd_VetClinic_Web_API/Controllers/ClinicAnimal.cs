@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace TFTIT_BackEnd_VetClinic_Web_API.Controllers
+namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

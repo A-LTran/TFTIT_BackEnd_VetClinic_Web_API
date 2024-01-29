@@ -1,12 +1,13 @@
 ﻿namespace DAL.Entities
 {
-    internal class Appointment
+    public class Appointment
     {
-        internal Guid AppointmentId { get; set; } = Guid.NewGuid();
-        internal DateTime AppointmentDate { get; set; }
-        internal DateTime AppointmentCreationDate { get; set; } = DateTime.Now;
-        internal string Reason { get; set; } = default!;
-        internal string Diagnosis { get; set; } = default!;
-
+        public Guid AppointmentId { get; set; } = Guid.NewGuid();
+        public DateTime AppointmentDate { get; set; }
+        public DateTime AppointmentCreationDate { get; set; } = DateTime.Now;
+        public string Reason { get; set; } = default!;
+        public string Diagnosis { get; set; } = default!;
+        public int AnimalId { get; set; }
+        public int VeterinaryId { get; set; }
     }
 }
