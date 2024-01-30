@@ -9,6 +9,21 @@
             _userRepository = userRepository;
         }
 
+        public bool Create(UserRegisterForm form)
+        {
+            return _userRepository.Create(form.ToUser());
+        }
+
+        public bool Create(OwnerRegisterForm form)
+        {
+            return _userRepository.Create(form.ToOwner());
+        }
+
+        public bool Create(AddressForm form)
+        {
+            return _userRepository.Create(form.ToAddress());
+        }
+
         public IEnumerable<User> Get()
         {
             return _userRepository.Get();

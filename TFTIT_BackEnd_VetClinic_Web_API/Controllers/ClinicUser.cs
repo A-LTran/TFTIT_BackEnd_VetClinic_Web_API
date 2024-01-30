@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BLL.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
 {
@@ -11,26 +12,63 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         {
             _userService = userService;
         }
-        [HttpGet("Users")]
+
+        //**************************************************************************************//
+        //                                       GETS                                           //
+        //**************************************************************************************//
+        [HttpGet("GetUsers")]
         public IActionResult Get()
         {
             return Ok(_userService.Get());
         }
-        [HttpGet("UsersByRole/{role}")]
+        [HttpGet("GetUsersByRole/{role}")]
         public IActionResult GetByRole([FromRoute] int role)
         {
             return Ok(_userService.GetUsersByRole(role));
         }
-        [HttpPost("AddUser")]
-        public IActionResult CreateUser()
+
+        //**************************************************************************************//
+        //                                       POST                                           //
+        //**************************************************************************************//
+        [HttpPost("AddAdmininstrator/{form}")]
+        public IActionResult CreateAdmin([FromBody] UserRegisterForm form)
         {
-            return Ok();
+            form.UserRole = Role.Administrator;
+            return Ok(_userService.Create(form));
         }
+
+        [HttpPost("AddVeterinary")]
+        public IActionResult CreateVeterinary([FromBody] UserRegisterForm form)
+        {
+            form.UserRole = Role.Veterinary;
+            return Ok(_userService.Create(form));
+        }
+
+        [HttpPost("AddOwner")]
+        public IActionResult CreateOwner([FromBody] OwnerRegisterForm form)
+        {
+            form.UserRole = Role.Owner;
+            return Ok(_userService.Create(form));
+        }
+
+        [HttpPost("AddAddress")]
+        public IActionResult CreateAddress([FromBody] AddressForm form)
+        {
+            return Ok(_userService.Create(form));
+        }
+
+        //**************************************************************************************//
+        //                                       PATCH                                          //
+        //**************************************************************************************//
         [HttpPatch("EditUser")]
         public IActionResult UpdateUser()
         {
             return Ok();
         }
+
+        //**************************************************************************************//
+        //                                      DELETE                                          //
+        //**************************************************************************************//
         [HttpDelete("DeleteUser")]
         public IActionResult DeleteUser()
         {

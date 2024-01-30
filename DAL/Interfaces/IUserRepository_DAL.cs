@@ -2,7 +2,9 @@
 {
     public interface IUserRepository_DAL
     {
-        //public User Create(User user);
+        public bool Create(User user);
+        public bool Create(Owner owner);
+        public bool Create(Address address);
         //public bool Update(User user);
         //public bool Delete(User user);
         //public User? GetByMail(string mail);

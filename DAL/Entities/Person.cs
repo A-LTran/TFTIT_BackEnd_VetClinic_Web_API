@@ -6,15 +6,29 @@
         {
 
         }
-        public Person(Guid userId, string lastName, string firstName, string email, string phone, string mobile, DateTime birthDate, Guid addressId)
+        public Person(string lastName, string firstName, string email, string phone, string mobile, DateTime birthDate)
         {
-            UserId = userId;
             LastName = lastName;
             FirstName = firstName;
             Email = email;
             Phone = phone;
             Mobile = mobile;
             BirthDate = birthDate;
+
+        }
+        public Person(string lastName, string firstName, string email, string phone, string mobile, DateTime birthDate, Role userRole) : this(lastName, firstName, email, phone, mobile, birthDate)
+        {
+            UserRole = userRole;
+
+        }
+        public Person(Guid userId, string lastName, string firstName, string email, string phone, string mobile, DateTime birthDate, Guid addressId) : this(lastName, firstName, email, phone, mobile, birthDate)
+        {
+            UserId = userId;
+            AddressId = addressId;
+        }
+        public Person(Guid userId, string lastName, string firstName, string email, string phone, string mobile, DateTime birthDate, Role userRole, Guid addressId) : this(lastName, firstName, email, phone, mobile, birthDate, userRole)
+        {
+            UserId = userId;
             AddressId = addressId;
         }
 
