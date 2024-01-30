@@ -9,7 +9,7 @@
         //public bool Delete(User user);
         //public User? GetByMail(string mail);
         //public User? GetById(int id);
-        public IEnumerable<User> Get();
-        public IEnumerable<Person> GetUsersByRole(Role personRole);
+        public IEnumerable<User?> Get();
+        public IEnumerable<Person?> GetPersonsByRole(Role personRole);
     }
 }

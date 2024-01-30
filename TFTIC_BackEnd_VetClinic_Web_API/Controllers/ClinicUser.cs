@@ -14,8 +14,9 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         }
 
         //**************************************************************************************//
-        //                                       GETS                                           //
+        //                                       GET                                            //
         //**************************************************************************************//
+
         [HttpGet("GetUsers")]
         public IActionResult Get()
         {
@@ -24,35 +25,36 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         [HttpGet("GetUsersByRole/{role}")]
         public IActionResult GetByRole([FromRoute] int role)
         {
-            return Ok(_userService.GetUsersByRole(role));
+            return Ok(_userService.GetPersonsByRole(role));
         }
 
         //**************************************************************************************//
         //                                       POST                                           //
         //**************************************************************************************//
-        [HttpPost("AddAdmininstrator/{form}")]
-        public IActionResult CreateAdmin([FromBody] UserRegisterForm form)
+
+        [HttpPost("AddAdministrator/{addressId}")]
+        public IActionResult CreateAdmin([FromBody] UserRegisterForm form, [FromRoute] Guid addressId)
         {
             form.UserRole = Role.Administrator;
-            return Ok(_userService.Create(form));
+            return Ok(_userService.Create(form, addressId));
         }
 
-        [HttpPost("AddVeterinary")]
-        public IActionResult CreateVeterinary([FromBody] UserRegisterForm form)
+        [HttpPost("AddVeterinary/{addressId}")]
+        public IActionResult CreateVeterinary([FromBody] UserRegisterForm form, [FromRoute] Guid addressId)
         {
             form.UserRole = Role.Veterinary;
-            return Ok(_userService.Create(form));
+            return Ok(_userService.Create(form, addressId));
         }
 
-        [HttpPost("AddOwner")]
-        public IActionResult CreateOwner([FromBody] OwnerRegisterForm form)
+        [HttpPost("AddOwner/{addressId}")]
+        public IActionResult CreateOwner([FromBody] OwnerRegisterForm form, [FromRoute] Guid addressId)
         {
             form.UserRole = Role.Owner;
-            return Ok(_userService.Create(form));
+            return Ok(_userService.Create(form, addressId));
         }
 
         [HttpPost("AddAddress")]
-        public IActionResult CreateAddress([FromBody] AddressForm form)
+        public IActionResult CreateAddress([FromBody] AddressRegisterForm form)
         {
             return Ok(_userService.Create(form));
         }
@@ -60,6 +62,7 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         //**************************************************************************************//
         //                                       PATCH                                          //
         //**************************************************************************************//
+
         [HttpPatch("EditUser")]
         public IActionResult UpdateUser()
         {

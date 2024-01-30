@@ -1,17 +1,20 @@
-﻿using Microsoft.Data.SqlClient;
-
-namespace DAL.Services
+﻿namespace DAL.Services
 {
     public class UserService_DAL : IUserRepository_DAL
     {
-        private readonly string _connectionString = @"Data Source=GOS-VDI1708\TFTIC;Initial Catalog=TFTIC_VeterinaryClinic;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+        private readonly string _connectionString;
+
+        public UserService_DAL(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
 
         public bool Create(User user)
         {
             using SqlConnection connection = new(_connectionString);
             using (SqlCommand command = connection.CreateCommand())
             {
-                command.CommandText = "INSERT INTO ClinicPerson (UserId, FirstName, LastName, Email, Phone, Mobile, BirthDate, UserRole, AddressId) VALUES (@userId, @firstName, @lastName, @email, @phone, @mobile,@birthdate, @password, @userRole, @addressId); " +
+                command.CommandText = "INSERT INTO ClinicPerson (UserId, FirstName, LastName, Email, Phone, Mobile, BirthDate, UserRole, AddressId) VALUES (@userId, @firstName, @lastName, @email, @phone, @mobile, @birthdate, @userRole, @addressId); " +
                     "INSERT INTO ClinicUser (UserPassword, UserId) VALUES (@password, @userId);";
 
                 command.Parameters.AddWithValue("@userId", user.UserId);
@@ -38,8 +41,7 @@ namespace DAL.Services
             using SqlConnection connection = new(_connectionString);
             using (SqlCommand command = connection.CreateCommand())
             {
-                command.CommandText = "INSERT INTO ClinicPerson (UserId, FirstName, LastName, Email, Phone, Mobile, BirthDate, UserRole, AddressId) VALUES (@userId, @firstName, @lastName, @email, @phone, @mobile,@birthdate, @userRole, @addressId); " +
-                    "INSERT INTO ClinicUser (UserPassword, UserId) VALUES (@password, @userId);";
+                command.CommandText = "INSERT INTO ClinicPerson (UserId, FirstName, LastName, Email, Phone, Mobile, BirthDate, UserRole, AddressId) VALUES (@userId, @firstName, @lastName, @email, @phone, @mobile,@birthdate, @userRole, @addressId); ";
 
                 command.Parameters.AddWithValue("@userId", owner.UserId);
                 command.Parameters.AddWithValue("@firstName", owner.FirstName);
@@ -104,18 +106,15 @@ namespace DAL.Services
             }
         }
 
-        public IEnumerable<User> Get()
+        public IEnumerable<User?> Get()
         {
             using SqlConnection connection = new SqlConnection(_connectionString);
             using (SqlCommand command = connection.CreateCommand())
             {
-                List<User?> users = new List<User>();
+                List<User?> users = new List<User?>();
 
-                // Gets All persons + psswd
+                // Gets All active persons + psswd
                 command.CommandText = "EXECUTE GetActivePersons";
-                //command.CommandText = "SELECT * " +
-                //    "FROM [ClinicUser] CU JOIN [ClinicPerson] CP " +
-                //    "ON CU.UserId = CP.UserId";
 
                 connection.Open();
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -135,7 +134,7 @@ namespace DAL.Services
             }
         }
 
-        public IEnumerable<Person> GetUsersByRole(Role personRole)
+        public IEnumerable<Person?> GetPersonsByRole(Role personRole)
         {
             using SqlConnection connection = new SqlConnection(_connectionString);
             using (SqlCommand command = connection.CreateCommand())
@@ -164,9 +163,9 @@ namespace DAL.Services
                         DateTime birthDate = ToolSet.ReturnNonDBNull<DateTime>(reader["BirthDate"]);
                         Guid addressId = ToolSet.ReturnNonDBNull<Guid>(reader["AddressId"]);
                         if (personRole == Role.Owner)
-                            owners.Add(UserMapper.ToOwner((Guid)reader["UserId"], (string)reader["LastName"], (string)reader["FirstName"], (string)reader["Email"], phone, mobile, birthDate, addressId));
+                            owners.Add(UserMapper.ToOwner((Guid)reader["UserId"], (string)reader["LastName"], (string)reader["FirstName"], (string)reader["Email"], phone, mobile, birthDate, addressId)!);
                         else
-                            users.Add(UserMapper.ToUser((Guid)reader["UserId"], (string)reader["LastName"], (string)reader["FirstName"], (string)reader["Email"], phone, mobile, birthDate, (string)reader["UserPassword"], addressId));
+                            users.Add(UserMapper.ToUser((Guid)reader["UserId"], (string)reader["LastName"], (string)reader["FirstName"], (string)reader["Email"], phone, mobile, birthDate, (string)reader["UserPassword"], addressId)!);
                     }
 
                 connection.Close();

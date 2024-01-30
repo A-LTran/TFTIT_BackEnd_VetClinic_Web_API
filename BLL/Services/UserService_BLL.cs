@@ -9,29 +9,29 @@
             _userRepository = userRepository;
         }
 
-        public bool Create(UserRegisterForm form)
+        public bool Create(UserRegisterForm form, Guid addressId)
         {
-            return _userRepository.Create(form.ToUser());
+            return _userRepository.Create(form.ToUser(addressId)!);
         }
 
-        public bool Create(OwnerRegisterForm form)
+        public bool Create(OwnerRegisterForm form, Guid addressId)
         {
-            return _userRepository.Create(form.ToOwner());
+            return _userRepository.Create(form.ToOwner(addressId)!);
         }
 
-        public bool Create(AddressForm form)
+        public bool Create(AddressRegisterForm form)
         {
             return _userRepository.Create(form.ToAddress());
         }
 
-        public IEnumerable<User> Get()
+        public IEnumerable<User?> Get()
         {
             return _userRepository.Get();
         }
-        public IEnumerable<Person> GetUsersByRole(int role)
+        public IEnumerable<Person?> GetPersonsByRole(int role)
         {
             Role PersonRole = (Role)role;
-            return _userRepository.GetUsersByRole(PersonRole);
+            return _userRepository.GetPersonsByRole(PersonRole);
         }
     }
 }

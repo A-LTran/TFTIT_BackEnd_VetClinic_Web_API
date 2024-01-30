@@ -16,17 +16,17 @@
             BirthDate = birthDate;
 
         }
-        public Person(string lastName, string firstName, string email, string phone, string mobile, DateTime birthDate, Role userRole) : this(lastName, firstName, email, phone, mobile, birthDate)
+
+        // User.cs BLL_ToUser & Owner.cs BLL_ToOwner
+        public Person(string lastName, string firstName, string email, string phone, string mobile, DateTime birthDate, Role userRole, Guid addressId) : this(lastName, firstName, email, phone, mobile, birthDate)
         {
+            AddressId = addressId;
             UserRole = userRole;
 
         }
+
+        // User.cs DAL_ToUser & Owner.cs DAL_ToOwnr
         public Person(Guid userId, string lastName, string firstName, string email, string phone, string mobile, DateTime birthDate, Guid addressId) : this(lastName, firstName, email, phone, mobile, birthDate)
-        {
-            UserId = userId;
-            AddressId = addressId;
-        }
-        public Person(Guid userId, string lastName, string firstName, string email, string phone, string mobile, DateTime birthDate, Role userRole, Guid addressId) : this(lastName, firstName, email, phone, mobile, birthDate, userRole)
         {
             UserId = userId;
             AddressId = addressId;

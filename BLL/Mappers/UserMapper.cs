@@ -2,14 +2,14 @@
 {
     internal static class UserMapper
     {
-        internal static User? ToUser(this UserRegisterForm form)
+        internal static User? ToUser(this UserRegisterForm form, Guid addressId)
         {
-            return new User(form.LastName, form.FirstName, form.Email, form.Phone, form.Mobile, form.BirthDate, form.UserPassword, form.UserRole);
+            return new User(form.LastName, form.FirstName, form.Email, form.Phone, form.Mobile, form.BirthDate, form.UserPassword, form.UserRole, addressId);
         }
 
-        internal static Owner? ToOwner(this OwnerRegisterForm form)
+        internal static Owner? ToOwner(this OwnerRegisterForm form, Guid addressId)
         {
-            return new Owner(form.LastName, form.FirstName, form.Email, form.Phone, form.Mobile, form.BirthDate, form.UserRole);
+            return new Owner(form.LastName, form.FirstName, form.Email, form.Phone, form.Mobile, form.BirthDate, form.UserRole, addressId);
         }
     }
 }

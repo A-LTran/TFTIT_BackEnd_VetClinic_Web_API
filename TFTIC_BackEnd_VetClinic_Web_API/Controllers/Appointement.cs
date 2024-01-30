@@ -6,7 +6,7 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
     [ApiController]
     public class Appointement : ControllerBase
     {
-        [HttpGet("Appointments")]
+        [HttpGet("GetAppointments")]
         public IActionResult Get()
         {
             return Ok();

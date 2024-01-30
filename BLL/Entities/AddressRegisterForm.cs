@@ -2,7 +2,7 @@
 
 namespace BLL.Entities
 {
-    public class AddressForm
+    public class AddressRegisterForm
     {
         [Required]
         [MaxLength(120)]
