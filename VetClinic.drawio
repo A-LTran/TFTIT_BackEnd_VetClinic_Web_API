@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-01-30T18:45:19.776Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0" etag="HQ8Lmw-UEGefAJkfl7dC" version="23.0.2" type="github">
+<mxfile host="app.diagrams.net" modified="2024-01-31T06:42:58.862Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0" etag="KrN0fLxg9hvSj4tVSbsf" version="23.0.2" type="github">
   <diagram name="Page-1" id="7aFArx-KWQnqd4Ve_FkT">
     <mxGraphModel dx="1339" dy="825" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -224,10 +224,10 @@
         <mxCell id="-Wf8E9lRrXQlnnPcnuH2-69" value="GetAllPersonsList" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="-Wf8E9lRrXQlnnPcnuH2-68">
           <mxGeometry y="30" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="-Wf8E9lRrXQlnnPcnuH2-70" value="GetUserByMail" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="-Wf8E9lRrXQlnnPcnuH2-68">
+        <mxCell id="-Wf8E9lRrXQlnnPcnuH2-70" value="GetPersonByMail" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="-Wf8E9lRrXQlnnPcnuH2-68">
           <mxGeometry y="60" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="-Wf8E9lRrXQlnnPcnuH2-71" value="GetUserById" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="-Wf8E9lRrXQlnnPcnuH2-68">
+        <mxCell id="-Wf8E9lRrXQlnnPcnuH2-71" value="GetPersoById" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="-Wf8E9lRrXQlnnPcnuH2-68">
           <mxGeometry y="90" width="140" height="30" as="geometry" />
         </mxCell>
         <mxCell id="-Wf8E9lRrXQlnnPcnuH2-73" value="Vets =&amp;gt; Owner" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
@@ -282,7 +282,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="-Wf8E9lRrXQlnnPcnuH2-88" value="Vets =&amp;gt; Dogs" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="420" y="1300" width="140" height="120" as="geometry" />
+          <mxGeometry x="420" y="1300" width="140" height="150" as="geometry" />
         </mxCell>
         <mxCell id="-Wf8E9lRrXQlnnPcnuH2-89" value="GetAllDogsList" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="-Wf8E9lRrXQlnnPcnuH2-88">
           <mxGeometry y="30" width="140" height="30" as="geometry" />
@@ -293,11 +293,17 @@
         <mxCell id="-Wf8E9lRrXQlnnPcnuH2-91" value="GetDogsByName" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="-Wf8E9lRrXQlnnPcnuH2-88">
           <mxGeometry y="90" width="140" height="30" as="geometry" />
         </mxCell>
+        <mxCell id="-Wf8E9lRrXQlnnPcnuH2-95" value="GetDogsById" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="-Wf8E9lRrXQlnnPcnuH2-88">
+          <mxGeometry y="120" width="140" height="30" as="geometry" />
+        </mxCell>
         <mxCell id="-Wf8E9lRrXQlnnPcnuH2-94" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.383;exitY=-0.025;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.779;entryY=0.933;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="-Wf8E9lRrXQlnnPcnuH2-67" target="-Wf8E9lRrXQlnnPcnuH2-91">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="590" y="1470" as="sourcePoint" />
             <mxPoint x="640" y="1420" as="targetPoint" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="-Wf8E9lRrXQlnnPcnuH2-96" value="If &#39;User&#39;, lookup for the password" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="1">
+          <mxGeometry x="960" y="1360" width="80" height="100" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
