@@ -24,7 +24,7 @@
 
         public bool GetByAppointmentAvailability(AppointmentRegisterForm form)
         {
-            return _appointmentService.GetByAppointmentRange(form.VeterinaryId, form.AppointmentDate) is not null;
+            return _appointmentService.GetByAppointmentRange(form.VeterinaryId, form.AppointmentDate, form.DurationMinutes).ToList().Count() > 0;
         }
 
         public bool Create(AppointmentRegisterForm form)

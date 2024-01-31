@@ -28,7 +28,6 @@
             }
         }
 
-
         public IEnumerable<Animal> Get()
         {
             return _requester.GetBy<string>("SELECT * FROM ClinicAnimal", "", "");

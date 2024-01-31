@@ -25,6 +25,7 @@
                         appointments.Add(((Guid)reader["AppointmentId"]).ToAppointment(
                         (DateTime)reader["AppointmentDate"],
                         (DateTime)reader["AppointmentCreationDate"],
+                        ToolSet.ReturnNonDBNull<int>(reader["DurationMinutes"]),
                         (string)reader["Reason"],
                         (string)reader["Diagnosis"],
                         (Guid)reader["AnimalId"],

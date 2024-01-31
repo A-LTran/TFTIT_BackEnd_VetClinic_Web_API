@@ -11,6 +11,7 @@ namespace BLL.Entities
         [DataType(DataType.DateTime)]
         public DateTime AppointmentCreationDate { get; set; } = DateTime.Now;
         [Required]
+        public int DurationMinutes { get; set; } = 30;
         public string Reason { get; set; } = default!;
         public string Diagnosis { get; set; } = "NA";
         public Guid AnimalId { get; set; }

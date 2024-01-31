@@ -6,12 +6,13 @@
             this Guid appointmentId,
             DateTime appointementDate,
             DateTime appointmentCreationDate,
+            int DurationMinutes,
             string reason,
             string diagnosis,
             Guid animalId,
             Guid veterinaryId)
         {
-            return new Appointment(appointmentId, appointementDate, appointmentCreationDate, reason, diagnosis, animalId, veterinaryId);
+            return new Appointment(appointmentId, appointementDate, appointmentCreationDate, DurationMinutes, reason, diagnosis, animalId, veterinaryId);
         }
     }
 }

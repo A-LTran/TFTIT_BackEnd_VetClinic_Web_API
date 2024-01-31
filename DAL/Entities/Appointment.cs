@@ -3,10 +3,11 @@
     public class Appointment
     {
         // BLL Form
-        public Appointment(DateTime appointmentDate, DateTime appointmentCreationDate, string reason, string diagnosis, Guid animalId, Guid veterinaryId)
+        public Appointment(DateTime appointmentDate, DateTime appointmentCreationDate, int durationMinutes, string reason, string diagnosis, Guid animalId, Guid veterinaryId)
         {
             AppointmentDate = appointmentDate;
             AppointmentCreationDate = appointmentCreationDate;
+            DurationMinutes = durationMinutes;
             Reason = reason;
             Diagnosis = diagnosis;
             AnimalId = animalId;
@@ -14,14 +15,15 @@
         }
 
         // DAL Get
-        public Appointment(Guid appointmentId, DateTime appointmentDate, DateTime appointmentCreationDate, string reason, string diagnosis, Guid animalId, Guid veterinaryId) : this(appointmentDate, appointmentCreationDate, reason, diagnosis, animalId, veterinaryId)
+        public Appointment(Guid appointmentId, DateTime appointmentDate, DateTime appointmentCreationDate, int durationMinutes, string reason, string diagnosis, Guid animalId, Guid veterinaryId) : this(appointmentDate, appointmentCreationDate, durationMinutes, reason, diagnosis, animalId, veterinaryId)
         {
-            AppointmentId = AppointmentId;
+            AppointmentId = appointmentId;
         }
 
         public Guid AppointmentId { get; set; } = Guid.NewGuid();
         public DateTime AppointmentDate { get; set; }
         public DateTime AppointmentCreationDate { get; set; } = DateTime.Now;
+        public int DurationMinutes { get; set; }
         public string Reason { get; set; } = default!;
         public string Diagnosis { get; set; } = default!;
         public Guid AnimalId { get; set; }

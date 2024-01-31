@@ -13,6 +13,7 @@ namespace BLL.Entities
         [MaxLength(100)]
         public string City { get; set; } = default!;
         [Required]
+        [MinLength(2)]
         [MaxLength(2)]
         public string Country { get; set; } = default!; //Country code
         [Required]

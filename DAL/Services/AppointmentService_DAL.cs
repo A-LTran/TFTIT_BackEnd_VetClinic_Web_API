@@ -28,12 +28,16 @@
                                                                             "WHERE AnimalName = @name)", "@name", name);
         }
 
-        public IEnumerable<Appointment?> GetByAppointmentRange(Guid vetId, DateTime date)
+        public IEnumerable<Appointment?> GetByAppointmentRange(Guid vetId, DateTime date, int durationMinutes = 30)
         {
             string sql = "SELECT * FROM Appointment " +
-                            "WHERE VeterinaryId = \'" + vetId + "\' AND AppointmentDate " +
-                            "BETWEEN @date and DATEADD(minute, 30, @DATE)";
-            return _requester.GetAppointmentsBy<DateTime>(sql, "@date", date);
+                            "WHERE VeterinaryId = \'" + vetId + "\' AND (AppointmentDate " +
+                            "BETWEEN @appointmentDate and DATEADD(minute, " + durationMinutes + ", @appointmentDate) " +
+                            "OR DATEADD(minute, DurationMinutes, AppointmentDate) " +
+                            "BETWEEN @appointmentDate and DATEADD(minute, " + durationMinutes + ", @appointmentDate))";
+
+
+            return _requester.GetAppointmentsBy<DateTime>(sql, "@appointmentDate", date);
         }
 
 
@@ -42,11 +46,12 @@
             using (SqlConnection connection = new(_connectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
-                command.CommandText = "INSERT INTO Appointment (AppointmentID, AppointmentDate, AppointmentCreationDate, Reason, Diagnosis, AnimalId, VeterinaryId) VALUES (@appointmentId, @appointmentDate, @appointmentCreationDate, @reason, @diagnosis, @animalId, @veterinaryId)";
+                command.CommandText = "INSERT INTO Appointment (AppointmentID, AppointmentDate, AppointmentCreationDate, DurationMinutes, Reason, Diagnosis, AnimalId, VeterinaryId) VALUES (@appointmentId, @appointmentDate, @appointmentCreationDate, @durationMinutes, @reason, @diagnosis, @animalId, @veterinaryId)";
 
                 command.Parameters.AddWithValue("@appointmentId", appointment.AppointmentId);
                 command.Parameters.AddWithValue("@appointmentDate", appointment.AppointmentDate);
                 command.Parameters.AddWithValue("@appointmentCreationDate", appointment.AppointmentCreationDate);
+                command.Parameters.AddWithValue("@durationMinutes", appointment.DurationMinutes);
                 command.Parameters.AddWithValue("@reason", appointment.Reason);
                 command.Parameters.AddWithValue("@diagnosis", appointment.Diagnosis);
                 command.Parameters.AddWithValue("@animalId", appointment.AnimalId);
