@@ -1,4 +1,7 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+
 namespace TFTIC_BackEnd_VetClinic_Web_API
 {
     public static class Program
@@ -24,6 +27,29 @@ namespace TFTIC_BackEnd_VetClinic_Web_API
             builder.Services.AddScoped<IAnimalRepository_DAL, AnimalService_DAL>(_ => new AnimalService_DAL(builder.Configuration.GetConnectionString("TFTIC_VetClinic")!));
             builder.Services.AddScoped<IAppointmentRepository_DAL, AppointmentService_DAL>(_ => new AppointmentService_DAL(builder.Configuration.GetConnectionString("TFTIC_VetClinic")!));
 
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+               options =>
+               {
+                   options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                   {
+                       ValidateIssuerSigningKey = true,
+                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(TokenManager.key)),
+                       ValidateLifetime = true,
+                       ValidateIssuer = false,
+                       ValidateAudience = false
+                   };
+               }
+            );
+
+            builder.Services.AddAuthorization(option =>
+            {
+                // Pour les points d'entrée accessible aux "admins"
+                option.AddPolicy("adminPolicy", p => p.RequireRole("administrator"));
+                option.AddPolicy("veterinaryPolicy", p => p.RequireRole("veterinary"));
+                // User must be authenticated
+                option.AddPolicy("connected", p => p.RequireAuthenticatedUser());
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -35,8 +61,8 @@ namespace TFTIC_BackEnd_VetClinic_Web_API
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 

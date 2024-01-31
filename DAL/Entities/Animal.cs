@@ -7,15 +7,15 @@
 
         }
         // AnimalMapper from form
-        public Animal(string animalName, string breed, int age, Guid ownerId)
+        public Animal(string animalName, string breed, DateTime birthDate, Guid ownerId)
         {
             AnimalName = animalName;
             Breed = breed;
-            Age = age;
+            BirthDate = birthDate;
             OwnerId = ownerId;
         }
         // DAL Get Animal
-        public Animal(Guid animalId, string animalName, string breed, int age, Guid ownerId) : this(animalName, breed, age, ownerId)
+        public Animal(Guid animalId, string animalName, string breed, DateTime birthDate, Guid ownerId) : this(animalName, breed, birthDate, ownerId)
         {
             AnimalId = animalId;
         }
@@ -23,7 +23,7 @@
         public Guid AnimalId { get; set; } = Guid.NewGuid();
         public string AnimalName { get; set; } = default!;
         public string Breed { get; set; } = default!;
-        public int Age { get; set; }
+        public DateTime BirthDate { get; set; }
         public Guid OwnerId { get; set; }
     }
 }

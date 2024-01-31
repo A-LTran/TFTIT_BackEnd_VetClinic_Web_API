@@ -11,7 +11,8 @@ namespace BLL.Entities
         [MaxLength(50)]
         public string Breed { get; set; } = default!;
         [Required]
-        public int Age { get; set; }
+        [DateRangeBeforeTodayAndAfter100Y]
+        public DateTime BirthDate { get; set; }
         public Guid OwnerId { get; set; }
     }
 }

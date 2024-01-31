@@ -1,4 +1,5 @@
-﻿global using Microsoft.Data.SqlClient;
+﻿global using DAL.Tools;
+global using Microsoft.Data.SqlClient;
 
 //namespace DAL.Services
 //{

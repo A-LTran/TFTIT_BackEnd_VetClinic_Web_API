@@ -17,16 +17,16 @@ namespace BLL.Entities
         [EmailAddress]
         public string Email { get; set; } = default!;
         [Phone]
-        public string Phone { get; set; } = default!;
+        public string Phone { get; set; } = "NA";
         [Phone]
-        public string Mobile { get; set; } = default!;
-        [DataType(DataType.Date)]
-        public DateTime BirthDate { get; set; }
+        public string Mobile { get; set; } = "NA";
+        [DateRangeBeforeTodayAndAfter100Y]
+        public DateTime BirthDate { get; set; } = DateTime.Today;
         [Required]
         [PasswordPropertyText]
         public string UserPassword { get; set; } = default!;
         [Compare(nameof(UserPassword))]
         public string ConfirmUserPassword { get; set; } = default!;
-        public Role UserRole { get; set; } = default!;
+        public Role PersonRole { get; set; } = default!;
     }
 }

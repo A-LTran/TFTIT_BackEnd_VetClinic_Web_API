@@ -4,7 +4,7 @@
     {
         public static Animal ToAnimal(this AnimalRegisterForm form)
         {
-            return new Animal(form.AnimalName, form.Breed, form.Age, form.OwnerId);
+            return new Animal(form.AnimalName, form.Breed, form.BirthDate, form.OwnerId);
         }
     }
 }

@@ -34,14 +34,19 @@
             {
                 command.CommandText = "SELECT * FROM ClinicAnimal";
 
-                List<Animal> animals = new List<Animal>();
+                List<Animal> animals = new();
 
                 connection.Open();
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        animals.Add(AnimalMapper.ToAnimal((Guid)reader["AnimalId"], (string)reader["AnimalName"], (string)reader["Breed"], (int)reader["Age"], (Guid)reader["OwnerId"]));
+                        animals.Add(AnimalMapper.ToAnimal(
+                            (Guid)reader["AnimalId"],
+                            (string)reader["AnimalName"],
+                            (string)reader["Breed"],
+                            (DateTime)reader["BirthDate"],
+                            (Guid)reader["OwnerId"]));
                     }
                 }
                 connection.Close();
@@ -64,13 +69,17 @@
                 {
                     if (reader.Read())
                     {
-                        animal = AnimalMapper.ToAnimal((Guid)reader["AnimalId"], (string)reader["AnimalName"], (string)reader["Breed"], (int)reader["Age"], (Guid)reader["OwnerId"]);
+                        animal = AnimalMapper.ToAnimal(
+                            (Guid)reader["AnimalId"],
+                            (string)reader["AnimalName"],
+                            (string)reader["Breed"],
+                            (DateTime)reader["Age"],
+                            (Guid)reader["OwnerId"]);
                     }
                 }
                 connection.Close();
                 return animal;
             }
         }
-
     }
 }

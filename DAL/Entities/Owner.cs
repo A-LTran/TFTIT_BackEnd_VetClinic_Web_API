@@ -7,12 +7,12 @@
         }
 
         //BLL ToOwner
-        public Owner(string lastName, string firstName, string email, string phone, string mobile, DateTime birthDate, Role userRole, Guid addressId) : base(lastName, firstName, email, phone, mobile, birthDate, userRole, addressId)
+        public Owner(string lastName, string firstName, string email, string phone, string mobile, DateTime birthDate, Role personRole, Guid addressId) : base(lastName, firstName, email, phone, mobile, birthDate, personRole, addressId)
         {
 
         }
         // DAL ToOwner
-        public Owner(Guid userId, string lastName, string firstName, string email, string phone, string mobile, DateTime birthDate, Guid addressId) : base(userId, lastName, firstName, email, phone, mobile, birthDate, addressId)
+        public Owner(Guid personId, string lastName, string firstName, string email, string phone, string mobile, DateTime birthDate, Role personRole, Guid addressId) : base(personId, lastName, firstName, email, phone, mobile, birthDate, personRole, addressId)
         {
 
         }

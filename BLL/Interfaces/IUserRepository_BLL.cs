@@ -12,5 +12,7 @@
         //internal User? GetById(int id);
         public IEnumerable<User?> Get();
         public IEnumerable<Person?> GetPersonsByRole(int role);
+        public User? GetUserById(Guid userId);
+        public User? GetUserByMail(string mail);
     }
 }

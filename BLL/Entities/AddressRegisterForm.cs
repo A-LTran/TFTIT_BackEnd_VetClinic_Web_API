@@ -8,7 +8,7 @@ namespace BLL.Entities
         [MaxLength(120)]
         public string Address1 { get; set; } = default!;
         [MaxLength(120)]
-        public string? Address2 { get; set; } = default!;
+        public string? Address2 { get; set; } = "NA";
         [Required]
         [MaxLength(100)]
         public string City { get; set; } = default!;

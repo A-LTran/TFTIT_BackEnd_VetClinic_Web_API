@@ -1,4 +1,6 @@
-﻿namespace BLL.Services
+﻿using Microsoft.IdentityModel.Tokens;
+
+namespace BLL.Services
 {
     public class UserService_BLL : IUserRepository_BLL
     {
@@ -11,6 +13,8 @@
 
         public bool Create(UserRegisterForm form, Guid addressId)
         {
+            if (!form.UserPassword.IsNullOrEmpty())
+                form.UserPassword = BCrypt.Net.BCrypt.HashPassword(form.UserPassword);
             return _userRepository.Create(form.ToUser(addressId)!);
         }
 
@@ -32,6 +36,16 @@
         {
             Role PersonRole = (Role)role;
             return _userRepository.GetPersonsByRole(PersonRole);
+        }
+
+        public User? GetUserById(Guid userId)
+        {
+            return _userRepository.GetById(userId);
+        }
+
+        public User? GetUserByMail(string mail)
+        {
+            return _userRepository.GetByMail(mail);
         }
     }
 }

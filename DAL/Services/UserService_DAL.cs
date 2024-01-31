@@ -3,10 +3,12 @@
     public class UserService_DAL : IUserRepository_DAL
     {
         private readonly string _connectionString;
+        private readonly Requester _requester;
 
         public UserService_DAL(string connectionString)
         {
             _connectionString = connectionString;
+            _requester = new Requester(connectionString);
         }
 
         public bool Create(User user)
@@ -14,10 +16,10 @@
             using SqlConnection connection = new(_connectionString);
             using (SqlCommand command = connection.CreateCommand())
             {
-                command.CommandText = "INSERT INTO ClinicPerson (UserId, FirstName, LastName, Email, Phone, Mobile, BirthDate, UserRole, AddressId) VALUES (@userId, @firstName, @lastName, @email, @phone, @mobile, @birthdate, @userRole, @addressId); " +
-                    "INSERT INTO ClinicUser (UserPassword, UserId) VALUES (@password, @userId);";
+                command.CommandText = "INSERT INTO ClinicPerson (PersonId, FirstName, LastName, Email, Phone, Mobile, BirthDate, PersonRole, AddressId) VALUES (@personId, @firstName, @lastName, @email, @phone, @mobile, @birthdate, @personRole, @addressId); " +
+                    "INSERT INTO ClinicUser (UserPassword, PersonId) VALUES (@password, @personId);";
 
-                command.Parameters.AddWithValue("@userId", user.UserId);
+                command.Parameters.AddWithValue("@personId", user.PersonId);
                 command.Parameters.AddWithValue("@firstName", user.FirstName);
                 command.Parameters.AddWithValue("@lastName", user.LastName);
                 command.Parameters.AddWithValue("@email", user.Email);
@@ -25,7 +27,7 @@
                 command.Parameters.AddWithValue("@mobile", user.Mobile);
                 command.Parameters.AddWithValue("@birthdate", user.BirthDate);
                 command.Parameters.AddWithValue("@password", user.UserPassword);
-                command.Parameters.AddWithValue("@userRole", (int)user.UserRole);
+                command.Parameters.AddWithValue("@personRole", (int)user.PersonRole);
                 command.Parameters.AddWithValue("@addressId", user.AddressId);
 
                 connection.Open();
@@ -41,16 +43,16 @@
             using SqlConnection connection = new(_connectionString);
             using (SqlCommand command = connection.CreateCommand())
             {
-                command.CommandText = "INSERT INTO ClinicPerson (UserId, FirstName, LastName, Email, Phone, Mobile, BirthDate, UserRole, AddressId) VALUES (@userId, @firstName, @lastName, @email, @phone, @mobile,@birthdate, @userRole, @addressId); ";
+                command.CommandText = "INSERT INTO ClinicPerson (personId, FirstName, LastName, Email, Phone, Mobile, BirthDate, PersonRole, AddressId) VALUES (@personId, @firstName, @lastName, @email, @phone, @mobile, @birthdate, @personRole, @addressId); ";
 
-                command.Parameters.AddWithValue("@userId", owner.UserId);
+                command.Parameters.AddWithValue("@personId", owner.PersonId);
                 command.Parameters.AddWithValue("@firstName", owner.FirstName);
                 command.Parameters.AddWithValue("@lastName", owner.LastName);
                 command.Parameters.AddWithValue("@email", owner.Email);
                 command.Parameters.AddWithValue("@phone", owner.Phone);
                 command.Parameters.AddWithValue("@mobile", owner.Mobile);
                 command.Parameters.AddWithValue("@birthdate", owner.BirthDate);
-                command.Parameters.AddWithValue("@userRole", (int)owner.UserRole);
+                command.Parameters.AddWithValue("@personRole", (int)owner.PersonRole);
                 command.Parameters.AddWithValue("@addressId", owner.AddressId);
 
                 connection.Open();
@@ -90,12 +92,11 @@
             {
                 using (SqlCommand command = connection.CreateCommand())
                 {
-                    command.CommandText = "DELETE FROM [ClinicPerson] OUTPUT deleted.UserId WHERE UserId = @userId";
-                    command.Parameters.AddWithValue("@userId", user.UserId);
-
+                    command.CommandText = "DELETE FROM [ClinicPerson] OUTPUT deleted.personId WHERE PersonId = @personId";
+                    command.Parameters.AddWithValue("@personId", user.PersonId);
                     connection.Open();
 
-                    if (Guid.TryParse(command.ExecuteScalar().ToString(), out Guid userId) && userId == user.UserId)
+                    if (Guid.TryParse(command.ExecuteScalar().ToString(), out Guid personId) && personId == user.PersonId)
                     {
                         connection.Close();
                         return true;
@@ -125,8 +126,9 @@
                         string? mobile = ToolSet.ReturnNonDBNull<string>(reader["Mobile"]);
                         DateTime birthDate = ToolSet.ReturnNonDBNull<DateTime>(reader["BirthDate"]);
                         Guid addressId = ToolSet.ReturnNonDBNull<Guid>(reader["AddressId"]);
+                        Role personRole = ToolSet.ReturnNonDBNull<Role>(reader["PersonRole"]);
 
-                        users.Add(UserMapper.ToUser((Guid)reader["UserId"], (string)reader["LastName"], (string)reader["FirstName"], (string)reader["Email"], phone, mobile, birthDate, (string)reader["UserPassword"], addressId));
+                        users.Add(UserMapper.ToUser((Guid)reader["PersonId"], (string)reader["LastName"], (string)reader["FirstName"], (string)reader["Email"], phone, mobile, birthDate, (string)reader["UserPassword"], personRole, addressId));
                     }
                 }
                 connection.Close();
@@ -163,9 +165,20 @@
                         DateTime birthDate = ToolSet.ReturnNonDBNull<DateTime>(reader["BirthDate"]);
                         Guid addressId = ToolSet.ReturnNonDBNull<Guid>(reader["AddressId"]);
                         if (personRole == Role.Owner)
-                            owners.Add(UserMapper.ToOwner((Guid)reader["UserId"], (string)reader["LastName"], (string)reader["FirstName"], (string)reader["Email"], phone, mobile, birthDate, addressId)!);
+                        {
+                            owners.Add(UserMapper.ToOwner(
+                                (Guid)reader["PersonId"],
+                                (string)reader["LastName"],
+                                (string)reader["FirstName"],
+                                (string)reader["Email"],
+                                phone,
+                                mobile,
+                                birthDate,
+                                personRole,
+                                addressId)!);
+                        }
                         else
-                            users.Add(UserMapper.ToUser((Guid)reader["UserId"], (string)reader["LastName"], (string)reader["FirstName"], (string)reader["Email"], phone, mobile, birthDate, (string)reader["UserPassword"], addressId)!);
+                            users.Add(UserMapper.ToUser((Guid)reader["PersonId"], (string)reader["LastName"], (string)reader["FirstName"], (string)reader["Email"], phone, mobile, birthDate, (string)reader["UserPassword"], personRole, addressId)!);
                     }
 
                 connection.Close();
@@ -173,16 +186,19 @@
             }
         }
 
-        public Person? GetById(int id)
+        public User? GetById(Guid id)
         {
-            throw new NotImplementedException();
+            return _requester.GetUserBy<Guid>("SELECT * FROM ClinicPerson CP JOIN ClinicUser CU " +
+                                                        "ON CP.PersonId = CU.PersonId " +
+                                                        "WHERE PersonId = @id", "@id", id);
         }
 
-        public Person? GetByMail(string mail)
+        public User? GetByMail(string mail)
         {
-            throw new NotImplementedException();
+            return _requester.GetUserBy<string>("SELECT * FROM ClinicPerson CP JOIN ClinicUser CU " +
+                                                        "ON CP.PersonId = CU.PersonId " +
+                                                        "WHERE Email = @mail", "@mail", mail);
         }
-
         public bool Update(Person user)
         {
             throw new NotImplementedException();
