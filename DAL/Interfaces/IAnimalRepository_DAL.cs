@@ -4,6 +4,7 @@
     {
         public bool Create(Animal animal);
         public IEnumerable<Animal> Get();
+        public IEnumerable<Animal> GetByOwner(Guid ownerId);
         public Animal GetAnimal(Guid animalId);
     }
 }

@@ -3,10 +3,11 @@
     public class AnimalService_DAL : IAnimalRepository_DAL
     {
         private readonly string _connectionString;
-
+        private readonly AnimalRequester _requester;
         public AnimalService_DAL(string connectionString)
         {
             _connectionString = connectionString;
+            _requester = new AnimalRequester(connectionString);
         }
 
         public bool Create(Animal animal)
@@ -27,31 +28,15 @@
             }
         }
 
+
         public IEnumerable<Animal> Get()
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            using (SqlCommand command = connection.CreateCommand())
-            {
-                command.CommandText = "SELECT * FROM ClinicAnimal";
+            return _requester.GetBy<string>("SELECT * FROM ClinicAnimal", "", "");
+        }
 
-                List<Animal> animals = new();
-
-                connection.Open();
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        animals.Add(AnimalMapper.ToAnimal(
-                            (Guid)reader["AnimalId"],
-                            (string)reader["AnimalName"],
-                            (string)reader["Breed"],
-                            (DateTime)reader["BirthDate"],
-                            (Guid)reader["OwnerId"]));
-                    }
-                }
-                connection.Close();
-                return animals;
-            }
+        public IEnumerable<Animal> GetByOwner(Guid ownerId)
+        {
+            return _requester.GetBy<Guid>("SELECT * FROM ClinicAnimal WHERE OwnerId = @ownerId;", "ownerId", ownerId);
         }
 
         public Animal GetAnimal(Guid animalId)

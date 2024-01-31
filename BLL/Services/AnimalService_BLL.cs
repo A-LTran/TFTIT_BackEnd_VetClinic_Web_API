@@ -20,6 +20,11 @@ namespace BLL.Services
             return _animalRepository.Get();
         }
 
+        public IEnumerable<Animal> GetByOwner(Guid ownerId)
+        {
+            return _animalRepository.GetByOwner(ownerId);
+        }
+
         public Animal GetAnimal(Guid animalId)
         {
             return _animalRepository.GetAnimal(animalId);

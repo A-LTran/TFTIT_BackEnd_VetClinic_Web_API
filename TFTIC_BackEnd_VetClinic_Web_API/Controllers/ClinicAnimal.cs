@@ -28,6 +28,13 @@
         {
             return Ok(_animalService.Get());
         }
+
+        [HttpGet("GetAnimalsByOwner/{ownerId}")]
+        public IActionResult GetAnimals([FromRoute] Guid ownerId)
+        {
+            return Ok(_animalService.GetByOwner(ownerId));
+        }
+
         [HttpGet("GetAnimalById/{animalId}")]
         public IActionResult GetAnimalById([FromRoute] Guid AnimalId)
         {

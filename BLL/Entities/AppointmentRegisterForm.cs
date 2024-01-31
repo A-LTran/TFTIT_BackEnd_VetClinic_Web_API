@@ -4,8 +4,6 @@ namespace BLL.Entities
 {
     public class AppointmentRegisterForm
     {
-        private readonly DateTime _CurrentDate = DateTime.Now;
-
         [Required]
         [DateRangeFromTodayToTwoYears]
         public DateTime AppointmentDate { get; set; }

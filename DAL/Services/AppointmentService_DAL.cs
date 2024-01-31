@@ -3,42 +3,17 @@
     public class AppointmentService_DAL : IAppointmentRepository_DAL
     {
         private readonly string _connectionString;
-        private Requester _requester;
+        private AppointmentRequester _requester;
 
         public AppointmentService_DAL(string connectionString)
         {
             _connectionString = connectionString;
-            _requester = new Requester(connectionString);
+            _requester = new AppointmentRequester(connectionString);
         }
 
         public IEnumerable<Appointment?> Get()
         {
-            using (SqlConnection connection = new(_connectionString))
-            using (SqlCommand command = connection.CreateCommand())
-            {
-                command.CommandText = "SELECT * FROM Appointment";
-
-                connection.Open();
-
-                List<Appointment?> appointments = new();
-
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        appointments.Add(AppointmentMapper.ToAppointment(
-                        (Guid)reader["AppointmentId"],
-                        (DateTime)reader["AppointmentDate"],
-                        (DateTime)reader["AppointmentCreationDate"],
-                        (string)reader["Reason"],
-                        (string)reader["Diagnosis"],
-                        (Guid)reader["AnimalId"],
-                        (Guid)reader["VeterinaryId"]));
-                    }
-                }
-                connection.Close();
-                return appointments;
-            }
+            return _requester.GetAppointmentsBy<string>("SELECT * FROM Appointment", "", "");
         }
 
         public IEnumerable<Appointment?> GetByVeterinaryId(Guid id)

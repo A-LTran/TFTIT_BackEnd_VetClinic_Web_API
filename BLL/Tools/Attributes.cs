@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BLL.Entities
+namespace BLL.Tools
 {
 
     public class DateRangeFromTodayToTwoYearsAttribute : ValidationAttribute
@@ -15,14 +15,14 @@ namespace BLL.Entities
             }
 
             DateTime startDate = DateTime.Now.Date;
-            DateTime endDate = DateTime.Now.AddYears(2);
-            if (dateTime.Value < startDate)
+            DateTime endDate = DateTime.Now.Date.AddYears(2);
+            if (dateTime.Value.Date < startDate)
             {
                 ErrorMessage = $"La date ne peut pas être plus petite que {startDate:dd/MM/yyyy}";
                 return false;
             }
 
-            if (dateTime.Value > endDate)
+            if (dateTime.Value.Date > endDate)
             {
                 ErrorMessage = $"La date ne peut pas être plus grande que {endDate:dd/MM/yyyy}";
                 return false;
@@ -43,15 +43,15 @@ namespace BLL.Entities
                 return false;
             }
 
-            DateTime startDate = DateTime.Now.AddYears(-100);
+            DateTime startDate = DateTime.Now.Date.AddYears(-100);
             DateTime endDate = DateTime.Now.Date;
-            if (dateTime.Value < startDate)
+            if (dateTime.Value.Date < startDate)
             {
                 ErrorMessage = $"La date ne peut pas être plus petite que {startDate:dd/MM/yyyy}";
                 return false;
             }
 
-            if (dateTime.Value > endDate)
+            if (dateTime.Value.Date > endDate)
             {
                 ErrorMessage = $"La date ne peut pas être plus grande que {endDate:dd/MM/yyyy}";
                 return false;
