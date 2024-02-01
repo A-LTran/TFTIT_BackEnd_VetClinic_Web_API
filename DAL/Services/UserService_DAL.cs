@@ -28,26 +28,6 @@
                     "VALUES (@addressId, @address1, @address2, @city, @country, @postalCode);", address);
         }
 
-        public bool Delete(User user)
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                using (SqlCommand command = connection.CreateCommand())
-                {
-                    command.CommandText = "DELETE FROM [ClinicPerson] OUTPUT deleted.personId WHERE PersonId = @personId";
-                    command.Parameters.AddWithValue("@personId", user.PersonId);
-                    connection.Open();
-
-                    if (Guid.TryParse(command.ExecuteScalar().ToString(), out Guid personId) && personId == user.PersonId)
-                    {
-                        connection.Close();
-                        return true;
-                    }
-                    connection.Close();
-                    return false;
-                }
-            }
-        }
 
         public IEnumerable<User?> Get()
         {
@@ -88,10 +68,67 @@
                                                         "WHERE Email = @mail", "@mail", mail);
         }
 
-
-        public bool Update(Person user)
+        public bool Update(Owner owner)
         {
-            throw new NotImplementedException();
+            string query = "UPDATE ClinicPerson " +
+                                    "SET FirstName = @firstName, " +
+                                        "LastName = @lastName, " +
+                                        "Email = @email, " +
+                                        "Phone = @phone, " +
+                                        "Mobile = @mobile, " +
+                                        "BirthDate = @birthdate, " +
+                                        "PersonRole = @personRole, " +
+                                        "AddressId = @addressId " +
+                                        "WHERE OwnerId = @ownerId";
+
+            return _requester.Update<bool, Owner>(query, owner);
+        }
+
+        public bool Update(User user)
+        {
+            string query = "UPDATE ClinicPerson " +
+                                    "SET FirstName = @firstName, " +
+                                        "LastName = @lastName, " +
+                                        "Email = @email, " +
+                                        "Phone = @phone, " +
+                                        "Mobile = @mobile, " +
+                                        "BirthDate = @birthdate, " +
+                                        "UserPassword = @userPassword, " +
+                                        "PersonRole = @personRole, " +
+                                        "AddressId = @addressId " +
+                                        "WHERE PersonId = @personId";
+
+            return _requester.Update<bool, User>(query, user);
+        }
+
+        public bool DeleteUser(Guid personId)
+        {
+            return Delete<Guid>("DELETE FROM [ClinicUser] WHERE PersonId = @personId; " +
+                                "DELETE FROM [ClinicPerson] " +
+                                "WHERE PersonId = @personId; ", "personId", personId);
+        }
+
+        public bool DeleteOwner(Guid ownerId)
+        {
+            return Delete<Guid>("DELETE FROM [ClinicPerson] WHERE OwnerId = @ownerId; ", "ownerId", ownerId);
+        }
+
+        public bool Delete<TBody>(string query, string bodyName, TBody body)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand command = connection.CreateCommand())
+                {
+                    command.CommandText = query;
+
+                    command.Parameters.AddWithValue("@" + bodyName, body);
+                    connection.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+                    connection.Close();
+
+                    return rowsAffected > 0;
+                }
+            }
         }
     }
 }

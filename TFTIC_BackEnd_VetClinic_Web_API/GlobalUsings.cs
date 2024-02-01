@@ -1,5 +1,6 @@
 ﻿global using BLL.Entities;
 global using BLL.Interfaces;
+global using BLL.Mappers;
 global using BLL.Services;
 global using DAL.Entities;
 global using DAL.Interfaces;

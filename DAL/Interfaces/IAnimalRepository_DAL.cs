@@ -6,5 +6,7 @@
         public IEnumerable<Animal> Get();
         public IEnumerable<Animal> GetByOwner(Guid ownerId);
         public Animal GetAnimal(Guid animalId);
+        public bool Update(Animal animal);
+        public bool Delete(Guid animalId);
     }
 }

@@ -11,9 +11,18 @@
             _requester = new AppointmentRequester(connectionString);
         }
 
+        //******************************************************************************//
+        //                                      GET                                     //
+        //******************************************************************************//
+
         public IEnumerable<Appointment?> Get(int scope)
         {
             return _requester.GetAppointmentsBy<string>(AppointmentDateScope.SetScope("SELECT * FROM Appointment", scope), "", "");
+        }
+
+        public IEnumerable<Appointment?> GetById(Guid appId)
+        {
+            return _requester.GetAppointmentsBy<Guid>("SELECT * FROM Appointment WHERE AppointmentId = @appId", "@appId", appId);
         }
 
         public IEnumerable<Appointment?> GetByVeterinaryId(Guid id, int scope)
@@ -54,16 +63,37 @@
             return _requester.GetAppointmentsBy<DateTime>(sql, "@appointmentDate", date);
         }
 
+        //******************************************************************************//
+        //                                      POST                                    //
+        //******************************************************************************//
+
         public bool Create(Appointment appointment)
         {
             using (SqlConnection connection = new(_connectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
-                command.CommandText = "INSERT INTO Appointment (AppointmentID, AppointmentDate, AppointmentCreationDate, DurationMinutes, Reason, Diagnosis, AnimalId, VeterinaryId) VALUES (@appointmentId, @appointmentDate, @appointmentCreationDate, @durationMinutes, @reason, @diagnosis, @animalId, @veterinaryId)";
+                command.CommandText = "INSERT INTO Appointment (AppointmentID, " +
+                                                                "AppointmentDate, " +
+                                                                "AppointmentCreationDate, " +
+                                                                "AppointmentUpdateDate, " +
+                                                                "DurationMinutes, " +
+                                                                "Reason, " +
+                                                                "Diagnosis, " +
+                                                                "AnimalId, " +
+                                                                "VeterinaryId) " +
+                                            "VALUES (@appointmentId, " +
+                                                    "@appointmentDate, " +
+                                                    "@appointmentCreationDate, " +
+                                                    "@durationMinutes, " +
+                                                    "@reason, " +
+                                                    "@diagnosis, " +
+                                                    "@animalId, " +
+                                                    "@veterinaryId)";
 
                 command.Parameters.AddWithValue("@appointmentId", appointment.AppointmentId);
                 command.Parameters.AddWithValue("@appointmentDate", appointment.AppointmentDate);
                 command.Parameters.AddWithValue("@appointmentCreationDate", appointment.AppointmentCreationDate);
+                command.Parameters.AddWithValue("@appointmentUpdateDate", DateTime.Now);
                 command.Parameters.AddWithValue("@durationMinutes", appointment.DurationMinutes);
                 command.Parameters.AddWithValue("@reason", appointment.Reason);
                 command.Parameters.AddWithValue("@diagnosis", appointment.Diagnosis);
@@ -73,6 +103,60 @@
                 connection.Open();
                 int rowsAffected = command.ExecuteNonQuery();
                 connection.Close();
+                return rowsAffected > 0;
+            }
+        }
+
+        //******************************************************************************//
+        //                                      PATCH                                   //
+        //******************************************************************************//
+
+        public bool Update(Appointment appointment)
+        {
+            using (SqlConnection connection = new(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.CommandText = "UPDATE Appointment " +
+                                        "SET AppointmentDate = @appointmentDate, " +
+                                            "AppointmentUpdateDate = @appointmentUpdateDate, " +
+                                            "Reason = @reason, " +
+                                            "Diagnosis = @diagnosis, " +
+                                            "AnimalId = @animalId, " +
+                                            "VeterinaryId = @veterinaryId " +
+
+                                        "WHERE AppointmentId = @appointmentId";
+
+                command.Parameters.AddWithValue("@appointmentId", appointment.AppointmentId);
+                command.Parameters.AddWithValue("@appointmentDate", appointment.AppointmentDate);
+                command.Parameters.AddWithValue("@appointmentUpdateDate", DateTime.Now);
+                command.Parameters.AddWithValue("@reason", appointment.Reason);
+                command.Parameters.AddWithValue("@diagnosis", appointment.Diagnosis);
+                command.Parameters.AddWithValue("@animalId", appointment.AnimalId);
+                command.Parameters.AddWithValue("@veterinaryId", appointment.VeterinaryId);
+
+                connection.Open();
+                int rowsAffected = command.ExecuteNonQuery();
+                connection.Close();
+                return rowsAffected > 0;
+            }
+        }
+
+        //******************************************************************************//
+        //                                     DELETE                                   //
+        //******************************************************************************//
+
+        public bool Delete(Guid id)
+        {
+            using (SqlConnection connection = new(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            { 
+                command.CommandText = "DELETE FROM Appointment WHERE AppointmentId = @id";
+                command.Parameters.AddWithValue("@id", id);
+
+                connection.Open();  
+                int rowsAffected = command.ExecuteNonQuery();
+                connection.Close();
+
                 return rowsAffected > 0;
             }
         }

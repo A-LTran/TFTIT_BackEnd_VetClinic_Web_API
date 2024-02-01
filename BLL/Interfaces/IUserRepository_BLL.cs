@@ -6,10 +6,10 @@
         public bool Create(UserRegisterForm form, Guid addressId);
         public bool Create(OwnerRegisterForm form, Guid addressId);
         public bool Create(AddressRegisterForm form);
-        //internal bool Update(User user);
-        //internal bool Delete(User user);
-        //internal User? GetByMail(string mail);
-        //internal User? GetById(int id);
+        public bool UpdateUser(UserEditForm form, Guid userId);
+        public bool UpdateOwner(OwnerEditForm form, Guid ownerId);
+        public bool DeleteUser(Guid userId);
+        public bool DeleteOwner(Guid ownerId);
         public IEnumerable<User?> Get();
         public IEnumerable<Person?> GetPersonsByRole(int role);
         public User? GetUserById(Guid userId);

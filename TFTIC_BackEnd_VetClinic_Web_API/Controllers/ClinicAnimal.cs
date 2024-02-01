@@ -56,11 +56,10 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         //******************************************************//
 
         [Authorize("veterinaryPolicy")]
-        [HttpPatch("EditAnimal")]
-        public IActionResult Update()
+        [HttpPatch("EditAnimal/{animalId}")]
+        public IActionResult Update([FromRoute] Guid animalId, [FromBody] AnimalEditForm form)
         {
-            return Ok();
-
+            return Ok(_animalService.Update(form, animalId));
         }
 
         //******************************************************//
@@ -68,10 +67,10 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         //******************************************************//
 
         [Authorize("veterinaryPolicy")]
-        [HttpDelete("DeleteAnimal")]
-        public IActionResult Delete()
+        [HttpDelete("DeleteAnimal/{animalId}")]
+        public IActionResult Delete([FromRoute]Guid animalId)
         {
-            return Ok();
+            return Ok(_animalService.Delete(animalId));
         }
 
         //******************************************************//

@@ -18,6 +18,14 @@
         }
 
         // User.cs BLL_ToUser & Owner.cs BLL_ToOwner
+        //Edit form
+        public Person(string lastName, string firstName, string email, string phone, string mobile, DateTime birthDate, Guid addressId) : this(lastName, firstName, email, phone, mobile, birthDate)
+        {
+            AddressId = addressId;
+
+        }
+
+        // Register Form
         public Person(string lastName, string firstName, string email, string phone, string mobile, DateTime birthDate, Role personRole, Guid addressId) : this(lastName, firstName, email, phone, mobile, birthDate)
         {
             AddressId = addressId;

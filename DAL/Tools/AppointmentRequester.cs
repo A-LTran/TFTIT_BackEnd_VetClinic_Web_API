@@ -22,9 +22,11 @@
                 {
                     while (reader.Read())
                     {
-                        appointments.Add(((Guid)reader["AppointmentId"]).ToAppointment(
+                        appointments.Add(AppointmentMapper.ToAppointment(
+                        (Guid)reader["AppointmentId"],
                         (DateTime)reader["AppointmentDate"],
                         (DateTime)reader["AppointmentCreationDate"],
+                        (DateTime)reader["AppointmentUpdateDate"],
                         ToolSet.ReturnNonDBNull<int>(reader["DurationMinutes"]),
                         (string)reader["Reason"],
                         (string)reader["Diagnosis"],

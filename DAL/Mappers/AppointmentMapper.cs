@@ -4,15 +4,24 @@
     {
         public static Appointment ToAppointment(
             this Guid appointmentId,
-            DateTime appointementDate,
+            DateTime appointmentDate,
             DateTime appointmentCreationDate,
+            DateTime appointmentUpdateDate,
             int DurationMinutes,
             string reason,
             string diagnosis,
             Guid animalId,
             Guid veterinaryId)
         {
-            return new Appointment(appointmentId, appointementDate, appointmentCreationDate, DurationMinutes, reason, diagnosis, animalId, veterinaryId);
+            return new Appointment(appointmentId,
+                                    appointmentDate,
+                                    appointmentCreationDate,
+                                    appointmentUpdateDate,
+                                    DurationMinutes,
+                                    reason,
+                                    diagnosis,
+                                    animalId,
+                                    veterinaryId);
         }
     }
 }

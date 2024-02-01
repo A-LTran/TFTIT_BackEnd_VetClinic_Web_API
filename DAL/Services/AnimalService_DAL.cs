@@ -10,6 +10,8 @@
             _requester = new AnimalRequester(connectionString);
         }
 
+        // POST
+
         public bool Create(Animal animal)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -27,6 +29,8 @@
                 return rowsAffected > 0;
             }
         }
+
+        // GET
 
         public IEnumerable<Animal> Get()
         {
@@ -68,6 +72,49 @@
                         return null;
                     }
                 }
+            }
+        }
+
+        // PATCH
+
+        public bool Update(Animal animal)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.CommandText = "UPDATE ClinicAnimal " +
+                                        "SET AnimalName = @animalName " +
+                                        "Breed = @breed, " +
+                                        "BirthDate = @birthDate, " +
+                                        "OwnerId = @ownerId " +
+                                        "WHERE AnimalId = @id";
+                command.Parameters.AddWithValue("@id", animal.AnimalId);
+                command.Parameters.AddWithValue("@animalName", animal.AnimalName);
+                command.Parameters.AddWithValue("@breed", animal.Breed);
+                command.Parameters.AddWithValue("@birthDate", animal.BirthDate);
+                command.Parameters.AddWithValue("@ownerId", animal.OwnerId);
+
+                connection.Open();
+                int rowsAffected = command.ExecuteNonQuery();
+                connection.Close();
+                return rowsAffected > 0;
+            }
+        }
+
+        // DELETE
+
+        public bool Delete(Guid animalId)
+        { 
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.CommandText = "DELETE FROM ClinicAnimal WHERE AnimalId = @id";
+                command.Parameters.AddWithValue("@id", animalId);
+
+                connection.Open();
+                int rowsAffected = command.ExecuteNonQuery();
+                connection.Close();
+                return rowsAffected > 0;
             }
         }
     }

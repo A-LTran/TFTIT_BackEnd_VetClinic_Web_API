@@ -114,5 +114,30 @@
 
             }
         }
+        public TResult Update<TResult, TBody>(string query, TBody body)
+        {
+            using SqlConnection connection = new(_connectionString);
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.CommandText = query;
+
+                Type bodyType = typeof(TBody);
+                foreach (var prop in bodyType.GetProperties())
+                {
+                    // Get the name and value of the property
+                    string propName = prop.Name;
+                    object propValue = prop.GetValue(body);
+                    command.Parameters.AddWithValue("@" + propName, propValue);
+                }
+
+                connection.Open();
+                int rowsAffected = command.ExecuteNonQuery();
+                connection.Close();
+
+                return (TResult)(object)(rowsAffected > 0);
+
+            }
+        }
     }
+
 }

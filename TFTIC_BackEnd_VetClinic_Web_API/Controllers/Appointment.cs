@@ -108,11 +108,13 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         //******************************************************//
 
         [Authorize("veterinaryPolicy")]
-        [HttpPatch("EditAppointment")]
-        public IActionResult Update()
+        [HttpPatch("EditAppointment/{appId}")]
+        public IActionResult Update([FromRoute] Guid appId, [FromBody] AppointmentEditForm form)
         {
-            return Ok();
+            if (!ModelState.IsValid)
+                return BadRequest();
 
+            return Ok(_appointmentService.Update(appId, form));
         }
 
         //******************************************************//
@@ -120,10 +122,10 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         //******************************************************//
 
         [Authorize("veterinaryPolicy")]
-        [HttpDelete("DeleteAppointment")]
-        public IActionResult Delete()
+        [HttpDelete("DeleteAppointment/{appId}")]
+        public IActionResult Delete([FromRoute] Guid appId)
         {
-            return Ok();
+            return Ok(_appointmentService.Delete(appId));
         }
 
         //******************************************************//

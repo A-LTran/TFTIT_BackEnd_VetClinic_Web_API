@@ -111,6 +111,39 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
             return Ok(tokenManager.GenerateToken(connectedUser));
         }
 
+
+        //**************************************************************************************//
+        //                                       PATCH                                          //
+        //**************************************************************************************//
+
+        [HttpPatch("EditUser/{userId}")]
+        public IActionResult UpdateUser([FromBody] UserEditForm form, [FromRoute] Guid userId)
+        {
+            return Ok(_userService.UpdateUser(form, userId));
+        }
+
+        [HttpPatch("EditOwner/{ownerId}")]
+        public IActionResult EditOwner([FromBody] OwnerEditForm form, [FromRoute] Guid ownerId)
+        {
+            return Ok(_userService.UpdateOwner(form, ownerId));
+        }
+
+        //**************************************************************************************//
+        //                                      DELETE                                          //
+        //**************************************************************************************//
+
+        [HttpDelete("DeletePerson/{personId}")]
+        public IActionResult DeleteUser([FromRoute] Guid personId)
+        {
+            return Ok(_userService.DeleteUser(personId));
+        }
+
+        [HttpDelete("DeleteOwner/{ownerId}")]
+        public IActionResult DeleteOwner([FromRoute] Guid ownerId)
+        {
+            return Ok(_userService.DeleteOwner(ownerId));
+        }
+
         //*******************************************************************//
         //                              TESTING                              // 
         //*******************************************************************//
@@ -158,39 +191,6 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
             };
             _userService.Create(ownerRegisterForm, AddressId);
 
-            return Ok();
-
-        }
-
-        //**************************************************************************************//
-        //                                       PATCH                                          //
-        //**************************************************************************************//
-
-        [HttpPatch("EditUser")]
-        public IActionResult UpdateUser()
-        {
-            return Ok();
-        }
-
-        [HttpPatch("EditOwner")]
-        public IActionResult EditOwner()
-        {
-            return Ok();
-        }
-
-        //**************************************************************************************//
-        //                                      DELETE                                          //
-        //**************************************************************************************//
-
-        [HttpDelete("DeleteUser")]
-        public IActionResult DeleteUser()
-        {
-            return Ok();
-        }
-
-        [HttpDelete("DeleteOwner")]
-        public IActionResult DeleteOwner()
-        {
             return Ok();
         }
     }

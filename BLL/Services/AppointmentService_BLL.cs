@@ -8,9 +8,17 @@
         {
             _appointmentService = appointmentService;
         }
+
+        // GET
         public IEnumerable<Appointment?> Get(int scope)
         {
             return _appointmentService.Get(scope);
+        }
+
+        public Appointment? GetById(Guid appId)
+        {
+            List<Appointment> apps = _appointmentService.GetById(appId).ToList();
+            return (apps.Count == 1) ? apps[0] : null;
         }
 
         public IEnumerable<Appointment?> GetByVeterinaryId(Guid vetId, int scope)
@@ -33,6 +41,8 @@
             return _appointmentService.GetByAnimalId(id, scope);
         }
 
+        // POST
+
         public bool GetByAppointmentAvailability(AppointmentRegisterForm form)
         {
             return _appointmentService.GetByAppointmentRange(form.VeterinaryId, form.AppointmentDate, form.DurationMinutes).ToList().Count() > 0;
@@ -41,6 +51,20 @@
         public bool Create(AppointmentRegisterForm form)
         {
             return _appointmentService.Create(form.ToAppointment());
+        }
+
+        // PATCH
+
+        public bool Update(Guid id, AppointmentEditForm form)
+        {
+            return _appointmentService.Update(form.ToAppointment(id));
+        }
+
+        // DELETE
+
+        public bool Delete(Guid id)
+        {
+            return _appointmentService.Delete(id);
         }
     }
 }
