@@ -46,6 +46,7 @@ namespace TFTIC_BackEnd_VetClinic_Web_API
                 // Pour les points d'entrée accessible aux "admins"
                 option.AddPolicy("adminPolicy", p => p.RequireRole("administrator"));
                 option.AddPolicy("veterinaryPolicy", p => p.RequireRole("veterinary"));
+                option.AddPolicy("adminAndVetPolicy", p => p.RequireRole("administrator", "veterinary"));
                 // User must be authenticated
                 option.AddPolicy("connected", p => p.RequireAuthenticatedUser());
             });

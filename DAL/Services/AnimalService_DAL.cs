@@ -38,7 +38,7 @@
             return _requester.GetBy<Guid>("SELECT * FROM ClinicAnimal WHERE OwnerId = @ownerId;", "ownerId", ownerId);
         }
 
-        public Animal GetAnimal(Guid animalId)
+        public Animal? GetAnimal(Guid animalId)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand command = connection.CreateCommand())
@@ -59,10 +59,15 @@
                             (string)reader["Breed"],
                             (DateTime)reader["Age"],
                             (Guid)reader["OwnerId"]);
+                        connection.Close();
+                        return animal;
+                    }
+                    else
+                    {
+                        connection.Close();
+                        return null;
                     }
                 }
-                connection.Close();
-                return animal;
             }
         }
     }

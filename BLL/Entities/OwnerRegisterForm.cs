@@ -16,9 +16,9 @@ namespace BLL.Entities
         [EmailAddress]
         public string Email { get; set; } = default!;
         [Phone]
-        public string Phone { get; set; } = "NA";
+        public string Phone { get; set; } = "0000000000";
         [Phone]
-        public string Mobile { get; set; } = "NA"!;
+        public string Mobile { get; set; } = "0000000000"!;
         [DateRangeBeforeTodayAndAfter100Y]
         public DateTime BirthDate { get; set; } = DateTime.Today;
         public Role PersonRole { get; set; } = default!;

@@ -34,8 +34,8 @@ namespace BLL.Services
         }
         public IEnumerable<Person?> GetPersonsByRole(int role)
         {
-            Role PersonRole = (Role)role;
-            return _userRepository.GetPersonsByRole(PersonRole);
+            Role personRole = (Role)role;
+            return _userRepository.GetPersonsByRole(personRole);
         }
 
         public User? GetUserById(Guid userId)
@@ -46,6 +46,19 @@ namespace BLL.Services
         public User? GetUserByMail(string mail)
         {
             return _userRepository.GetByMail(mail);
+        }
+
+        public IEnumerable<Address> GetAddresses()
+        {
+            return _userRepository.GetAddresses();
+        }
+
+        public User? Login(UserLoginForm form)
+        {
+            User? u = _userRepository.GetByMail(form.Email);
+            if (u is null)
+                return null;
+            return BCrypt.Net.BCrypt.Verify(form.UserPassword, u.UserPassword) ? u : null;
         }
     }
 }

@@ -17,9 +17,14 @@
         {
             return _appointmentService.GetByVeterinaryId(vetId);
         }
-        public IEnumerable<Appointment?> GetByDogName(string name)
+        public IEnumerable<Appointment?> GetByAnimalName(string name)
         {
-            return _appointmentService.GetByDogName(name);
+            return _appointmentService.GetByAnimalName(name);
+        }
+
+        public IEnumerable<Appointment?> GetByAnimalId(Guid id)
+        {
+            return _appointmentService.GetByAnimalId(id);
         }
 
         public bool GetByAppointmentAvailability(AppointmentRegisterForm form)

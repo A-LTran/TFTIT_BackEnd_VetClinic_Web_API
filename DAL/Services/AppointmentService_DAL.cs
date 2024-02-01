@@ -20,12 +20,19 @@
         {
             return _requester.GetAppointmentsBy<Guid>("SELECT * FROM Appointment WHERE VeterinaryId = @id", "@id", id);
         }
-        public IEnumerable<Appointment?> GetByDogName(string name)
+
+        public IEnumerable<Appointment?> GetByAnimalName(string name)
         {
             return _requester.GetAppointmentsBy<string>("SELECT * FROM Appointment " +
                                                             "WHERE AnimalId = (SELECT AnimalID " +
                                                                             "FROM ClinicAnimal " +
                                                                             "WHERE AnimalName = @name)", "@name", name);
+        }
+
+        public IEnumerable<Appointment?> GetByAnimalId(Guid id)
+        {
+            return _requester.GetAppointmentsBy<Guid>("SELECT * FROM Appointment " +
+                                                            "WHERE AnimalId = @id", "@id", id);
         }
 
         public IEnumerable<Appointment?> GetByAppointmentRange(Guid vetId, DateTime date, int durationMinutes = 30)
@@ -36,10 +43,8 @@
                             "OR DATEADD(minute, DurationMinutes, AppointmentDate) " +
                             "BETWEEN @appointmentDate and DATEADD(minute, " + durationMinutes + ", @appointmentDate))";
 
-
             return _requester.GetAppointmentsBy<DateTime>(sql, "@appointmentDate", date);
         }
-
 
         public bool Create(Appointment appointment)
         {

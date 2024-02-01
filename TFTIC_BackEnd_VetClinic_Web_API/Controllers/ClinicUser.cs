@@ -1,4 +1,6 @@
-﻿namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -14,21 +16,39 @@
         //                                       GET                                            //
         //**************************************************************************************//
 
+        [Authorize("adminPolicy")]
         [HttpGet("GetUsers")]
         public IActionResult Get()
         {
             return Ok(_userService.Get());
         }
+
+        [Authorize("adminPolicy")]
         [HttpGet("GetUsersByRole/{role}")]
         public IActionResult GetByRole([FromRoute] int role)
         {
             return Ok(_userService.GetPersonsByRole(role));
         }
 
+        [Authorize("veterinaryPolicy")]
+        [HttpGet("GetOwners")]
+        public IActionResult GetOwners()
+        {
+            return Ok(_userService.GetPersonsByRole((int)Role.Owner));
+        }
+
+        [Authorize("adminAndVetPolicy")]
+        [HttpGet("GetAddresses")]
+        public IActionResult GetAddresses()
+        {
+            return Ok(_userService.GetAddresses());
+        }
+
         //**************************************************************************************//
         //                                       POST                                           //
         //**************************************************************************************//
 
+        [Authorize("adminPolicy")]
         [HttpPost("AddAdministrator/{addressId}")]
         public IActionResult CreateAdmin([FromBody] UserRegisterForm form, [FromRoute] Guid addressId)
         {
@@ -39,6 +59,7 @@
             return Ok(_userService.Create(form, addressId));
         }
 
+        [Authorize("adminPolicy")]
         [HttpPost("AddVeterinary/{addressId}")]
         public IActionResult CreateVeterinary([FromBody] UserRegisterForm form, [FromRoute] Guid addressId)
         {
@@ -49,6 +70,7 @@
             return Ok(_userService.Create(form, addressId));
         }
 
+        [Authorize("veterinaryPolicy")]
         [HttpPost("AddOwner/{addressId}")]
         public IActionResult CreateOwner([FromBody] OwnerRegisterForm form, [FromRoute] Guid addressId)
         {
@@ -59,6 +81,7 @@
             return Ok(_userService.Create(form, addressId));
         }
 
+        [Authorize("adminAndVetPolicy")]
         [HttpPost("AddAddress")]
         public IActionResult CreateAddress([FromBody] AddressRegisterForm form)
         {
@@ -76,11 +99,11 @@
                 return BadRequest();
             }
 
-            User? connectedUser = _userService.GetUserByMail(form.Email);
+            User? connectedUser = _userService.Login(form);
 
-            if (connectedUser == null)
+            if (connectedUser is null)
             {
-                return BadRequest("Utilisateur inexistant.");
+                return BadRequest("Identifiants incorrects.");
             }
 
             TokenManager tokenManager = new TokenManager();
@@ -88,6 +111,8 @@
             return Ok(tokenManager.GenerateToken(connectedUser));
         }
 
+        // FOR TESTS
+        [Authorize("adminPolicy")]
         [HttpPost("GenerateSomePersons")]
         public IActionResult GenerateSomePersons()
         {
@@ -144,11 +169,24 @@
             return Ok();
         }
 
+        [HttpPatch("EditOwner")]
+        public IActionResult EditOwner()
+        {
+            return Ok();
+        }
+
         //**************************************************************************************//
         //                                      DELETE                                          //
         //**************************************************************************************//
+
         [HttpDelete("DeleteUser")]
         public IActionResult DeleteUser()
+        {
+            return Ok();
+        }
+
+        [HttpDelete("DeleteOwner")]
+        public IActionResult DeleteOwner()
         {
             return Ok();
         }

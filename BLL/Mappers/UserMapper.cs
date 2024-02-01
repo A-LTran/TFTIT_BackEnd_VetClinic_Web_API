@@ -11,5 +11,10 @@
         {
             return new Owner(form.LastName, form.FirstName, form.Email, form.Phone, form.Mobile, form.BirthDate, form.PersonRole, addressId);
         }
+
+        internal static Owner? ToOwner(this Person person)
+        {
+            return new Owner(person.LastName, person.FirstName, person.Email, person.Phone, person.Mobile, person.BirthDate, person.PersonRole, person.AddressId);
+        }
     }
 }

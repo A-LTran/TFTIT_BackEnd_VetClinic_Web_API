@@ -2,6 +2,10 @@
 {
     public class Address
     {
+        public Address()
+        {
+
+        }
         public Address(string address1, string? address2, string city, string country, string postalCode)
         {
             Address1 = address1;
@@ -9,6 +13,10 @@
             City = city;
             Country = country;
             PostalCode = postalCode;
+        }
+        public Address(Guid addressId, string address1, string? address2, string city, string country, string postalCode) : this(address1, address2, city, country, postalCode)
+        {
+            AddressId = addressId;
         }
 
         public Guid AddressId { get; set; } = Guid.NewGuid();

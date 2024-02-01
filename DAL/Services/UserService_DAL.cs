@@ -51,7 +51,7 @@
 
         public IEnumerable<User?> Get()
         {
-            return _requester.GetUsersBy<User, Guid>("EXECUTE GetActivePersons", "@personId", Guid.Empty);
+            return _requester.GetTResultBy<User, Guid>("EXECUTE GetActivePersons", "@personId", Guid.Empty);
         }
 
         public IEnumerable<Person?> GetPersonsByRole(Role personRole)
@@ -59,14 +59,19 @@
             switch (personRole)
             {
                 case Role.Owner:
-                    return _requester.GetUsersBy<Owner, string>("EXECUTE GetActiveOwners", "", "");
+                    return _requester.GetTResultBy<Owner, string>("EXECUTE GetActiveOwners", "", "");
                 case Role.Veterinary:
-                    return _requester.GetUsersBy<User, string>("EXECUTE GetActiveVeterinarians", "", "");
+                    return _requester.GetTResultBy<User, string>("EXECUTE GetActiveVeterinarians", "", "");
                 case Role.Administrator:
-                    return _requester.GetUsersBy<User, string>("EXECUTE GetActiveAdmins", "", "");
+                    return _requester.GetTResultBy<User, string>("EXECUTE GetActiveAdmins", "", "");
                 default:
                     return null;
             }
+        }
+
+        public IEnumerable<Address?> GetAddresses()
+        {
+            return _requester.GetTResultBy<Address, string>("SELECT * FROM PersonAddress", "", "");
         }
 
         public User? GetById(Guid id)
@@ -82,6 +87,8 @@
                                                         "ON CP.PersonId = CU.PersonId " +
                                                         "WHERE Email = @mail", "@mail", mail);
         }
+
+
         public bool Update(Person user)
         {
             throw new NotImplementedException();

@@ -11,7 +11,5 @@ namespace BLL.Entities
         [Required]
         [PasswordPropertyText]
         public string UserPassword { get; set; } = default!;
-        [Compare(nameof(UserPassword))]
-        public string ConfirmUserPassword { get; set; } = default!;
     }
 }

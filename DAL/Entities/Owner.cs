@@ -17,6 +17,6 @@
 
         }
 
-        public List<Animal> AnimalList { get; set; } = new();
+        //public List<Animal> AnimalList { get; set; } = new();
     }
 }
