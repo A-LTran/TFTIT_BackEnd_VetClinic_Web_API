@@ -8,23 +8,29 @@
         {
             _appointmentService = appointmentService;
         }
-        public IEnumerable<Appointment?> Get()
+        public IEnumerable<Appointment?> Get(int scope)
         {
-            return _appointmentService.Get();
+            return _appointmentService.Get(scope);
         }
 
-        public IEnumerable<Appointment?> GetByVeterinaryId(Guid vetId)
+        public IEnumerable<Appointment?> GetByVeterinaryId(Guid vetId, int scope)
         {
-            return _appointmentService.GetByVeterinaryId(vetId);
-        }
-        public IEnumerable<Appointment?> GetByAnimalName(string name)
-        {
-            return _appointmentService.GetByAnimalName(name);
+            return _appointmentService.GetByVeterinaryId(vetId, scope);
         }
 
-        public IEnumerable<Appointment?> GetByAnimalId(Guid id)
+        public IEnumerable<Appointment?> GetByOwnerId(Guid vetId, int scope)
         {
-            return _appointmentService.GetByAnimalId(id);
+            return _appointmentService.GetByOwnerId(vetId, scope);
+        }
+
+        public IEnumerable<Appointment?> GetByAnimalName(string name, int scope)
+        {
+            return _appointmentService.GetByAnimalName(name, scope);
+        }
+
+        public IEnumerable<Appointment?> GetByAnimalId(Guid id, int scope)
+        {
+            return _appointmentService.GetByAnimalId(id, scope);
         }
 
         public bool GetByAppointmentAvailability(AppointmentRegisterForm form)

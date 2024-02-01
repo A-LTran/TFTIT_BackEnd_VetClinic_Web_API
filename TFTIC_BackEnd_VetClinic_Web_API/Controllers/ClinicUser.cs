@@ -12,9 +12,9 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
             _userService = userService;
         }
 
-        //**************************************************************************************//
-        //                                       GET                                            //
-        //**************************************************************************************//
+        //*******************************************************************//
+        //                               GET                                 //
+        //*******************************************************************//
 
         [Authorize("adminPolicy")]
         [HttpGet("GetUsers")]
@@ -44,9 +44,9 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
             return Ok(_userService.GetAddresses());
         }
 
-        //**************************************************************************************//
-        //                                       POST                                           //
-        //**************************************************************************************//
+        //*******************************************************************//
+        //                               POST                                //
+        //*******************************************************************//
 
         [Authorize("adminPolicy")]
         [HttpPost("AddAdministrator/{addressId}")]
@@ -111,7 +111,10 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
             return Ok(tokenManager.GenerateToken(connectedUser));
         }
 
-        // FOR TESTS
+        //*******************************************************************//
+        //                              TESTING                              // 
+        //*******************************************************************//
+
         [Authorize("adminPolicy")]
         [HttpPost("GenerateSomePersons")]
         public IActionResult GenerateSomePersons()

@@ -11,28 +11,36 @@
             _requester = new AppointmentRequester(connectionString);
         }
 
-        public IEnumerable<Appointment?> Get()
+        public IEnumerable<Appointment?> Get(int scope)
         {
-            return _requester.GetAppointmentsBy<string>("SELECT * FROM Appointment", "", "");
+            return _requester.GetAppointmentsBy<string>(AppointmentDateScope.SetScope("SELECT * FROM Appointment", scope), "", "");
         }
 
-        public IEnumerable<Appointment?> GetByVeterinaryId(Guid id)
+        public IEnumerable<Appointment?> GetByVeterinaryId(Guid id, int scope)
         {
-            return _requester.GetAppointmentsBy<Guid>("SELECT * FROM Appointment WHERE VeterinaryId = @id", "@id", id);
+            return _requester.GetAppointmentsBy<Guid>(AppointmentDateScope.SetScope("SELECT * FROM Appointment WHERE VeterinaryId = @id", scope), "@id", id);
         }
 
-        public IEnumerable<Appointment?> GetByAnimalName(string name)
+        public IEnumerable<Appointment?> GetByOwnerId(Guid id, int scope)
         {
-            return _requester.GetAppointmentsBy<string>("SELECT * FROM Appointment " +
+            return _requester.GetAppointmentsBy<Guid>(AppointmentDateScope.SetScope("SELECT * FROM Appointment WHERE AnimalId IN " +
+                                                                                                                    "(SELECT AnimalID " +
+                                                                                                                    "FROM ClinicAnimal " +
+                                                                                                                    "WHERE OwnerId = @id)", scope), "@id", id);
+        }
+
+        public IEnumerable<Appointment?> GetByAnimalName(string name, int scope)
+        {
+            return _requester.GetAppointmentsBy<string>(AppointmentDateScope.SetScope("SELECT * FROM Appointment " +
                                                             "WHERE AnimalId = (SELECT AnimalID " +
                                                                             "FROM ClinicAnimal " +
-                                                                            "WHERE AnimalName = @name)", "@name", name);
+                                                                            "WHERE AnimalName = @name)", scope), "@name", name);
         }
 
-        public IEnumerable<Appointment?> GetByAnimalId(Guid id)
+        public IEnumerable<Appointment?> GetByAnimalId(Guid id, int scope)
         {
-            return _requester.GetAppointmentsBy<Guid>("SELECT * FROM Appointment " +
-                                                            "WHERE AnimalId = @id", "@id", id);
+            return _requester.GetAppointmentsBy<Guid>(AppointmentDateScope.SetScope("SELECT * FROM Appointment " +
+                                                            "WHERE AnimalId = @id", scope), "@id", id);
         }
 
         public IEnumerable<Appointment?> GetByAppointmentRange(Guid vetId, DateTime date, int durationMinutes = 30)

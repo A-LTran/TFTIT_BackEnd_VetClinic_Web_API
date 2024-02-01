@@ -12,6 +12,10 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
             _animalService = animalService;
         }
 
+        //******************************************************//
+        //                          GET                         //   
+        //******************************************************//
+
         [Authorize("veterinaryPolicy")]
         [HttpGet("GetAnimals")]
         public IActionResult GetAnimals()
@@ -33,6 +37,10 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
             return Ok(_animalService.GetAnimal(AnimalId));
         }
 
+        //******************************************************//
+        //                         POST                         //   
+        //******************************************************//
+
         [Authorize("veterinaryPolicy")]
         [HttpPost("AddAnimal")]
         public IActionResult Create([FromBody] AnimalRegisterForm form)
@@ -43,6 +51,10 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
             return Ok(_animalService.Create(form));
         }
 
+        //******************************************************//
+        //                         PATCH                        //   
+        //******************************************************//
+
         [Authorize("veterinaryPolicy")]
         [HttpPatch("EditAnimal")]
         public IActionResult Update()
@@ -51,6 +63,10 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
 
         }
 
+        //******************************************************//
+        //                        DELETE                        //   
+        //******************************************************//
+
         [Authorize("veterinaryPolicy")]
         [HttpDelete("DeleteAnimal")]
         public IActionResult Delete()
@@ -58,7 +74,10 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
             return Ok();
         }
 
-        // FOR TESTS
+        //******************************************************//
+        //                        TESTING                       //   
+        //******************************************************//
+
         [Authorize("adminPolicy")]
         [HttpPost("GenerateAnimal")]
         public IActionResult GenerateAnimal()
