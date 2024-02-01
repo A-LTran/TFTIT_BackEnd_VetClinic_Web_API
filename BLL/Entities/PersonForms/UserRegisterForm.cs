@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BLL.Entities
+namespace BLL.Entities.PersonForms
 {
-    public class UserEditForm
+    public class UserRegisterForm
     {
+        [Required]
         [MaxLength(50)]
         [MinLength(2)]
         public string LastName { get; set; } = default!;
+        [Required]
         [MaxLength(50)]
         [MinLength(2)]
         public string FirstName { get; set; } = default!;
+        [Required]
         [EmailAddress]
         public string Email { get; set; } = default!;
         [Phone]
@@ -29,5 +27,6 @@ namespace BLL.Entities
         public string UserPassword { get; set; } = default!;
         [Compare(nameof(UserPassword))]
         public string ConfirmUserPassword { get; set; } = default!;
+        public Role PersonRole { get; set; } = default!;
     }
 }

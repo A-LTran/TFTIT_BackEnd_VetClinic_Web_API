@@ -1,9 +1,8 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace BLL.Entities
+namespace BLL.Entities.PersonForms
 {
-    public class UserRegisterForm
+    public class OwnerRegisterForm
     {
         [Required]
         [MaxLength(50)]
@@ -19,14 +18,9 @@ namespace BLL.Entities
         [Phone]
         public string Phone { get; set; } = "0000000000";
         [Phone]
-        public string Mobile { get; set; } = "0000000000";
+        public string Mobile { get; set; } = "0000000000"!;
         [DateRangeBeforeTodayAndAfter100Y]
         public DateTime BirthDate { get; set; } = DateTime.Today;
-        [Required]
-        [PasswordPropertyText]
-        public string UserPassword { get; set; } = default!;
-        [Compare(nameof(UserPassword))]
-        public string ConfirmUserPassword { get; set; } = default!;
         public Role PersonRole { get; set; } = default!;
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace BLL.Mappers
+﻿using BLL.Entities.PersonForms;
+
+namespace BLL.Mappers
 {
     internal static class UserMapper
     {

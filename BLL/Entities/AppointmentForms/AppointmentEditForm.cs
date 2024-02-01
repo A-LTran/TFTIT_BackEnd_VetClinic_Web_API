@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BLL.Entities
+namespace BLL.Entities.AppointmentForms
 {
     public class AppointmentEditForm
     {

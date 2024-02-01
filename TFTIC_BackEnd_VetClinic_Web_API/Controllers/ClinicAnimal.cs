@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BLL.Entities.AnimalForms;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
 {
@@ -68,7 +69,7 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
 
         [Authorize("veterinaryPolicy")]
         [HttpDelete("DeleteAnimal/{animalId}")]
-        public IActionResult Delete([FromRoute]Guid animalId)
+        public IActionResult Delete([FromRoute] Guid animalId)
         {
             return Ok(_animalService.Delete(animalId));
         }

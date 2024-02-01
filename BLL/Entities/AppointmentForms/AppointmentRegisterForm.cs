@@ -1,4 +1,4 @@
-﻿namespace BLL.Entities
+﻿namespace BLL.Entities.AppointmentForms
 {
     public class AppointmentRegisterForm
     {

@@ -13,21 +13,66 @@
 
         public bool Create(User user)
         {
-            return _requester.Create<bool, User>("INSERT INTO ClinicPerson (PersonId, FirstName, LastName, Email, Phone, Mobile, BirthDate, PersonRole, AddressId) VALUES (@personId, @firstName, @lastName, @email, @phone, @mobile, @birthdate, @personRole, @addressId); " +
-                    "INSERT INTO ClinicUser (UserPassword, PersonId) VALUES (@userPassword, @personId);", user);
+            return _requester.Create<bool, User>("INSERT INTO ClinicPerson (" +
+                                                                            "PersonId, " +
+                                                                            "FirstName, " +
+                                                                            "LastName, " +
+                                                                            "Email, " +
+                                                                            "Phone, " +
+                                                                            "Mobile, " +
+                                                                            "BirthDate, " +
+                                                                            "PersonRole, " +
+                                                                            "AddressId) " +
+                                                "VALUES (@personId, " +
+                                                        "@firstName, " +
+                                                        "@lastName, " +
+                                                        "@email, " +
+                                                        "@phone, " +
+                                                        "@mobile, " +
+                                                        "@birthdate, " +
+                                                        "@personRole, " +
+                                                        "@addressId); " +
+                                                "INSERT INTO ClinicUser (UserPassword, PersonId) " +
+                                                "VALUES (@userPassword, @personId);", user);
         }
 
         public bool Create(Owner owner)
         {
-            return _requester.Create<bool, Owner>("INSERT INTO ClinicPerson (PersonId, FirstName, LastName, Email, Phone, Mobile, BirthDate, PersonRole, AddressId) VALUES (@personId, @firstName, @lastName, @email, @phone, @mobile, @birthdate, @personRole, @addressId); ", owner);
+            return _requester.Create<bool, Owner>("INSERT INTO ClinicPerson (PersonId, " +
+                                                                            "FirstName, " +
+                                                                            "LastName, " +
+                                                                            "Email, " +
+                                                                            "Phone, " +
+                                                                            "Mobile, " +
+                                                                            "BirthDate, " +
+                                                                            "PersonRole, " +
+                                                                            "AddressId) " +
+                                                        "VALUES (@personId, " +
+                                                                "@firstName, " +
+                                                                "@lastName, " +
+                                                                "@email, " +
+                                                                "@phone, " +
+                                                                "@mobile, " +
+                                                                "@birthdate, " +
+                                                                "@personRole, " +
+                                                                "@addressId); ", owner);
         }
 
         public bool Create(Address address)
         {
-            return _requester.Create<bool, Address>("INSERT INTO PersonAddress (AddressId, Address1, Address2, City, Country, PostalCode) " +
-                    "VALUES (@addressId, @address1, @address2, @city, @country, @postalCode);", address);
+            return _requester.Create<bool, Address>("INSERT INTO PersonAddress (AddressId, " +
+                                                                                "Address1, " +
+                                                                                "Address2, " +
+                                                                                "City, " +
+                                                                                "Country, " +
+                                                                                "PostalCode) " +
+                                                    "VALUES (@addressId, " +
+                                                            "@address1, " +
+                                                            "@address2, " +
+                                                            "@city, " +
+                                                            "@country, " +
+                                                            "@postalCode);", address);
         }
-
 
         public IEnumerable<User?> Get()
         {

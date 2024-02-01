@@ -1,4 +1,6 @@
-﻿namespace BLL.Interfaces
+﻿using BLL.Entities.PersonForms;
+
+namespace BLL.Interfaces
 {
     public interface IUserRepository_BLL
     {

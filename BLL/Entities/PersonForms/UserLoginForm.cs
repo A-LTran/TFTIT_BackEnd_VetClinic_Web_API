@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace BLL.Entities
+namespace BLL.Entities.PersonForms
 {
     public class UserLoginForm
     {

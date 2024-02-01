@@ -90,16 +90,13 @@
                                                     "@diagnosis, " +
                                                     "@animalId, " +
                                                     "@veterinaryId)";
-
-                command.Parameters.AddWithValue("@appointmentId", appointment.AppointmentId);
-                command.Parameters.AddWithValue("@appointmentDate", appointment.AppointmentDate);
-                command.Parameters.AddWithValue("@appointmentCreationDate", appointment.AppointmentCreationDate);
-                command.Parameters.AddWithValue("@appointmentUpdateDate", DateTime.Now);
-                command.Parameters.AddWithValue("@durationMinutes", appointment.DurationMinutes);
-                command.Parameters.AddWithValue("@reason", appointment.Reason);
-                command.Parameters.AddWithValue("@diagnosis", appointment.Diagnosis);
-                command.Parameters.AddWithValue("@animalId", appointment.AnimalId);
-                command.Parameters.AddWithValue("@veterinaryId", appointment.VeterinaryId);
+                Type bodyType = typeof(Appointment);
+                foreach (var prop in bodyType.GetProperties())
+                {
+                    string propName = prop.Name;
+                    object propValue = prop.GetValue(appointment);
+                    command.Parameters.AddWithValue("@" + propName, propValue);
+                }
 
                 connection.Open();
                 int rowsAffected = command.ExecuteNonQuery();
@@ -127,13 +124,13 @@
 
                                         "WHERE AppointmentId = @appointmentId";
 
-                command.Parameters.AddWithValue("@appointmentId", appointment.AppointmentId);
-                command.Parameters.AddWithValue("@appointmentDate", appointment.AppointmentDate);
-                command.Parameters.AddWithValue("@appointmentUpdateDate", DateTime.Now);
-                command.Parameters.AddWithValue("@reason", appointment.Reason);
-                command.Parameters.AddWithValue("@diagnosis", appointment.Diagnosis);
-                command.Parameters.AddWithValue("@animalId", appointment.AnimalId);
-                command.Parameters.AddWithValue("@veterinaryId", appointment.VeterinaryId);
+                Type bodyType = typeof(Appointment);
+                foreach (var prop in bodyType.GetProperties())
+                {
+                    string propName = prop.Name;
+                    object propValue = prop.GetValue(appointment);
+                    command.Parameters.AddWithValue("@" + propName, propValue);
+                }
 
                 connection.Open();
                 int rowsAffected = command.ExecuteNonQuery();

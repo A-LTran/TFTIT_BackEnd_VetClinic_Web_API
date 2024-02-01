@@ -1,4 +1,6 @@
-﻿namespace BLL.Mappers
+﻿using BLL.Entities.AppointmentForms;
+
+namespace BLL.Mappers
 {
     public static class AppointmentMapper
     {

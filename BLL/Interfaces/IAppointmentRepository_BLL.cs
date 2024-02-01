@@ -1,4 +1,6 @@
-﻿namespace BLL.Interfaces
+﻿using BLL.Entities.AppointmentForms;
+
+namespace BLL.Interfaces
 {
     public interface IAppointmentRepository_BLL
     {

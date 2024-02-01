@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BLL.Entities
+namespace BLL.Entities.AnimalForms
 {
     public class AnimalEditForm
     {

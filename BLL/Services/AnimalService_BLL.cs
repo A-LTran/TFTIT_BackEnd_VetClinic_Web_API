@@ -1,5 +1,4 @@
-﻿
-namespace BLL.Services
+﻿namespace BLL.Services
 {
     public class AnimalService_BLL : IAnimalRepository_BLL
     {

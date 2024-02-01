@@ -17,7 +17,8 @@
             using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
-                command.CommandText = "INSERT INTO ClinicAnimal (AnimalId, AnimalName, Breed, OwnerId) VALUES (@animalId, @animalName, @breed, @ownerId);";
+                command.CommandText = "INSERT INTO ClinicAnimal (AnimalId, AnimalName, Breed, OwnerId) " +
+                                        "VALUES (@animalId, @animalName, @breed, @ownerId);";
                 command.Parameters.AddWithValue("@animalId", animal.AnimalId);
                 command.Parameters.AddWithValue("@animalName", animal.AnimalName);
                 command.Parameters.AddWithValue("@breed", animal.Breed);
@@ -104,7 +105,7 @@
         // DELETE
 
         public bool Delete(Guid animalId)
-        { 
+        {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand command = connection.CreateCommand())
             {

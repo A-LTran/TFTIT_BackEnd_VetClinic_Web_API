@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BLL.Entities.AppointmentForms;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
 {

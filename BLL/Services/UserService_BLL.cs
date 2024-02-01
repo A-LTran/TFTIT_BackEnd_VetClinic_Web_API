@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using BLL.Entities.PersonForms;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BLL.Services
 {
@@ -61,18 +62,18 @@ namespace BLL.Services
 
         public IEnumerable<Address> GetAddresses()
         {
-            return _userRepository.GetAddresses();
+            return _userRepository.GetAddresses()!;
         }
 
         // PATCH
 
         public bool UpdateUser(UserEditForm form, Guid userId)
         {
-            return _userRepository.Update(form.ToUser(userId));
+            return _userRepository.Update(form.ToUser(userId)!);
         }
         public bool UpdateOwner(OwnerEditForm form, Guid ownerId)
         {
-            return _userRepository.Update(form.ToOwner(ownerId));
+            return _userRepository.Update(form.ToOwner(ownerId)!);
         }
 
         // DELETE
