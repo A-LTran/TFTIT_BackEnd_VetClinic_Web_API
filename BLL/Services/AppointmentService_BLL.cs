@@ -11,7 +11,10 @@ namespace BLL.Services
             _appointmentService = appointmentService;
         }
 
-        // GET
+        //*****************************************************************************//
+        //                                    GET                                      //
+        //*****************************************************************************//
+
         public IEnumerable<Appointment?> Get(int scope)
         {
             return _appointmentService.Get(scope);
@@ -43,7 +46,9 @@ namespace BLL.Services
             return _appointmentService.GetByAnimalId(id, scope);
         }
 
-        // POST
+        //*****************************************************************************//
+        //                                    POST                                     //
+        //*****************************************************************************//
 
         public bool GetByAppointmentAvailability(AppointmentRegisterForm form)
         {
@@ -55,7 +60,9 @@ namespace BLL.Services
             return _appointmentService.Create(form.ToAppointment());
         }
 
-        // PATCH
+        //*****************************************************************************//
+        //                                    PATCH                                    //
+        //*****************************************************************************//
 
         public bool Update(Guid id, AppointmentEditForm form)
         {

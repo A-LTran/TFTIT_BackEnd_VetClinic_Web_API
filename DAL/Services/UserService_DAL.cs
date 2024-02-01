@@ -11,6 +11,10 @@
             _requester = new PersonRequester(connectionString);
         }
 
+        //*****************************************************************************//
+        //                                    POST                                     //
+        //*****************************************************************************//
+
         public bool Create(User user)
         {
             return _requester.Create<bool, User>("INSERT INTO ClinicPerson (" +
@@ -74,6 +78,10 @@
                                                             "@postalCode);", address);
         }
 
+        //*****************************************************************************//
+        //                                     GET                                     //
+        //*****************************************************************************//
+
         public IEnumerable<User?> Get()
         {
             return _requester.GetTResultBy<User, Guid>("EXECUTE GetActivePersons", "@personId", Guid.Empty);
@@ -113,6 +121,10 @@
                                                         "WHERE Email = @mail", "@mail", mail);
         }
 
+        //*****************************************************************************//
+        //                                    PATCH                                    //
+        //*****************************************************************************//
+
         public bool Update(Owner owner)
         {
             string query = "UPDATE ClinicPerson " +
@@ -145,6 +157,10 @@
 
             return _requester.Update<bool, User>(query, user);
         }
+
+        //*****************************************************************************//
+        //                                    DELETE                                   //
+        //*****************************************************************************//
 
         public bool DeleteUser(Guid personId)
         {

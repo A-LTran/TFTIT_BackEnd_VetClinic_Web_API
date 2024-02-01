@@ -12,7 +12,9 @@ namespace BLL.Services
             _userRepository = userRepository;
         }
 
-        // POST
+        //*****************************************************************************//
+        //                                    POST                                     //
+        //*****************************************************************************//
 
         public bool Create(UserRegisterForm form, Guid addressId)
         {
@@ -38,7 +40,9 @@ namespace BLL.Services
             return BCrypt.Net.BCrypt.Verify(form.UserPassword, u.UserPassword) ? u : null;
         }
 
-        // GET
+        //*****************************************************************************//
+        //                                    GET                                      //
+        //*****************************************************************************//
 
         public IEnumerable<User?> Get()
         {
@@ -65,7 +69,9 @@ namespace BLL.Services
             return _userRepository.GetAddresses()!;
         }
 
-        // PATCH
+        //*****************************************************************************//
+        //                                    PATCH                                    //
+        //*****************************************************************************//
 
         public bool UpdateUser(UserEditForm form, Guid userId)
         {
@@ -76,7 +82,9 @@ namespace BLL.Services
             return _userRepository.Update(form.ToOwner(ownerId)!);
         }
 
-        // DELETE
+        //*****************************************************************************//
+        //                                   DELETE                                    //
+        //*****************************************************************************//
 
         public bool DeleteOwner(Guid ownerId)
         {

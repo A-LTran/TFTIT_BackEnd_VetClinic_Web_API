@@ -7,9 +7,4 @@ global using DAL.Entities;
 global using DAL.Interfaces;
 global using DAL.Mappers;
 
-//namespace BLL
-//{
-//    internal class BLL_GlobalUsings
-//    {
-//    }
-//}
+
