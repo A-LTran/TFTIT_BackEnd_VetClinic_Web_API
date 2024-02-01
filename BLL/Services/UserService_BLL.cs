@@ -66,11 +66,11 @@ namespace BLL.Services
 
         // PATCH
 
-        public bool Update(UserEditForm form, Guid userId)
+        public bool UpdateUser(UserEditForm form, Guid userId)
         {
             return _userRepository.Update(form.ToUser(userId));
         }
-        public bool Update(OwnerEditForm form, Guid ownerId)
+        public bool UpdateOwner(OwnerEditForm form, Guid ownerId)
         {
             return _userRepository.Update(form.ToOwner(ownerId));
         }

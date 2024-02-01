@@ -2,13 +2,24 @@
 {
     public static class AppointmentDateScope
     {
-        public static string SetScope(string query, int scope)
+        public static string SetScope(string query, int scope, int isWhere)
         {
             DateTime Today = DateTime.Today.Date;
-            if (scope == 1)
-                return query + " AND AppointmentDate >= \'" + Today + "\';";
+            if (isWhere == 1)
+            {
+                if (scope == 1)
+                    return query + " AND AppointmentDate >= \'" + Today + "\';";
+                else
+                    return query + " AND AppointmentDate < \'" + Today + "\';";
+            }
             else
-                return query + " AND AppointmentDate < \'" + Today + "\';";
+            {
+                if (scope == 1)
+                    return query + " WHERE AppointmentDate >= \'" + Today + "\';";
+                else
+                    return query + " WHERE AppointmentDate < \'" + Today + "\';";
+            }
+
         }
     }
 }
