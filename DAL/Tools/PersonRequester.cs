@@ -138,6 +138,24 @@
 
             }
         }
+
+        public bool Delete<TBody>(string query, string bodyName, TBody body)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand command = connection.CreateCommand())
+                {
+                    command.CommandText = query;
+
+                    command.Parameters.AddWithValue("@" + bodyName, body);
+                    connection.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+                    connection.Close();
+
+                    return rowsAffected > 0;
+                }
+            }
+        }
     }
 
 }

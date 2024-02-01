@@ -148,32 +148,14 @@
 
         public bool DeleteUser(Guid personId)
         {
-            return Delete<Guid>("DELETE FROM [ClinicUser] WHERE PersonId = @personId; " +
+            return _requester.Delete<Guid>("DELETE FROM [ClinicUser] WHERE PersonId = @personId; " +
                                 "DELETE FROM [ClinicPerson] " +
                                 "WHERE PersonId = @personId; ", "personId", personId);
         }
 
         public bool DeleteOwner(Guid ownerId)
         {
-            return Delete<Guid>("DELETE FROM [ClinicPerson] WHERE OwnerId = @ownerId; ", "ownerId", ownerId);
-        }
-
-        public bool Delete<TBody>(string query, string bodyName, TBody body)
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                using (SqlCommand command = connection.CreateCommand())
-                {
-                    command.CommandText = query;
-
-                    command.Parameters.AddWithValue("@" + bodyName, body);
-                    connection.Open();
-                    int rowsAffected = command.ExecuteNonQuery();
-                    connection.Close();
-
-                    return rowsAffected > 0;
-                }
-            }
+            return _requester.Delete<Guid>("DELETE FROM [ClinicPerson] WHERE OwnerId = @ownerId; ", "ownerId", ownerId);
         }
     }
 }
