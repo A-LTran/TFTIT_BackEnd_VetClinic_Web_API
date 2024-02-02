@@ -107,18 +107,28 @@
             return _requester.GetTResultBy<Address, string>("SELECT * FROM PersonAddress", "", "");
         }
 
-        public User? GetById(Guid id)
+        public User? GetUserById(Guid id)
         {
-            return _requester.GetUserBy<Guid>("SELECT * FROM ClinicPerson CP JOIN ClinicUser CU " +
+            return _requester.GetBy<User, Guid>("SELECT * FROM ClinicPerson CP JOIN ClinicUser CU " +
                                                         "ON CP.PersonId = CU.PersonId " +
                                                         "WHERE PersonId = @id", "@id", id);
         }
 
-        public User? GetByMail(string mail)
+        public User? GetUserByMail(string mail)
         {
-            return _requester.GetUserBy<string>("SELECT * FROM ClinicPerson CP JOIN ClinicUser CU " +
+            return _requester.GetBy<User, string>("SELECT * FROM ClinicPerson CP JOIN ClinicUser CU " +
                                                         "ON CP.PersonId = CU.PersonId " +
                                                         "WHERE Email = @mail", "@mail", mail);
+        }
+
+        public Owner? GetOwnerById(Guid ownerId)
+        {
+            return _requester.GetBy<Owner, Guid>("SELECT * FROM ClinicPerson WHERE OwnerId = @ownerId", "@ownerId", ownerId);
+        }
+
+        public Owner? GetOwnerByMail(string mail)
+        {
+            return _requester.GetBy<Owner, string>("SELECT * FROM ClinicPerson WHERE Email = @mail", "@mail", mail);
         }
 
         //*****************************************************************************//

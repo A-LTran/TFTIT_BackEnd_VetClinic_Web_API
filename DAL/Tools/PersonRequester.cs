@@ -1,4 +1,6 @@
-﻿namespace DAL.Tools
+﻿using System.Data.SqlTypes;
+
+namespace DAL.Tools
 {
     public class PersonRequester
     {
@@ -8,7 +10,7 @@
             _connectionString = connectionString;
         }
 
-        public User? GetUserBy<TBody>(string sqlCommandText, string bodyName, TBody body)
+        public TResult? GetBy<TResult, TBody>(string sqlCommandText, string bodyName, TBody body) where TResult : class
         {
             using SqlConnection connection = new SqlConnection(_connectionString);
             using (SqlCommand command = connection.CreateCommand())
@@ -16,7 +18,7 @@
                 command.CommandText = sqlCommandText;
                 command.Parameters.AddWithValue(bodyName, body);
 
-                User? u = new();
+                
 
                 connection.Open();
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -29,7 +31,15 @@
                         Guid addressId = ToolSet.ReturnNonDBNull<Guid>(reader["AddressId"]);
                         Role personRole = ToolSet.ReturnNonDBNull<Role>(reader["PersonRole"]);
 
-                        u = (UserMapper.ToUser((Guid)reader["PersonId"], (string)reader["LastName"], (string)reader["FirstName"], (string)reader["Email"], phone, mobile, birthDate, (string)reader["UserPassword"], personRole, addressId)!);
+                        if (typeof(TResult) == typeof(User))
+                        {
+                            return (TResult)(Object)(UserMapper.ToUser((Guid)reader["PersonId"], (string)reader["LastName"], (string)reader["FirstName"], (string)reader["Email"], phone, mobile, birthDate, (string)reader["UserPassword"], personRole, addressId)!);
+                        }
+                        else if (typeof(TResult) == typeof(Owner))
+                        {
+                            return (TResult)(Object)(UserMapper.ToOwner((Guid)reader["PersonId"], (string)reader["LastName"], (string)reader["FirstName"], (string)reader["Email"], phone, mobile, birthDate, personRole, addressId)!);
+                        }
+                        return null;
                     }
                     else
                     {
@@ -37,7 +47,6 @@
                     }
                 }
                 connection.Close();
-                return u;
             }
         }
 

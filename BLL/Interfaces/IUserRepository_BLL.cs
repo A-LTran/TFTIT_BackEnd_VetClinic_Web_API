@@ -16,6 +16,8 @@ namespace BLL.Interfaces
         public IEnumerable<Person?> GetPersonsByRole(int role);
         public User? GetUserById(Guid userId);
         public User? GetUserByMail(string mail);
+        public Owner? GetByOwnerId(Guid ownerId);
+        public Owner? GetByOwnerMail(string mail);
         public IEnumerable<Address> GetAddresses();
         public User? Login(UserLoginForm form);
     }

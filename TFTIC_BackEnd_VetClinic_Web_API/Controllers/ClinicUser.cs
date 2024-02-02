@@ -112,17 +112,18 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
             return Ok(tokenManager.GenerateToken(connectedUser));
         }
 
-
         //**************************************************************************************//
         //                                       PATCH                                          //
         //**************************************************************************************//
 
+        [Authorize("adminPolicy")]
         [HttpPatch("EditUser/{userId}")]
         public IActionResult UpdateUser([FromBody] UserEditForm form, [FromRoute] Guid userId)
         {
             return Ok(_userService.UpdateUser(form, userId));
         }
 
+        [Authorize("veterinaryPolicy")]
         [HttpPatch("EditOwner/{ownerId}")]
         public IActionResult EditOwner([FromBody] OwnerEditForm form, [FromRoute] Guid ownerId)
         {
@@ -133,12 +134,14 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         //                                      DELETE                                          //
         //**************************************************************************************//
 
+        [Authorize("adminPolicy")]
         [HttpDelete("DeletePerson/{personId}")]
         public IActionResult DeleteUser([FromRoute] Guid personId)
         {
             return Ok(_userService.DeleteUser(personId));
         }
 
+        [Authorize("veterinaryPolicy")]
         [HttpDelete("DeleteOwner/{ownerId}")]
         public IActionResult DeleteOwner([FromRoute] Guid ownerId)
         {

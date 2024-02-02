@@ -5,8 +5,10 @@
         public bool Create(User user);
         public bool Create(Owner owner);
         public bool Create(Address address);
-        public User? GetById(Guid id);
-        public User? GetByMail(string mail);
+        public User? GetUserById(Guid id);
+        public User? GetUserByMail(string mail);
+        public Owner? GetOwnerById(Guid ownerId);
+        public Owner? GetOwnerByMail(string mail);
         public bool Update(Owner owner);
         public bool Update(User user);
         public bool DeleteUser(Guid personId);
