@@ -16,5 +16,6 @@
         public IEnumerable<User?> Get();
         public IEnumerable<Person?> GetPersonsByRole(Role personRole);
         public IEnumerable<Address?> GetAddresses();
+        public Address? GetAddressByPersonId(Guid personId);
     }
 }

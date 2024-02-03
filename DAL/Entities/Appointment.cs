@@ -2,6 +2,10 @@
 {
     public class Appointment
     {
+        public Appointment()
+        {
+
+        }
         // BLL Form
         public Appointment(DateTime appointmentDate, int durationMinutes, string reason, string diagnosis, Guid animalId, Guid veterinaryId)
         {

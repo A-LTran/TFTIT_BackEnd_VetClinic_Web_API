@@ -117,10 +117,17 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         //**************************************************************************************//
 
         [Authorize("adminPolicy")]
-        [HttpPatch("EditUser/{userId}")]
-        public IActionResult UpdateUser([FromBody] UserEditForm form, [FromRoute] Guid userId)
+        [HttpPatch("EditAdmin/{userId}")]
+        public IActionResult UpdateAdmin([FromBody] UserEditForm form, [FromRoute] Guid userId)
         {
-            return Ok(_userService.UpdateUser(form, userId));
+            return Ok(_userService.UpdateUser(form, userId, Role.Administrator));
+        }
+
+        [Authorize("adminPolicy")]
+        [HttpPatch("EditVeterinary/{userId}")]
+        public IActionResult UpdateVeterinary([FromBody] UserEditForm form, [FromRoute] Guid userId)
+        {
+            return Ok(_userService.UpdateUser(form, userId, Role.Veterinary));
         }
 
         [Authorize("veterinaryPolicy")]

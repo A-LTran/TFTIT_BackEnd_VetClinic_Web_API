@@ -9,18 +9,18 @@ namespace BLL.Mappers
             return new User(form.LastName, form.FirstName, form.Email, form.Phone, form.Mobile, form.BirthDate, form.UserPassword, form.PersonRole, addressId);
         }
 
-        internal static User? ToUser(this UserEditForm form, Guid addressId)
+        internal static User? ToUser(this UserEditForm form, Guid addressId, Role role)
         {
-            return new User(form.LastName, form.FirstName, form.Email, form.Phone, form.Mobile, form.BirthDate, form.UserPassword, addressId);
+            return new User(form.LastName, form.FirstName, form.Email, form.Phone, form.Mobile, form.BirthDate, form.UserPassword, role, addressId);
         }
 
         internal static Owner? ToOwner(this OwnerRegisterForm form, Guid addressId)
         {
             return new Owner(form.LastName, form.FirstName, form.Email, form.Phone, form.Mobile, form.BirthDate, form.PersonRole, addressId);
         }
-        internal static Owner? ToOwner(this OwnerEditForm form, Guid addressId)
+        internal static Owner? ToOwner(this OwnerEditForm form, Guid ownerId, Guid addressId)
         {
-            return new Owner(form.LastName, form.FirstName, form.Email, form.Phone, form.Mobile, form.BirthDate, addressId);
+            return new Owner(ownerId, form.LastName, form.FirstName, form.Email, form.Phone, form.Mobile, form.BirthDate, Role.Owner, addressId);
         }
 
         internal static Owner? ToOwner(this Person person)

@@ -8,7 +8,7 @@ namespace BLL.Interfaces
         public bool Create(UserRegisterForm form, Guid addressId);
         public bool Create(OwnerRegisterForm form, Guid addressId);
         public bool Create(AddressRegisterForm form);
-        public bool UpdateUser(UserEditForm form, Guid userId);
+        public bool UpdateUser(UserEditForm form, Guid userId, Role role);
         public bool UpdateOwner(OwnerEditForm form, Guid ownerId);
         public bool DeleteUser(Guid userId);
         public bool DeleteOwner(Guid ownerId);
@@ -19,6 +19,7 @@ namespace BLL.Interfaces
         public Owner? GetByOwnerId(Guid ownerId);
         public Owner? GetByOwnerMail(string mail);
         public IEnumerable<Address> GetAddresses();
+        public Address? GetAddressByPersonId(Guid personId);
         public User? Login(UserLoginForm form);
     }
 }

@@ -86,17 +86,24 @@ namespace BLL.Services
             return _userService.GetAddresses()!;
         }
 
+        public Address? GetAddressByPersonId(Guid personId)
+        {
+            return _userService.GetAddressByPersonId(personId);
+        }
+
         //*****************************************************************************//
         //                                    PATCH                                    //
         //*****************************************************************************//
 
-        public bool UpdateUser(UserEditForm form, Guid userId)
+        public bool UpdateUser(UserEditForm form, Guid userId, Role role)
         {
-            return (_userService.GetUserById(userId) is not null) ? _userService.Update(form.ToUser(userId)!) : false;
+            Guid userAddressId = _userService.GetAddressByPersonId(userId).AddressId;
+            return (_userService.GetUserById(userId) is not null) ? _userService.Update(form.ToUser(userAddressId, role)!) : false;
         }
         public bool UpdateOwner(OwnerEditForm form, Guid ownerId)
         {
-            return _userService.Update(form.ToOwner(ownerId)!);
+            Guid ownerAddressId = _userService.GetAddressByPersonId(ownerId).AddressId;
+            return (_userService.GetOwnerById(ownerId) is not null) ? _userService.Update(form.ToOwner(ownerId, ownerAddressId)) : false;
         }
 
         //*****************************************************************************//
