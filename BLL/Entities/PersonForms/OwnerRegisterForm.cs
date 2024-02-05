@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using DAL.Entities.Enumerations;
 
 namespace BLL.Entities.PersonForms
 {

@@ -8,3 +8,4 @@ global using BLL.Tools;
 global using DAL.Entities;
 global using DAL.Interfaces;
 global using DAL.Mappers;
+global using static BLL.Tools.ToolSet;

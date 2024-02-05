@@ -1,4 +1,6 @@
-﻿namespace DAL.Services
+﻿using DAL.Entities.Enumerations;
+
+namespace DAL.Services
 {
     public class UserService_DAL : IUserRepository_DAL
     {
@@ -100,27 +102,40 @@
             }
         }
 
+        // USER
+
         public User? GetUserById(Guid id)
         {
             return _mainRequester.GetTResult<User, Guid>("SELECT * FROM ClinicPerson CP JOIN ClinicUser CU " +
                                                         "ON CP.PersonId = CU.PersonId " +
-                                                        "WHERE CP.PersonId = @id", "id", id);
+                                                        "WHERE CP.PersonRole != 1 AND CP.PersonId = @id", "id", id);
         }
 
         public User? GetUserByMail(string mail)
         {
             return _mainRequester.GetTResult<User, string>("SELECT * FROM ClinicPerson CP JOIN ClinicUser CU " +
                                                             "ON CP.PersonId = CU.PersonId " +
-                                                            "WHERE Email = @mail", "mail", mail);
+                                                            "WHERE CP.PersonRole != 1 AND Email = @mail", "mail", mail);
         }
 
+        // OWNER
         public Owner? GetOwnerById(Guid ownerId)
         {
             return _mainRequester.GetTResult<Owner, Guid>("SELECT * FROM ClinicPerson " +
                                                             "WHERE IsActive = 1 " +
+                                                            "AND PersonRole = 4 " +
                                                             "AND PersonId = @personId", "personId", ownerId);
         }
 
+        public Owner? GetOwnerByMail(string mail)
+        {
+            return _mainRequester.GetTResult<Owner, string>("SELECT * FROM ClinicPerson " +
+                                                            "WHERE IsActive = 1 " +
+                                                            "AND PersonRole = 4 " +
+                                                            "AND Email = @mail", "mail", mail);
+        }
+
+        // IS ACTIVE
         public bool GetIsActiveByMail(string mail)
         {
             return _mainRequester.GetTResult<Owner, string>("SELECT * FROM ClinicPerson " +
@@ -128,17 +143,11 @@
                                                             "AND Email = @mail", "mail", mail) is not null;
         }
 
-        public Owner? GetOwnerByMail(string mail)
-        {
-            return _mainRequester.GetTResult<Owner, string>("SELECT * FROM ClinicPerson " +
-                                                            "WHERE IsActive = 1 " +
-                                                            "AND Email = @mail", "mail", mail);
-        }
-
         // GET ADDRESS
         public IEnumerable<Address?> GetAddresses()
         {
-            return _mainRequester.GetEnumTResult<Address, string>("SELECT * FROM PersonAddress", "", "");
+            return _mainRequester.GetEnumTResult<Address, string>("SELECT * FROM PersonAddress " +
+                                                                    "WHERE IsActive = 1", "", "");
         }
 
         public Address? GetAddressByPersonId(Guid personId)
@@ -236,16 +245,18 @@
         {
             return _mainRequester.Delete<Guid>("DELETE FROM [ClinicPerson] " +
                                                 "WHERE PersonId = @personId; ", "personId", personId);
-            //return _mainRequester.Delete<Guid>("DELETE FROM [ClinicUser] " +
-            //                                    "WHERE PersonId = @personId; " +
-            //                                    "DELETE FROM [ClinicPerson] " +
-            //                                    "WHERE PersonId = @personId; ", "personId", personId);
         }
 
         public bool DeleteOwner(Guid ownerId)
         {
             return _mainRequester.Delete<Guid>("DELETE FROM [ClinicPerson] " +
                                                 "WHERE PersonId = @personId; ", "personId", ownerId);
+        }
+
+        public bool DeleteAddress(Guid addressId)
+        {
+            return _mainRequester.Delete<Guid>("DELETE FROM [PersonAddress] " +
+                                                "WHERE AddressId = @addressId; ", "addressId", addressId);
         }
     }
 }

@@ -16,6 +16,9 @@ namespace BLL.Mappers
 
         public static AppointmentEditForm ToEditForm(this Appointment appointment)
         {
+            if (appointment == null)
+                return null;
+
             return new AppointmentEditForm(appointment.AppointmentDate,
                                             appointment.DurationMinutes,
                                             appointment.Reason,

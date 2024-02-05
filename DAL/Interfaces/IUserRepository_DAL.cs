@@ -1,4 +1,6 @@
-﻿namespace DAL.Interfaces
+﻿using DAL.Entities.Enumerations;
+
+namespace DAL.Interfaces
 {
     public interface IUserRepository_DAL
     {
@@ -19,6 +21,7 @@
         public bool SetIsActiveOff(Guid personId);
         public bool DeleteUser(Guid personId);
         public bool DeleteOwner(Guid ownerId);
+        public bool DeleteAddress(Guid addressId);
         public IEnumerable<User?> Get();
         public IEnumerable<Person?> GetPersonsByRole(Role personRole);
         public IEnumerable<Address?> GetAddresses();

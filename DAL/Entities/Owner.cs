@@ -1,4 +1,6 @@
-﻿namespace DAL.Entities
+﻿using DAL.Entities.Enumerations;
+
+namespace DAL.Entities
 {
     public class Owner : Person
     {

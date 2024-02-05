@@ -1,4 +1,6 @@
-﻿namespace BLL.Mappers
+﻿using DAL.Entities.Enumerations;
+
+namespace BLL.Mappers
 {
     internal static class UserMapper
     {
@@ -32,6 +34,9 @@
 
         internal static Owner? ToOwner(this Person person)
         {
+            if (person == null)
+                return null;
+
             return new Owner(person.LastName, person.FirstName, person.Email, person.Phone, person.Mobile, person.BirthDate, person.PersonRole, person.AddressId);
         }
 
@@ -39,16 +44,22 @@
 
         internal static UserForDisplay ToUserForDisplay(this User user)
         {
+            if (user == null)
+                return null;
             return new UserForDisplay(user.PersonId, user.LastName, user.FirstName, user.Email, user.Phone, user.Mobile, user.BirthDate);
         }
 
         internal static UserForDisplay ToUserForDisplay(this Owner owner)
         {
+            if (owner == null)
+                return null;
             return new UserForDisplay(owner.PersonId, owner.LastName, owner.FirstName, owner.Email, owner.Phone, owner.Mobile, owner.BirthDate);
         }
 
         internal static UserForDisplay ToUserForDisplay(this Person person)
         {
+            if (person == null)
+                return null;
             return new UserForDisplay(person.PersonId, person.LastName, person.FirstName, person.Email, person.Phone, person.Mobile, person.BirthDate);
         }
     }

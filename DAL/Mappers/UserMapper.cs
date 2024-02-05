@@ -1,4 +1,6 @@
-﻿namespace DAL.Mappers
+﻿using DAL.Entities.Enumerations;
+
+namespace DAL.Mappers
 {
     internal static class UserMapper
     {
