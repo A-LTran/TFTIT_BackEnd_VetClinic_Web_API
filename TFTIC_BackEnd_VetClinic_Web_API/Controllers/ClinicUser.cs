@@ -1,4 +1,5 @@
-﻿using BLL.Entities.PersonForms;
+﻿using BLL.Entities.AddressForms;
+using BLL.Entities.PersonForms;
 using Microsoft.AspNetCore.Authorization;
 
 namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
@@ -28,13 +29,25 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         [HttpGet("GetUsersByRole/{role}")]
         public IActionResult GetByRole([FromRoute] int role)
         {
+            Role connectedUserRole = HttpContext.User.FindFirst("role")?.Value is null ? Role.Anonymous : (Role)Enum.Parse(typeof(Role), HttpContext.User.FindFirst("role")?.Value);
             return Ok(_userService.GetPersonsByRole(role));
+        }
+
+        [Authorize("veterinaryPolicy")]
+        [HttpGet("GetVeterinarians")]
+        public IActionResult GetVeterinarians()
+        {
+            Role connectedUserRole = HttpContext.User.FindFirst("role")?.Value is null ? Role.Anonymous : (Role)Enum.Parse(typeof(Role), HttpContext.User.FindFirst("role")?.Value);
+
+            return Ok(_userService.GetPersonsByRole((int)Role.Veterinary));
         }
 
         [Authorize("veterinaryPolicy")]
         [HttpGet("GetOwners")]
         public IActionResult GetOwners()
         {
+            Role connectedUserRole = HttpContext.User.FindFirst("role")?.Value is null ? Role.Anonymous : (Role)Enum.Parse(typeof(Role), HttpContext.User.FindFirst("role")?.Value);
+
             return Ok(_userService.GetPersonsByRole((int)Role.Owner));
         }
 
@@ -54,10 +67,10 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         public IActionResult CreateAdmin([FromBody] UserRegisterForm form, [FromRoute] Guid addressId)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest("Invalid Form");
 
             form.PersonRole = Role.Administrator;
-            return Ok(_userService.Create(form, addressId));
+            return _userService.Create(form, addressId) ? Ok(_userService.GetMessage()) : BadRequest(_userService.GetMessage());
         }
 
         [Authorize("adminPolicy")]
@@ -65,10 +78,10 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         public IActionResult CreateVeterinary([FromBody] UserRegisterForm form, [FromRoute] Guid addressId)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest("Invalid Form");
 
             form.PersonRole = Role.Veterinary;
-            return Ok(_userService.Create(form, addressId));
+            return _userService.Create(form, addressId) ? Ok(_userService.GetMessage()) : BadRequest(_userService.GetMessage());
         }
 
         [Authorize("veterinaryPolicy")]
@@ -76,10 +89,10 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         public IActionResult CreateOwner([FromBody] OwnerRegisterForm form, [FromRoute] Guid addressId)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest("Invalid Form");
 
             form.PersonRole = Role.Owner;
-            return Ok(_userService.Create(form, addressId));
+            return _userService.Create(form, addressId) ? Ok(_userService.GetMessage()) : BadRequest(_userService.GetMessage());
         }
 
         [Authorize("adminAndVetPolicy")]
@@ -87,9 +100,9 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         public IActionResult CreateAddress([FromBody] AddressRegisterForm form)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest("Invalid Form");
 
-            return Ok(_userService.Create(form));
+            return _userService.Create(form) ? Ok(_userService.GetMessage()) : BadRequest(_userService.GetMessage());
         }
 
         [HttpPost("Login")]
@@ -97,7 +110,7 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest("Invalid Form");
             }
 
             User? connectedUser = _userService.Login(form);
@@ -123,11 +136,20 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
             return Ok(_userService.UpdateUser(form, userId, Role.Administrator));
         }
 
-        [Authorize("adminPolicy")]
+        [Authorize("adminAndVetPolicy")]
         [HttpPatch("EditVeterinary/{userId}")]
         public IActionResult UpdateVeterinary([FromBody] UserEditForm form, [FromRoute] Guid userId)
         {
-            return Ok(_userService.UpdateUser(form, userId, Role.Veterinary));
+            Guid connectedUserId = HttpContext.User.FindFirst("userId")?.Value is null ? Guid.Empty : Guid.Parse(HttpContext.User.FindFirst("userId")?.Value);
+            Role connectedRole = HttpContext.User.FindFirst("role")?.Value is null ? Role.Administrator : (Role)Enum.Parse(typeof(Role), HttpContext.User.FindFirst("role")?.Value);
+
+            if (!(connectedUserId == userId || connectedRole == Role.Administrator))
+                return Unauthorized("You are not authorized for this action.");
+
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid Form");
+
+            return (_userService.UpdateUser(form, userId, Role.Veterinary)) ? Ok(_userService.GetMessage()) : BadRequest(_userService.GetMessage());
         }
 
         [Authorize("veterinaryPolicy")]

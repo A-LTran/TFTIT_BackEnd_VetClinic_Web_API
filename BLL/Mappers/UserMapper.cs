@@ -1,9 +1,9 @@
-﻿using BLL.Entities.PersonForms;
-
-namespace BLL.Mappers
+﻿namespace BLL.Mappers
 {
     internal static class UserMapper
     {
+        // USER
+
         internal static User? ToUser(this UserRegisterForm form, Guid addressId)
         {
             return new User(form.LastName, form.FirstName, form.Email, form.Phone, form.Mobile, form.BirthDate, form.UserPassword, form.PersonRole, addressId);
@@ -13,6 +13,13 @@ namespace BLL.Mappers
         {
             return new User(form.LastName, form.FirstName, form.Email, form.Phone, form.Mobile, form.BirthDate, form.UserPassword, role, addressId);
         }
+
+        internal static User? ToUser(this UserEditForm form, Guid userId, Guid addressId, Role role)
+        {
+            return new User(userId, form.LastName, form.FirstName, form.Email, form.Phone, form.Mobile, form.BirthDate, form.UserPassword, role, addressId);
+        }
+
+        // OWNER
 
         internal static Owner? ToOwner(this OwnerRegisterForm form, Guid addressId)
         {
@@ -26,6 +33,23 @@ namespace BLL.Mappers
         internal static Owner? ToOwner(this Person person)
         {
             return new Owner(person.LastName, person.FirstName, person.Email, person.Phone, person.Mobile, person.BirthDate, person.PersonRole, person.AddressId);
+        }
+
+        // USER TO DISPLAY
+
+        internal static UserForDisplay ToUserForDisplay(this User user)
+        {
+            return new UserForDisplay(user.PersonId, user.LastName, user.FirstName, user.Email, user.Phone, user.Mobile, user.BirthDate);
+        }
+
+        internal static UserForDisplay ToUserForDisplay(this Owner owner)
+        {
+            return new UserForDisplay(owner.PersonId, owner.LastName, owner.FirstName, owner.Email, owner.Phone, owner.Mobile, owner.BirthDate);
+        }
+
+        internal static UserForDisplay ToUserForDisplay(this Person person)
+        {
+            return new UserForDisplay(person.PersonId, person.LastName, person.FirstName, person.Email, person.Phone, person.Mobile, person.BirthDate);
         }
     }
 }

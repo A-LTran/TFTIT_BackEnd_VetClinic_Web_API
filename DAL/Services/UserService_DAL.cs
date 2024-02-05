@@ -100,24 +100,11 @@
             }
         }
 
-        public IEnumerable<Address?> GetAddresses()
-        {
-            return _mainRequester.GetEnumTResult<Address, string>("SELECT * FROM PersonAddress", "", "");
-        }
-
-        public Address? GetAddressByPersonId(Guid personId)
-        {
-            return _mainRequester.GetTResult<Address, Guid>("SELECT * FROM PersonAddress " +
-                                                                "WHERE AddressId = ( SELECT AddressId " +
-                                                                                    "FROM ClinicPerson " +
-                                                                                    "WHERE PersonId = @personId) ", "personId", personId);
-        }
-
         public User? GetUserById(Guid id)
         {
             return _mainRequester.GetTResult<User, Guid>("SELECT * FROM ClinicPerson CP JOIN ClinicUser CU " +
                                                         "ON CP.PersonId = CU.PersonId " +
-                                                        "WHERE PersonId = @id", "id", id);
+                                                        "WHERE CP.PersonId = @id", "id", id);
         }
 
         public User? GetUserByMail(string mail)
@@ -148,6 +135,38 @@
                                                             "AND Email = @mail", "mail", mail);
         }
 
+        // GET ADDRESS
+        public IEnumerable<Address?> GetAddresses()
+        {
+            return _mainRequester.GetEnumTResult<Address, string>("SELECT * FROM PersonAddress", "", "");
+        }
+
+        public Address? GetAddressByPersonId(Guid personId)
+        {
+            return _mainRequester.GetTResult<Address, Guid>("SELECT * FROM PersonAddress " +
+                                                                "WHERE AddressId = ( SELECT AddressId " +
+                                                                                    "FROM ClinicPerson " +
+                                                                                    "WHERE PersonId = @personId) ", "personId", personId);
+        }
+
+        public Address? GetAddressById(Guid addressId)
+        {
+            return _mainRequester.GetTResult<Address, Guid>("SELECT * FROM PersonAddress " +
+                                                            "WHERE AddressId = @addressId", "addressId", addressId);
+        }
+
+
+
+        public IEnumerable<Address?> GetAddressByAddressInfo(Address address)
+        {
+            return _mainRequester.GetEnumTResult<Address, Address>("SELECT * FROM PersonAddress " +
+                                                                "WHERE Address1 = @address1 " +
+                                                                "AND Address2 = @address2 " +
+                                                                "AND City = @city " +
+                                                                "AND Country = @country " +
+                                                                "AND PostalCode = @postalCode", address);
+        }
+
         //*****************************************************************************//
         //                                    PATCH                                    //
         //*****************************************************************************//
@@ -172,17 +191,31 @@
         {
             string query = "UPDATE ClinicPerson " +
                             "SET FirstName = @firstName" +
-                            ", LastName = @lastName" +
-                            ", Email = @email" +
-                            ", Phone = @phone" +
-                            ", Mobile = @mobile" +
-                            ", BirthDate = @birthdate" +
-                            ", UserPassword = @userPassword" +
-                            ", PersonRole = @personRole" +
-                            ", AddressId = @addressId " +
-                            "WHERE PersonId = @personId";
+                                ", LastName = @lastName" +
+                                ", Email = @email" +
+                                ", Phone = @phone" +
+                                ", Mobile = @mobile" +
+                                ", BirthDate = @birthdate" +
+                                ", PersonRole = @personRole" +
+                                ", AddressId = @addressId " +
+                            "WHERE PersonId = @personId; " +
+                            "UPDATE ClinicUser " +
+                            "SET UserPassword = @userPassword " +
+                            "WHERE PersonId = @personId; ";
 
             return _mainRequester.Update(query, user);
+        }
+
+        public bool Update(Address address)
+        {
+            string query = "UPDATE PersonAddress " +
+                            "SET Address1 = @address1 " +
+                            ", Address2 = @address2 " +
+                            ", City = @city " +
+                            ", Country = @country " +
+                            ", PostalCode = @postalCode " +
+                            "WHERE AddressId = @addressId";
+            return _mainRequester.Update(query, address);
         }
 
         public bool SetIsActiveOn(Guid personId)

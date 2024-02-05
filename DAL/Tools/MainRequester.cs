@@ -78,6 +78,26 @@ namespace DAL.Tools
             }
         }
 
+        public IEnumerable<TResult?> GetEnumTResult<TResult, TBody>(string query, TBody body) where TResult : class
+        {
+            using (SqlConnection connection = new(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.CommandText = query;
+                command.Parameters.AddRange(GetParameters(body));
+
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        yield return Read<TResult>(reader);
+                    }
+                }
+                connection.Close();
+            }
+        }
+
         //******************************************************************//
         //                              UPDATE                              //
         //******************************************************************//

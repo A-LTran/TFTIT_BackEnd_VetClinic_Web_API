@@ -1,11 +1,18 @@
-﻿using BLL.Entities.PersonForms;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 
 namespace BLL.Services
 {
     public class UserService_BLL : IUserRepository_BLL
     {
+
         private readonly IUserRepository_DAL _userService;
+
+        private string _message;
+        public string Message
+        {
+            get { return _message; }
+            set { _message = value; }
+        }
 
         public UserService_BLL(IUserRepository_DAL userRepository)
         {
@@ -22,27 +29,68 @@ namespace BLL.Services
 
             if (u is not null)
             {
-                return (_userService.GetIsActiveByMail(u.Email)) ? false : _userService.SetIsActiveOn(u.PersonId);
+                if (_userService.GetIsActiveByMail(u.Email))
+                {
+                    Message = "User already exists!";
+                    return false;
+                }
+                else
+                {
+                    Message = "User has been reactivated! Please update your information.";
+                    return _userService.SetIsActiveOn(u.PersonId);
+                }
             }
 
             if (!form.UserPassword.IsNullOrEmpty())
                 form.UserPassword = BCrypt.Net.BCrypt.HashPassword(form.UserPassword);
 
-            return _userService.Create(form.ToUser(addressId)!);
+            if (_userService.Create(form.ToUser(addressId)!))
+            {
+                Message = "User has been created.";
+                return true;
+            }
+            else
+            {
+                Message = "Something went wrong!";
+                return false;
+            }
         }
 
         public bool Create(OwnerRegisterForm form, Guid addressId)
         {
             if (_userService.GetOwnerByMail(form.Email) is not null)
+            {
+                Message = "Owner already exists!";
                 return false;
+            }
+            if (_userService.Create(form.ToOwner(addressId)!))
+            {
+                Message = "Owner has been created!";
+                return true;
+            }
 
-            return _userService.Create(form.ToOwner(addressId)!);
+            Message = "Something went wrong!";
+            return false;
         }
 
         public bool Create(AddressRegisterForm form)
         {
-            return _userService.Create(form.ToAddress());
+            List<Address?> addresses = _userService.GetAddressByAddressInfo(form.ToAddress()).ToList();
+            if (addresses is not null)
+            {
+                Message = "Address already exists!";
+                return false;
+            }
+
+            if (_userService.Create(form.ToAddress()))
+            {
+                Message = "Address created";
+                return true;
+            }
+            Message = "Something went wrong!";
+            return false;
         }
+
         public User? Login(UserLoginForm form)
         {
             User? u = _userService.GetUserByMail(form.Email);
@@ -55,14 +103,17 @@ namespace BLL.Services
         //                                    GET                                      //
         //*****************************************************************************//
 
-        public IEnumerable<User?> Get()
+        public IEnumerable<UserForDisplay?> Get()
         {
-            return _userService.Get();
+            foreach (User? u in _userService.Get())
+                yield return u?.ToUserForDisplay();
         }
-        public IEnumerable<Person?> GetPersonsByRole(int role)
+        public IEnumerable<UserForDisplay> GetPersonsByRole(int role)
         {
             Role personRole = (Role)role;
-            return _userService.GetPersonsByRole(personRole);
+
+            foreach (Person person in _userService.GetPersonsByRole(personRole))
+                yield return person.ToUserForDisplay();
         }
 
         public User? GetUserById(Guid userId)
@@ -101,13 +152,71 @@ namespace BLL.Services
 
         public bool UpdateUser(UserEditForm form, Guid userId, Role role)
         {
-            Guid userAddressId = _userService.GetAddressByPersonId(userId).AddressId;
-            return (_userService.GetUserById(userId) is not null) ? _userService.Update(form.ToUser(userAddressId, role)!) : false;
+            if (_userService.GetUserById(userId) is null)
+            {
+                Message = "User doesn't exist!";
+            }
+
+            Address? address = _userService.GetAddressByPersonId(userId);
+            if (address is null)
+            {
+                Message = "This person doens't have a valid address.";
+                return false;
+            }
+
+            form.UserPassword = BCrypt.Net.BCrypt.HashPassword(form.UserPassword!);
+
+            if (_userService.Update(form.ToUser(userId, address.AddressId, role)!))
+            {
+                Message = "User has been updated.";
+                return true;
+            }
+
+            Message = "Something went wrong!";
+            return false;
+
         }
+
         public bool UpdateOwner(OwnerEditForm form, Guid ownerId)
         {
-            Guid ownerAddressId = _userService.GetAddressByPersonId(ownerId).AddressId;
-            return (_userService.GetOwnerById(ownerId) is not null) ? _userService.Update(form.ToOwner(ownerId, ownerAddressId)) : false;
+            if (_userService.GetUserById(ownerId) is null)
+            {
+                Message = "User doesn't exist!";
+            }
+
+            Address? address = _userService.GetAddressByPersonId(ownerId);
+            if (address is null)
+            {
+                Message = "This owner doens't have a valid address.";
+                return false;
+            }
+
+            if (_userService.Update(form.ToOwner(ownerId, address.AddressId)!))
+            {
+                Message = "User has been updated.";
+                return true;
+            }
+
+            Message = "Something went wrong!";
+            return false;
+        }
+
+        public bool UpdateAddress(AddressEditForm form, Guid addressId)
+        {
+            if (_userService.GetAddressById(addressId) is null)
+            {
+                Message = "Address doesn't exist!";
+                return false;
+            }
+
+            if (_userService.Update(form.ToAddress(addressId)))
+            {
+                Message = "Address has been updated.";
+                return true;
+            }
+
+            Message = "Something went wrong!";
+            return false;
         }
 
         //*****************************************************************************//
@@ -121,6 +230,16 @@ namespace BLL.Services
         public bool DeleteUser(Guid userId)
         {
             return _userService.DeleteUser(userId);
+        }
+
+        //*****************************************************************************//
+        //                                    TOOL                                     //
+        //*****************************************************************************//
+
+
+        public string GetMessage()
+        {
+            return Message;
         }
     }
 }
