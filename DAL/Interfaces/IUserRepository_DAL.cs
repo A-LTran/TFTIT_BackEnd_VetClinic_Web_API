@@ -9,8 +9,11 @@
         public User? GetUserByMail(string mail);
         public Owner? GetOwnerById(Guid ownerId);
         public Owner? GetOwnerByMail(string mail);
+        public bool GetIsActiveByMail(string mail);
         public bool Update(Owner owner);
         public bool Update(User user);
+        public bool SetIsActiveOn(Guid personId);
+        public bool SetIsActiveOff(Guid personId);
         public bool DeleteUser(Guid personId);
         public bool DeleteOwner(Guid ownerId);
         public IEnumerable<User?> Get();

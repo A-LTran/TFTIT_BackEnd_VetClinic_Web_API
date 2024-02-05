@@ -17,21 +17,11 @@ namespace DAL.Tools
 
         public bool Create<TBody>(string query, TBody body)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new(_connectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
                 command.CommandText = query;
-
-                Type bodyType = typeof(TBody);
-                foreach (var prop in bodyType.GetProperties())
-                {
-                    //Console.WriteLine($"@{prop.Name} : {prop.GetValue(body)}");
-                    if (prop.Name == "PersonRole")
-                        command.Parameters.AddWithValue("@" + prop.Name, (int)prop.GetValue(body));
-                    else
-                        command.Parameters.AddWithValue("@" + prop.Name, prop.GetValue(body));
-
-                }
+                command.Parameters.AddRange(GetParameters(body));
 
                 connection.Open();
                 int rowsAffected = command.ExecuteNonQuery();
@@ -46,7 +36,7 @@ namespace DAL.Tools
 
         public TResult? GetTResult<TResult, TBody>(string query, string bodyName, TBody body) where TResult : class
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new(_connectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
                 command.CommandText = query;
@@ -70,7 +60,7 @@ namespace DAL.Tools
 
         public IEnumerable<TResult?> GetEnumTResult<TResult, TBody>(string query, string bodyName, TBody body) where TResult : class
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new(_connectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
                 command.CommandText = query;
@@ -88,6 +78,81 @@ namespace DAL.Tools
             }
         }
 
+        //******************************************************************//
+        //                              UPDATE                              //
+        //******************************************************************//
+
+        public bool Update<TBody>(string query, TBody body)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.CommandText = query;
+                command.Parameters.AddRange(GetParameters(body));
+
+                connection.Open();
+                int rowsAffected = command.ExecuteNonQuery();
+                connection.Close();
+                return rowsAffected > 0;
+            }
+        }
+
+        public bool Update<TBody>(string query, string bodyName, TBody body)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.CommandText = query;
+                command.Parameters.AddWithValue("@" + bodyName, body);
+
+                connection.Open();
+                int rowsAffected = command.ExecuteNonQuery();
+                connection.Close();
+                return rowsAffected > 0;
+            }
+        }
+
+        //******************************************************************//
+        //                              DELETE                              //
+        //******************************************************************//
+
+        public bool Delete<TBody>(string query, string bodyName, TBody body)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.CommandText = query;
+                command.Parameters.AddWithValue("@" + bodyName, body);
+
+                connection.Open();
+                int rowsAffected = command.ExecuteNonQuery();
+                connection.Close();
+                return rowsAffected > 0;
+            }
+        }
+
+        //******************************************************************//
+        //                              TOOLS                               //
+        //******************************************************************//
+
+        private SqlParameter[] GetParameters<TBody>(TBody body)
+        {
+            Type type = typeof(TBody);
+            List<SqlParameter> parameters = new();
+            foreach (var prop in type.GetProperties())
+            {
+                if (!prop.GetValue(body).ToString().IsNullOrEmpty())
+                {
+                    if (prop.Name == "PersonRole")
+                        parameters.Add(new SqlParameter("@" + prop.Name, (int)prop.GetValue(body)));
+                    else
+                        parameters.Add(new SqlParameter("@" + prop.Name, prop.GetValue(body)));
+                }
+            }
+
+            return parameters.ToArray();
+        }
+
         private static readonly Dictionary<Type, PropertyInfo[]> propertyCache = new();
 
         private static TResult Read<TResult>(SqlDataReader reader)
@@ -99,6 +164,8 @@ namespace DAL.Tools
             if (!propertyCache.ContainsKey(type))
             {
                 propertyCache[type] = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                // public : Specifies that public members are to be included in the search.
+                // instance : Specifies that instance members are to be included in the search.
             }
 
             // Loop through the properties and set their values
@@ -129,56 +196,6 @@ namespace DAL.Tools
                 }
             }
             return result;
-        }
-
-        //******************************************************************//
-        //                              UPDATE                              //
-        //******************************************************************//
-
-        public bool Update<TBody>(string query, TBody body)
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            using (SqlCommand command = connection.CreateCommand())
-            {
-                command.CommandText = query;
-
-                Type type = typeof(TBody);
-                foreach (var prop in type.GetProperties())
-                {
-                    if (!(prop.GetValue(body) == null || prop.GetValue(body).ToString().IsNullOrEmpty()))
-                    {
-                        //Console.WriteLine($"@{prop.Name} : {prop.GetValue(body)}");
-                        if (prop.Name == "PersonRole")
-                            command.Parameters.AddWithValue("@" + prop.Name, (int)prop.GetValue(body));
-                        else
-                            command.Parameters.AddWithValue("@" + prop.Name, prop.GetValue(body));
-                    }
-                }
-
-                connection.Open();
-                int rowsAffected = command.ExecuteNonQuery();
-                connection.Close();
-                return rowsAffected > 0;
-            }
-        }
-
-        //******************************************************************//
-        //                              DELETE                              //
-        //******************************************************************//
-
-        public bool Delete<TBody>(string query, string bodyName, TBody body)
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            using (SqlCommand command = connection.CreateCommand())
-            {
-                command.CommandText = query;
-                command.Parameters.AddWithValue("@" + bodyName, body);
-
-                connection.Open();
-                int rowsAffected = command.ExecuteNonQuery();
-                connection.Close();
-                return rowsAffected > 0;
-            }
         }
     }
 }

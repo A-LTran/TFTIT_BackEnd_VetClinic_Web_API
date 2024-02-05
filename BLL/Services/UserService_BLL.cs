@@ -18,8 +18,12 @@ namespace BLL.Services
 
         public bool Create(UserRegisterForm form, Guid addressId)
         {
-            if (_userService.GetUserByMail(form.Email) is not null)
-                return false;
+            User? u = _userService.GetUserByMail(form.Email);
+
+            if (u is not null)
+            {
+                return (_userService.GetIsActiveByMail(u.Email)) ? false : _userService.SetIsActiveOn(u.PersonId);
+            }
 
             if (!form.UserPassword.IsNullOrEmpty())
                 form.UserPassword = BCrypt.Net.BCrypt.HashPassword(form.UserPassword);

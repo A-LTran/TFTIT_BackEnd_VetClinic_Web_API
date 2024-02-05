@@ -134,6 +134,13 @@
                                                             "AND PersonId = @personId", "personId", ownerId);
         }
 
+        public bool GetIsActiveByMail(string mail)
+        {
+            return _mainRequester.GetTResult<Owner, string>("SELECT * FROM ClinicPerson " +
+                                                            "WHERE IsActive = 1 " +
+                                                            "AND Email = @mail", "mail", mail) is not null;
+        }
+
         public Owner? GetOwnerByMail(string mail)
         {
             return _mainRequester.GetTResult<Owner, string>("SELECT * FROM ClinicPerson " +
@@ -158,7 +165,6 @@
                             ", AddressId = @addressId " +
                             "WHERE PersonId = @personId";
 
-            //return _requester.Update<bool, Owner>(query, owner);
             return _mainRequester.Update(query, owner);
         }
 
@@ -177,7 +183,16 @@
                             "WHERE PersonId = @personId";
 
             return _mainRequester.Update(query, user);
+        }
 
+        public bool SetIsActiveOn(Guid personId)
+        {
+            return _mainRequester.Update("UPDATE ClinicPerson SET IsActive = 1 WHERE PersonId = @personId", "personId", personId);
+        }
+
+        public bool SetIsActiveOff(Guid personId)
+        {
+            return _mainRequester.Update("UPDATE ClinicPerson SET IsActive = 0 WHERE PersonId = @personId", "personId", personId);
         }
 
         //*****************************************************************************//
@@ -186,10 +201,12 @@
 
         public bool DeleteUser(Guid personId)
         {
-            return _mainRequester.Delete<Guid>("DELETE FROM [ClinicUser] " +
-                                                "WHERE PersonId = @personId; " +
-                                                "DELETE FROM [ClinicPerson] " +
+            return _mainRequester.Delete<Guid>("DELETE FROM [ClinicPerson] " +
                                                 "WHERE PersonId = @personId; ", "personId", personId);
+            //return _mainRequester.Delete<Guid>("DELETE FROM [ClinicUser] " +
+            //                                    "WHERE PersonId = @personId; " +
+            //                                    "DELETE FROM [ClinicPerson] " +
+            //                                    "WHERE PersonId = @personId; ", "personId", personId);
         }
 
         public bool DeleteOwner(Guid ownerId)
