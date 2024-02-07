@@ -40,9 +40,20 @@
 
         public bool Update(AnimalEditForm form, Guid animalId)
         {
-            Animal? a = _animalService.GetAnimal(animalId);
-            if (!ObjectExistsCheck(_animalService.GetAnimal(animalId) is not null, "Animal"))
+            Animal? currentAnimal = _animalService.GetAnimal(animalId);
+            if (!ObjectExistsCheck(currentAnimal is not null, "Animal"))
                 return false;
+
+            Animal? newAnimal = form.ToAnimal(animalId);
+
+            Type type = typeof(Animal);
+            foreach (var prop in type.GetProperties())
+            {
+                if (!(prop.GetValue(newAnimal) is null || prop.GetValue(newAnimal) == default))
+                {
+                    prop.SetValue(currentAnimal, prop.GetValue(newAnimal));
+                }
+            }
 
             if (!SucceessCheck(_animalService.Update(form.ToAnimal(animalId)), "Animal", "updated"))
                 return false;

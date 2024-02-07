@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace BLL.Entities.AppointmentForms
+﻿namespace BLL.Entities.AppointmentForms
 {
     public class AppointmentEditForm
     {
@@ -14,14 +12,12 @@ namespace BLL.Entities.AppointmentForms
             VeterinaryId = veterinaryId;
         }
 
-        [Required]
         [DateRangeFromTodayToTwoYears]
         public DateTime AppointmentDate { get; set; }
-        [Required]
-        public int DurationMinutes { get; set; } = 30;
-        public string Reason { get; set; } = default!;
-        public string Diagnosis { get; set; } = "NA";
-        public Guid AnimalId { get; set; }
-        public Guid VeterinaryId { get; set; }
+        public int? DurationMinutes { get; set; }
+        public string? Reason { get; set; }
+        public string? Diagnosis { get; set; }
+        public Guid? AnimalId { get; set; }
+        public Guid? VeterinaryId { get; set; }
     }
 }

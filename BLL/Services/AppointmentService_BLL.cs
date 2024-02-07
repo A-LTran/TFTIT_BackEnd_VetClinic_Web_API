@@ -75,8 +75,20 @@ namespace BLL.Services
 
         public bool Update(Guid id, AppointmentEditForm form)
         {
-            if (!ObjectExistsCheck(_appointmentService.GetById(id) is not null, "Appointment"))
+            Appointment? currentApp = _appointmentService.GetById(id)!;
+            if (!ObjectExistsCheck(currentApp is not null, "Appointment"))
                 return false;
+
+            Appointment? newApp = form.ToAppointment(id);
+
+            Type type = typeof(Appointment);
+            foreach (var prop in type.GetProperties())
+            {
+                if (!(prop.GetValue(newApp) is null || prop.GetValue(newApp) == default))
+                {
+                    prop.SetValue(currentApp, prop.GetValue(newApp));
+                }
+            }
 
             if (!SucceessCheck(_appointmentService.Update(form.ToAppointment(id)), "Appointment", "updated"))
                 return false;
