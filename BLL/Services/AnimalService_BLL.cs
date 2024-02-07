@@ -11,10 +11,10 @@
 
         public bool Create(AnimalRegisterForm form)
         {
-            if (!ToolSet.ObjectExistsCheck(!form.Equals(new AnimalRegisterForm()), "Animal"))
+            if (!ObjectExistsCheck(!form.Equals(new AnimalRegisterForm()), "Animal"))
                 return false;
 
-            if (!ToolSet.SucceessCheck(_animalService.Create(form.ToAnimal()), "Animal", "created"))
+            if (!SucceessCheck(_animalService.Create(form.ToAnimal()), "Animal", "created"))
                 return false;
             return true;
         }
@@ -32,7 +32,7 @@
         public Animal? GetAnimal(Guid animalId)
         {
             Animal? a = _animalService.GetAnimal(animalId);
-            if (!ToolSet.ObjectExistsCheck(a is not null, "Animal"))
+            if (!ObjectExistsCheck(a is not null, "Animal"))
                 return null;
 
             return a;
@@ -41,10 +41,10 @@
         public bool Update(AnimalEditForm form, Guid animalId)
         {
             Animal? a = _animalService.GetAnimal(animalId);
-            if (!ToolSet.ObjectExistsCheck(_animalService.GetAnimal(animalId) is not null, "Animal"))
+            if (!ObjectExistsCheck(_animalService.GetAnimal(animalId) is not null, "Animal"))
                 return false;
 
-            if (!ToolSet.SucceessCheck(_animalService.Update(form.ToAnimal(animalId)), "Animal", "updated"))
+            if (!SucceessCheck(_animalService.Update(form.ToAnimal(animalId)), "Animal", "updated"))
                 return false;
 
             return true;
@@ -52,10 +52,10 @@
 
         public bool Delete(Guid animalId)
         {
-            if (!ToolSet.ObjectExistsCheck(_animalService.GetAnimal(animalId) is not null, "Animal"))
+            if (!ObjectExistsCheck(_animalService.GetAnimal(animalId) is not null, "Animal"))
                 return false;
 
-            if (!ToolSet.SucceessCheck(_animalService.Delete(animalId), "Animal", "deleted"))
+            if (!SucceessCheck(_animalService.Delete(animalId), "Animal", "deleted"))
                 return false;
 
             return true;

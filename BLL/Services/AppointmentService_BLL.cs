@@ -23,7 +23,7 @@ namespace BLL.Services
         public Appointment? GetById(Guid appId)
         {
             Appointment? app = _appointmentService.GetById(appId);
-            if (!ToolSet.ObjectExistsCheck(app is not null, "Appointment"))
+            if (!ObjectExistsCheck(app is not null, "Appointment"))
                 return null;
 
             return app;
@@ -60,10 +60,10 @@ namespace BLL.Services
 
         public bool Create(AppointmentRegisterForm form)
         {
-            if (ToolSet.SucceessCheck(GetByAppointmentAvailability(form), "", "", "Cette plage horaire n'est pas disponible."))
+            if (SucceessCheck(GetByAppointmentAvailability(form), "", "", "Cette plage horaire n'est pas disponible."))
                 return false;
 
-            if (!ToolSet.SucceessCheck(_appointmentService.Create(form.ToAppointment()), "Appointment", "created"))
+            if (!SucceessCheck(_appointmentService.Create(form.ToAppointment()), "Appointment", "created"))
                 return false;
 
             return true;
@@ -75,10 +75,10 @@ namespace BLL.Services
 
         public bool Update(Guid id, AppointmentEditForm form)
         {
-            if (!ToolSet.ObjectExistsCheck(_appointmentService.GetById(id) is not null, "Appointment"))
+            if (!ObjectExistsCheck(_appointmentService.GetById(id) is not null, "Appointment"))
                 return false;
 
-            if (!ToolSet.SucceessCheck(_appointmentService.Update(form.ToAppointment(id)), "Appointment", "updated"))
+            if (!SucceessCheck(_appointmentService.Update(form.ToAppointment(id)), "Appointment", "updated"))
                 return false;
 
             return true;
@@ -90,9 +90,9 @@ namespace BLL.Services
 
         public bool Delete(Guid id)
         {
-            if (!ToolSet.ObjectExistsCheck(_appointmentService.GetById(id) is not null, "Appointment"))
+            if (!ObjectExistsCheck(_appointmentService.GetById(id) is not null, "Appointment"))
                 return false;
-            if (!ToolSet.SucceessCheck(_appointmentService.Delete(id), "Appointment", "deleted"))
+            if (!SucceessCheck(_appointmentService.Delete(id), "Appointment", "deleted"))
                 return false;
 
             return true;
