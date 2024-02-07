@@ -7,18 +7,18 @@ namespace BLL.Entities.PersonForms
     {
         [MaxLength(50)]
         [MinLength(2)]
-        public string LastName { get; set; } = default!;
+        public string? LastName { get; set; }
         [MaxLength(50)]
         [MinLength(2)]
-        public string FirstName { get; set; } = default!;
+        public string? FirstName { get; set; }
         [EmailAddress]
-        public string Email { get; set; } = default!;
+        public string? Email { get; set; }
         [Phone]
-        public string Phone { get; set; } = "0000000000";
+        public string? Phone { get; set; }
         [Phone]
-        public string Mobile { get; set; } = "0000000000";
+        public string? Mobile { get; set; }
         [DateRangeBeforeTodayAndAfter100Y]
-        public DateTime BirthDate { get; set; } = DateTime.Today;
+        public DateTime BirthDate { get; set; } = default!;
         [Required]
         [PasswordPropertyText]
         public string UserPassword { get; set; } = default!;

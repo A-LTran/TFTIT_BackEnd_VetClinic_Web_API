@@ -216,6 +216,7 @@
         [HttpPatch("EditOwner/{ownerId}")]
         public IActionResult EditOwner([FromBody] OwnerEditForm form, [FromRoute] Guid ownerId)
         {
+
             if (!ModelState.IsValid)
                 return BadRequest("Invalid Form");
 

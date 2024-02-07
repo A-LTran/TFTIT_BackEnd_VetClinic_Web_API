@@ -213,7 +213,7 @@ namespace BLL.Services
             Type type = typeof(Owner);
             foreach (var prop in type.GetProperties())
             {
-                if (!(prop.GetValue(newOwner) is null || prop.GetValue(newOwner) == default))
+                if (!(prop.GetValue(newOwner) is null || prop.GetType() == typeof(string) && prop.GetValue(newOwner) == "empty"))
                 {
                     prop.SetValue(currentOwner, prop.GetValue(newOwner));
                 }
