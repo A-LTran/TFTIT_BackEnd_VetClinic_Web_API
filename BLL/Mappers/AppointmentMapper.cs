@@ -6,7 +6,7 @@ namespace BLL.Mappers
     {
         public static Appointment ToAppointment(this AppointmentEditForm form, Guid id)
         {
-            return new Appointment(id, form.AppointmentDate, form.DurationMinutes, form.Reason, form.Diagnosis, form.AnimalId, form.VeterinaryId);
+            return new Appointment(id, form.AppointmentDate, form.DurationMinutes == null ? default : (int)form.DurationMinutes, form.Reason, form.Diagnosis, form.AnimalId == null ? default : (Guid)form.AnimalId, form.VeterinaryId == null ? default : (Guid)form.VeterinaryId);
         }
 
         public static Appointment ToAppointment(this AppointmentRegisterForm form)

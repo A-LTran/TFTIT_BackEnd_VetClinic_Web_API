@@ -1,5 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace DAL.Tools
 {
@@ -176,7 +175,8 @@ namespace DAL.Tools
             List<SqlParameter> parameters = new();
             foreach (var prop in type.GetProperties())
             {
-                if (!prop.GetValue(body).ToString().IsNullOrEmpty())
+                var value = prop.GetValue(body);
+                if (value is not null && value != default)
                 {
                     if (prop.Name == "PersonRole")
                         parameters.Add(new SqlParameter("@" + prop.Name, (int)prop.GetValue(body)));

@@ -14,7 +14,7 @@
             if (!ObjectExistsCheck(!form.Equals(new AnimalRegisterForm()), "Animal"))
                 return false;
 
-            if (!SucceessCheck(_animalService.Create(form.ToAnimal()), "Animal", "created"))
+            if (!SuccessCheck(_animalService.Create(form.ToAnimal()), "Animal", "created"))
                 return false;
             return true;
         }
@@ -55,7 +55,7 @@
                 }
             }
 
-            if (!SucceessCheck(_animalService.Update(form.ToAnimal(animalId)), "Animal", "updated"))
+            if (!SuccessCheck(_animalService.Update(currentAnimal), "Animal", "updated"))
                 return false;
 
             return true;
@@ -66,7 +66,7 @@
             if (!ObjectExistsCheck(_animalService.GetAnimal(animalId) is not null, "Animal"))
                 return false;
 
-            if (!SucceessCheck(_animalService.Delete(animalId), "Animal", "deleted"))
+            if (!SuccessCheck(_animalService.Delete(animalId), "Animal", "deleted"))
                 return false;
 
             return true;

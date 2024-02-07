@@ -36,7 +36,7 @@ namespace BLL.Services
 
             form.UserPassword = BCrypt.Net.BCrypt.HashPassword(form.UserPassword);
 
-            if (!SucceessCheck(_userService.Create(form.ToUser(addressId)!), "User", "created"))
+            if (!SuccessCheck(_userService.Create(form.ToUser(addressId)!), "User", "created"))
                 return false;
 
             return true;
@@ -47,7 +47,7 @@ namespace BLL.Services
             if (ObjectExistsCheck(_userService.GetOwnerByMail(form.Email) is not null, "Owner"))
                 return false;
 
-            if (!SucceessCheck(_userService.Create(form.ToOwner(addressId)!), "Owner", "created"))
+            if (!SuccessCheck(_userService.Create(form.ToOwner(addressId)!), "Owner", "created"))
                 return false;
 
             return true;
@@ -56,7 +56,7 @@ namespace BLL.Services
 
         public bool Create(AddressRegisterForm form)
         {
-            if (!SucceessCheck(_userService.Create(form.ToAddress()), "Address", "created"))
+            if (!SuccessCheck(_userService.Create(form.ToAddress()), "Address", "created"))
                 return false;
 
             return true;
@@ -194,7 +194,7 @@ namespace BLL.Services
                 }
             }
 
-            if (!SucceessCheck(_userService.Update(currentUser), "User", "updated"))
+            if (!SuccessCheck(_userService.Update(currentUser), "User", "updated"))
                 return false;
 
             return true;
@@ -219,7 +219,7 @@ namespace BLL.Services
                 }
             }
 
-            if (!SucceessCheck(_userService.Update(currentOwner), "Owner", "updated"))
+            if (!SuccessCheck(_userService.Update(currentOwner), "Owner", "updated"))
                 return false;
 
             return true;
@@ -239,7 +239,7 @@ namespace BLL.Services
                 }
             }
 
-            if (!SucceessCheck(_userService.Update(currentAddress), "Address", "updated"))
+            if (!SuccessCheck(_userService.Update(currentAddress), "Address", "updated"))
                 return false;
 
             return true;
@@ -251,14 +251,14 @@ namespace BLL.Services
 
         public bool DeleteOwner(Guid ownerId)
         {
-            if (!SucceessCheck(_userService.DeleteOwner(ownerId), "Owner", "deleted"))
+            if (!SuccessCheck(_userService.DeleteOwner(ownerId), "Owner", "deleted"))
                 return false;
 
             return true;
         }
         public bool DeleteUser(Guid userId)
         {
-            if (!SucceessCheck(_userService.DeleteUser(userId), "User", "deleted"))
+            if (!SuccessCheck(_userService.DeleteUser(userId), "User", "deleted"))
                 return false;
 
             return true;
@@ -269,7 +269,7 @@ namespace BLL.Services
             if (!ObjectExistsCheck(_userService.GetAddressById(addressId) is not null, "Address"))
                 return false;
 
-            if (!SucceessCheck(_userService.DeleteAddress(addressId), "Address", "deleted"))
+            if (!SuccessCheck(_userService.DeleteAddress(addressId), "Address", "deleted"))
                 return false;
 
             return true;

@@ -60,10 +60,10 @@ namespace BLL.Services
 
         public bool Create(AppointmentRegisterForm form)
         {
-            if (SucceessCheck(GetByAppointmentAvailability(form), "", "", "Cette plage horaire n'est pas disponible."))
+            if (SuccessCheck(GetByAppointmentAvailability(form), "", "", "Cette plage horaire n'est pas disponible."))
                 return false;
 
-            if (!SucceessCheck(_appointmentService.Create(form.ToAppointment()), "Appointment", "created"))
+            if (!SuccessCheck(_appointmentService.Create(form.ToAppointment()), "Appointment", "created"))
                 return false;
 
             return true;
@@ -90,7 +90,7 @@ namespace BLL.Services
                 }
             }
 
-            if (!SucceessCheck(_appointmentService.Update(form.ToAppointment(id)), "Appointment", "updated"))
+            if (!SuccessCheck(_appointmentService.Update(currentApp), "Appointment", "updated"))
                 return false;
 
             return true;
@@ -104,7 +104,7 @@ namespace BLL.Services
         {
             if (!ObjectExistsCheck(_appointmentService.GetById(id) is not null, "Appointment"))
                 return false;
-            if (!SucceessCheck(_appointmentService.Delete(id), "Appointment", "deleted"))
+            if (!SuccessCheck(_appointmentService.Delete(id), "Appointment", "deleted"))
                 return false;
 
             return true;

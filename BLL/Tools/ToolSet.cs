@@ -26,7 +26,7 @@ namespace BLL.Tools
         /// <param name="objectAction">What action has been test : "created", "updated",...</param>
         /// <param name="txt">If you want a specific message to be returned in both case (true/false)</param>
         /// <returns>bool</returns>
-        public static bool SucceessCheck(bool isSuccess, string objectName, string objectAction, string txt = "")
+        public static bool SuccessCheck(bool isSuccess, string objectName, string objectAction, string txt = "")
         {
 
             return CheckTemplate(isSuccess, objectName, $"has/have not been {objectAction}!", $"has/have been {objectAction}!", txt);
