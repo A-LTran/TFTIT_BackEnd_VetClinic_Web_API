@@ -42,25 +42,32 @@ namespace BLL.Mappers
 
         // USER TO DISPLAY
 
-        internal static UserForDisplay ToUserForDisplay(this User user)
+        internal static UserDto ToUserForDisplay(this User user)
         {
             if (user == null)
                 return null;
-            return new UserForDisplay(user.PersonId, user.LastName, user.FirstName, user.Email, user.Phone, user.Mobile, user.BirthDate);
+            return new UserDto(user.PersonId, user.LastName, user.FirstName, user.Email, user.Phone, user.Mobile, user.BirthDate);
         }
 
-        internal static UserForDisplay ToUserForDisplay(this Owner owner)
+        internal static UserDto ToUserForDisplay(this Owner owner)
         {
             if (owner == null)
                 return null;
-            return new UserForDisplay(owner.PersonId, owner.LastName, owner.FirstName, owner.Email, owner.Phone, owner.Mobile, owner.BirthDate);
+            return new UserDto(owner.PersonId, owner.LastName, owner.FirstName, owner.Email, owner.Phone, owner.Mobile, owner.BirthDate);
         }
 
-        internal static UserForDisplay ToUserForDisplay(this Person person)
+        internal static UserDto ToUserForDisplay(this Person person)
         {
             if (person == null)
                 return null;
-            return new UserForDisplay(person.PersonId, person.LastName, person.FirstName, person.Email, person.Phone, person.Mobile, person.BirthDate);
+            return new UserDto(person.PersonId, person.LastName, person.FirstName, person.Email, person.Phone, person.Mobile, person.BirthDate);
+        }
+
+        // DTO
+
+        internal static UserTokenDto ToUserTokenDto(this UserTokenDto_DAL user)
+        { 
+            return new UserTokenDto(user.PersonId, user.LastName, user.Email, user.PersonRole);
         }
     }
 }

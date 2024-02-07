@@ -1,12 +1,12 @@
 ﻿namespace BLL.Entities.Models
 {
-    public class UserForDisplay
+    public class UserDto
     {
-        public UserForDisplay()
+        public UserDto()
         {
 
         }
-        public UserForDisplay(Guid personId, string lastName, string firstName, string email, string phone, string mobile, DateTime birthDate)
+        public UserDto(Guid personId, string lastName, string firstName, string email, string phone, string mobile, DateTime birthDate)
         {
             PersonId = personId;
             LastName = lastName;

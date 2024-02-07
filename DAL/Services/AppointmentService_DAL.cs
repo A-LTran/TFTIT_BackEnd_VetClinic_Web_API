@@ -21,9 +21,9 @@
 
         }
 
-        public IEnumerable<Appointment?> GetById(Guid appId)
+        public Appointment? GetById(Guid appId)
         {
-            return _mainRequester.GetEnumTResult<Appointment, Guid>("SELECT * FROM Appointment " +
+            return _mainRequester.GetTResult<Appointment, Guid>("SELECT * FROM Appointment " +
                                                                     "WHERE AppointmentId = @appId", "appId", appId);
         }
 

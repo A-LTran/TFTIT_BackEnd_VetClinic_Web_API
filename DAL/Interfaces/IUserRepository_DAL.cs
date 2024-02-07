@@ -1,4 +1,5 @@
-﻿using DAL.Entities.Enumerations;
+﻿using DAL.Entities.DTO;
+using DAL.Entities.Enumerations;
 
 namespace DAL.Interfaces
 {
@@ -11,6 +12,11 @@ namespace DAL.Interfaces
         public User? GetUserByMail(string mail);
         public Owner? GetOwnerById(Guid ownerId);
         public Owner? GetOwnerByMail(string mail);
+        public string? GetUserPasswordByMail(string mail);
+        public bool PersonExistsCheckById(Guid personId);
+        public bool PersonExistsCheckByMail(string mail);
+        public bool AddressExistsCheckById(Guid id);
+        public UserTokenDto_DAL? GetUserDtoByMail(string mail);
         public bool GetIsActiveByMail(string mail);
         public Address? GetAddressById(Guid addressId);
         public IEnumerable<Address?> GetAddressByAddressInfo(Address address);

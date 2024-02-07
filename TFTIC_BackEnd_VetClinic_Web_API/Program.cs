@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using TFTIC_BackEnd_VetClinic_Web_API.Tools.ExceptionHandler;
 
 namespace TFTIC_BackEnd_VetClinic_Web_API
 {
@@ -26,6 +27,11 @@ namespace TFTIC_BackEnd_VetClinic_Web_API
             builder.Services.AddScoped<IUserRepository_DAL, UserService_DAL>(_ => new UserService_DAL(builder.Configuration.GetConnectionString("TFTIC_VetClinic")!));
             builder.Services.AddScoped<IAnimalRepository_DAL, AnimalService_DAL>(_ => new AnimalService_DAL(builder.Configuration.GetConnectionString("TFTIC_VetClinic")!));
             builder.Services.AddScoped<IAppointmentRepository_DAL, AppointmentService_DAL>(_ => new AppointmentService_DAL(builder.Configuration.GetConnectionString("TFTIC_VetClinic")!));
+
+            // Exception handling
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            // standardized responses as per RFC 7807 specification
+            builder.Services.AddProblemDetails();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
                options =>
@@ -61,6 +67,9 @@ namespace TFTIC_BackEnd_VetClinic_Web_API
             }
 
             app.UseHttpsRedirection();
+
+            // User Exception Handler
+            app.UseExceptionHandler();
 
             app.UseAuthentication();
             app.UseAuthorization();

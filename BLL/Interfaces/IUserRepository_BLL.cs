@@ -13,15 +13,20 @@ namespace BLL.Interfaces
         public bool DeleteUser(Guid userId);
         public bool DeleteOwner(Guid ownerId);
         public bool DeleteAddress(Guid addressId);
-        public IEnumerable<UserForDisplay?> Get();
-        public IEnumerable<UserForDisplay> GetPersonsByRole(int role);
-        public UserForDisplay? GetUserById(Guid userId);
-        public UserForDisplay? GetUserByMail(string mail);
-        public UserForDisplay? GetOwnerById(Guid ownerId);
-
-        public UserForDisplay? GetOwnerByMail(string mail);
+        public IEnumerable<UserDto?> Get();
+        public IEnumerable<UserDto> GetPersonsByRole(int role);
+        public UserDto? GetUserById(Guid userId);
+        public UserDto? GetUserByMail(string mail);
+        public UserDto? GetOwnerById(Guid ownerId);
+        public UserDto? GetOwnerByMail(string mail);
+        public UserTokenDto? GetUserDtoByMail(string mail);
+        public bool PersonExistsCheckById(Guid id);
+        public bool PersonExistsCheckByMail(string mail);
+        public bool AddressExistsCheckById(Guid id);
+        public bool AddressExistsCheckByAddressInfo(AddressRegisterForm form);
+        public string? GetUserPasswordByMail(string mail);
         public IEnumerable<Address> GetAddresses();
         public Address? GetAddressByPersonId(Guid personId);
-        public User? Login(UserLoginForm form);
+        public bool VerifyPassword(UserLoginForm form);
     }
 }

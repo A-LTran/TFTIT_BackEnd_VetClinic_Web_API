@@ -1,8 +1,15 @@
-﻿global using BLL.Interfaces;
+﻿global using BLL.Entities.AddressForms;
+global using BLL.Entities.AnimalForms;
+global using BLL.Entities.Models;
+global using BLL.Entities.PersonForms;
+global using BLL.Interfaces;
 global using BLL.Services;
+global using BLL.Tools;
 global using DAL.Entities;
+global using DAL.Entities.Enumerations;
 global using DAL.Interfaces;
 global using DAL.Services;
+global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Mvc;
 global using System.Text;
 global using TFTIC_BackEnd_VetClinic_Web_API.Tools;

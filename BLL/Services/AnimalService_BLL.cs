@@ -11,32 +11,54 @@
 
         public bool Create(AnimalRegisterForm form)
         {
-            return _animalService.Create(form.ToAnimal());
+            if (!ToolSet.ObjectExistsCheck(!form.Equals(new AnimalRegisterForm()), "Animal"))
+                return false;
+
+            if (!ToolSet.SucceessCheck(_animalService.Create(form.ToAnimal()), "Animal", "created"))
+                return false;
+            return true;
         }
 
-        public IEnumerable<Animal> Get()
+        public IEnumerable<Animal?> Get()
         {
             return _animalService.Get();
         }
 
-        public IEnumerable<Animal> GetByOwner(Guid ownerId)
+        public IEnumerable<Animal?> GetByOwner(Guid ownerId)
         {
             return _animalService.GetByOwner(ownerId);
         }
 
-        public Animal GetAnimal(Guid animalId)
+        public Animal? GetAnimal(Guid animalId)
         {
-            return _animalService.GetAnimal(animalId);
+            Animal? a = _animalService.GetAnimal(animalId);
+            if (!ToolSet.ObjectExistsCheck(a is not null, "Animal"))
+                return null;
+
+            return a;
         }
 
         public bool Update(AnimalEditForm form, Guid animalId)
         {
-            return _animalService.Update(form.ToAnimal(animalId));
+            Animal? a = _animalService.GetAnimal(animalId);
+            if (!ToolSet.ObjectExistsCheck(_animalService.GetAnimal(animalId) is not null, "Animal"))
+                return false;
+
+            if (!ToolSet.SucceessCheck(_animalService.Update(form.ToAnimal(animalId)), "Animal", "updated"))
+                return false;
+
+            return true;
         }
 
         public bool Delete(Guid animalId)
         {
-            return _animalService.Delete(animalId);
+            if (!ToolSet.ObjectExistsCheck(_animalService.GetAnimal(animalId) is not null, "Animal"))
+                return false;
+
+            if (!ToolSet.SucceessCheck(_animalService.Delete(animalId), "Animal", "deleted"))
+                return false;
+
+            return true;
         }
     }
 }

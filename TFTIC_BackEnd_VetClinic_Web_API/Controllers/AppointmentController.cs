@@ -1,14 +1,13 @@
 ﻿using BLL.Entities.AppointmentForms;
-using Microsoft.AspNetCore.Authorization;
 
 namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Appointment : ControllerBase
+    public class AppointmentController : ControllerBase
     {
         private readonly IAppointmentRepository_BLL _appointmentService;
-        public Appointment(IAppointmentRepository_BLL appointmentService)
+        public AppointmentController(IAppointmentRepository_BLL appointmentService)
         {
             _appointmentService = appointmentService;
         }
@@ -29,6 +28,14 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         public IActionResult GetHistory()
         {
             return Ok(_appointmentService.Get(-1));
+        }
+
+        [Authorize("veterinaryPolicy")]
+        [HttpGet("GetById/{appId}")]
+        public IActionResult GetById([FromRoute] Guid appId)
+        {
+            Appointment? a = _appointmentService.GetById(appId);
+            return (a is not null) ? Ok(a) : BadRequest("Invalid Request");
         }
 
         [Authorize("veterinaryPolicy")]
@@ -96,12 +103,9 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         public IActionResult Create([FromBody] AppointmentRegisterForm form)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest("Invalid Form");
 
-            if (_appointmentService.GetByAppointmentAvailability(form))
-                return BadRequest("Cette plage horaire n'est pas disponible.");
-
-            return Ok(_appointmentService.Create(form));
+            return (_appointmentService.Create(form)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
         }
 
         //******************************************************//
@@ -113,9 +117,9 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         public IActionResult Update([FromRoute] Guid appId, [FromBody] AppointmentEditForm form)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest("Invalid Form");
 
-            return Ok(_appointmentService.Update(appId, form));
+            return (_appointmentService.Update(appId, form)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
         }
 
         //******************************************************//
@@ -126,7 +130,7 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         [HttpDelete("DeleteAppointment/{appId}")]
         public IActionResult Delete([FromRoute] Guid appId)
         {
-            return Ok(_appointmentService.Delete(appId));
+            return (_appointmentService.Delete(appId)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
         }
 
         //******************************************************//

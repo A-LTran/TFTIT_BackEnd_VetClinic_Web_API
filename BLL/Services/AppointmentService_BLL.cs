@@ -22,8 +22,11 @@ namespace BLL.Services
 
         public Appointment? GetById(Guid appId)
         {
-            List<Appointment> apps = _appointmentService.GetById(appId).ToList();
-            return (apps.Count == 1) ? apps[0] : null;
+            Appointment? app = _appointmentService.GetById(appId);
+            if (!ToolSet.ObjectExistsCheck(app is not null, "Appointment"))
+                return null;
+
+            return app;
         }
 
         public IEnumerable<Appointment?> GetByVeterinaryId(Guid vetId, int scope)
@@ -57,7 +60,13 @@ namespace BLL.Services
 
         public bool Create(AppointmentRegisterForm form)
         {
-            return _appointmentService.Create(form.ToAppointment());
+            if (ToolSet.SucceessCheck(GetByAppointmentAvailability(form), "", "", "Cette plage horaire n'est pas disponible."))
+                return false;
+
+            if (!ToolSet.SucceessCheck(_appointmentService.Create(form.ToAppointment()), "Appointment", "created"))
+                return false;
+
+            return true;
         }
 
         //*****************************************************************************//
@@ -66,14 +75,27 @@ namespace BLL.Services
 
         public bool Update(Guid id, AppointmentEditForm form)
         {
-            return _appointmentService.Update(form.ToAppointment(id));
+            if (!ToolSet.ObjectExistsCheck(_appointmentService.GetById(id) is not null, "Appointment"))
+                return false;
+
+            if (!ToolSet.SucceessCheck(_appointmentService.Update(form.ToAppointment(id)), "Appointment", "updated"))
+                return false;
+
+            return true;
         }
 
-        // DELETE
+        //*****************************************************************************//
+        //                                    DELETE                                   //
+        //*****************************************************************************//
 
         public bool Delete(Guid id)
         {
-            return _appointmentService.Delete(id);
+            if (!ToolSet.ObjectExistsCheck(_appointmentService.GetById(id) is not null, "Appointment"))
+                return false;
+            if (!ToolSet.SucceessCheck(_appointmentService.Delete(id), "Appointment", "deleted"))
+                return false;
+
+            return true;
         }
     }
 }

@@ -1,14 +1,11 @@
-﻿using BLL.Entities.AnimalForms;
-using Microsoft.AspNetCore.Authorization;
-
-namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
+﻿namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClinicAnimal : ControllerBase
+    public class ClinicAnimalController : ControllerBase
     {
         private readonly IAnimalRepository_BLL _animalService;
-        public ClinicAnimal(IAnimalRepository_BLL animalService)
+        public ClinicAnimalController(IAnimalRepository_BLL animalService)
         {
             _animalService = animalService;
         }
@@ -35,7 +32,8 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         [HttpGet("GetAnimalById/{animalId}")]
         public IActionResult GetAnimalById([FromRoute] Guid AnimalId)
         {
-            return Ok(_animalService.GetAnimal(AnimalId));
+            Animal? a = _animalService.GetAnimal(AnimalId);
+            return (a is not null) ? Ok(a) : BadRequest(ToolSet.Message);
         }
 
         //******************************************************//
@@ -47,9 +45,9 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         public IActionResult Create([FromBody] AnimalRegisterForm form)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest("Invalid Model");
 
-            return Ok(_animalService.Create(form));
+            return (_animalService.Create(form)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
         }
 
         //******************************************************//
@@ -60,7 +58,7 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         [HttpPatch("EditAnimal/{animalId}")]
         public IActionResult Update([FromRoute] Guid animalId, [FromBody] AnimalEditForm form)
         {
-            return Ok(_animalService.Update(form, animalId));
+            return (_animalService.Update(form, animalId)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
         }
 
         //******************************************************//
@@ -71,7 +69,7 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         [HttpDelete("DeleteAnimal/{animalId}")]
         public IActionResult Delete([FromRoute] Guid animalId)
         {
-            return Ok(_animalService.Delete(animalId));
+            return (_animalService.Delete(animalId)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
         }
 
         //******************************************************//

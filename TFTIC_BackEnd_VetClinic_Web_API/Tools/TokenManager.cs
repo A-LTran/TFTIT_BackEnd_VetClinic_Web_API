@@ -1,8 +1,6 @@
-﻿using DAL.Entities.Enumerations;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace TFTIC_BackEnd_VetClinic_Web_API.Tools
 {
@@ -10,7 +8,7 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Tools
     {
         public static string key = "Test,eozik,eiof,z*$**é123654987aziajzheiahdazd--Test,eozik,eiof,z*$**é123654987aziajzheiahdazdTest,eozik,eiof,z*$**é123654987aziajzheiahdazd";
 
-        public string GenerateToken(User user)
+        public string GenerateToken(UserTokenDto user)
         {
             //Générer la clé de signature de mon Token
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));

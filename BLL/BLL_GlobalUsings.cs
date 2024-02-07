@@ -6,6 +6,7 @@ global using BLL.Interfaces;
 global using BLL.Mappers;
 global using BLL.Tools;
 global using DAL.Entities;
+global using DAL.Entities.DTO;
 global using DAL.Interfaces;
 global using DAL.Mappers;
 global using static BLL.Tools.ToolSet;

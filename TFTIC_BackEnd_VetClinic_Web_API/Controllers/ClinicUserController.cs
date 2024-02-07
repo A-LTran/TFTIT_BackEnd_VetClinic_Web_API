@@ -1,18 +1,11 @@
-﻿using BLL.Entities.AddressForms;
-using BLL.Entities.Models;
-using BLL.Entities.PersonForms;
-using BLL.Tools;
-using DAL.Entities.Enumerations;
-using Microsoft.AspNetCore.Authorization;
-
-namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
+﻿namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClinicUser : ControllerBase
+    public class ClinicUserController : ControllerBase
     {
         private IUserRepository_BLL _userService;
-        public ClinicUser(IUserRepository_BLL userService)
+        public ClinicUserController(IUserRepository_BLL userService)
         {
             _userService = userService;
         }
@@ -46,7 +39,7 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         [HttpGet("GetUserById/{userId}")]
         public IActionResult GetUserById([FromRoute] Guid userId)
         {
-            UserForDisplay? u = _userService.GetUserById(userId);
+            UserDto? u = _userService.GetUserById(userId);
             return (u is not null) ? Ok(u) : BadRequest(ToolSet.Message);
         }
 
@@ -54,7 +47,7 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         [HttpGet("GetUserByMail/{mail}")]
         public IActionResult GetUserByMail([FromRoute] string mail)
         {
-            UserForDisplay? u = _userService.GetUserByMail(mail);
+            UserDto? u = _userService.GetUserByMail(mail);
             return (u is not null) ? Ok(u) : BadRequest(ToolSet.Message);
         }
 
@@ -69,7 +62,7 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         [HttpGet("GetOwnerById/{ownerId}")]
         public IActionResult GetOwnerById([FromRoute] Guid ownerId)
         {
-            UserForDisplay? o = _userService.GetOwnerById(ownerId);
+            UserDto? o = _userService.GetOwnerById(ownerId);
             return (o is not null) ? Ok(o) : BadRequest(ToolSet.Message);
         }
 
@@ -77,7 +70,7 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         [HttpGet("GetOwnerByMail/{mail}")]
         public IActionResult GetOwnerByMail([FromRoute] string mail)
         {
-            UserForDisplay? o = _userService.GetOwnerByMail(mail);
+            UserDto? o = _userService.GetOwnerByMail(mail);
             return (o is not null) ? Ok(o) : BadRequest(ToolSet.Message);
         }
 
@@ -106,6 +99,9 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest("Invalid Form");
 
+            if (!_userService.AddressExistsCheckById(addressId))
+                return BadRequest("Invalid Address");
+
             form.PersonRole = Role.Administrator;
             return _userService.Create(form, addressId) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
         }
@@ -116,6 +112,9 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid Form");
+
+            if (!_userService.AddressExistsCheckById(addressId))
+                return BadRequest("Invalid Address");
 
             form.PersonRole = Role.Veterinary;
             return _userService.Create(form, addressId) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
@@ -128,6 +127,9 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest("Invalid Form");
 
+            if (!_userService.AddressExistsCheckById(addressId))
+                return BadRequest("Invalid Address");
+
             form.PersonRole = Role.Owner;
             return _userService.Create(form, addressId) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
         }
@@ -138,6 +140,9 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid Form");
+
+            if (_userService.AddressExistsCheckByAddressInfo(form))
+                return BadRequest("Address already exists");
 
             return _userService.Create(form) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
         }
@@ -150,16 +155,25 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
                 return BadRequest("Invalid Form");
             }
 
-            User? connectedUser = _userService.Login(form);
-
-            if (connectedUser is null)
+            if (!_userService.PersonExistsCheckByMail(form.Email))
             {
                 return BadRequest("Identifiants incorrects.");
             }
 
-            TokenManager tokenManager = new TokenManager();
+            if (!_userService.VerifyPassword(form))
+            {
+                return BadRequest("Identifiants incorrects.");
+            }
 
-            return Ok(tokenManager.GenerateToken(connectedUser));
+            UserTokenDto connectedUser = _userService.GetUserDtoByMail(form.Email)!;
+            TokenManager tokenManager = new();
+
+            string? token = tokenManager.GenerateToken(connectedUser);
+
+            if (token is null)
+                return BadRequest("Response failure : Something went wrong...");
+
+            return Ok(token);
         }
 
         //**************************************************************************************//
@@ -170,6 +184,12 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         [HttpPatch("EditAdmin/{userId}")]
         public IActionResult UpdateAdmin([FromBody] UserEditForm form, [FromRoute] Guid userId)
         {
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid Form");
+
+            if (!_userService.PersonExistsCheckById(userId))
+                return BadRequest("Identifiants incorrects.");
+
             return (_userService.UpdateUser(form, userId, Role.Administrator)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
         }
 
@@ -186,6 +206,9 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest("Invalid Form");
 
+            if (_userService.PersonExistsCheckById(userId))
+                return BadRequest("Identifiants incorrects.");
+
             return (_userService.UpdateUser(form, userId, Role.Veterinary)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
         }
 
@@ -193,6 +216,12 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         [HttpPatch("EditOwner/{ownerId}")]
         public IActionResult EditOwner([FromBody] OwnerEditForm form, [FromRoute] Guid ownerId)
         {
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid Form");
+
+            if (!_userService.PersonExistsCheckById(ownerId))
+                return BadRequest("Identifiants incorrects.");
+
             return (_userService.UpdateOwner(form, ownerId)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
         }
 
@@ -200,6 +229,12 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         [HttpPatch("EditAddress/{addressId}")]
         public IActionResult UpdateAddress([FromBody] AddressEditForm form, [FromRoute] Guid addressId)
         {
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid Form");
+
+            if (!_userService.AddressExistsCheckById(addressId))
+                return BadRequest("Invalid Address");
+
             return (_userService.UpdateAddress(form, addressId)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
         }
 
@@ -211,6 +246,9 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         [HttpDelete("DeletePerson/{personId}")]
         public IActionResult DeleteUser([FromRoute] Guid personId)
         {
+            if (!_userService.PersonExistsCheckById(personId))
+                return BadRequest("Identifiants incorrects.");
+
             return (_userService.DeleteUser(personId)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
         }
 
@@ -218,6 +256,9 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         [HttpDelete("DeleteOwner/{ownerId}")]
         public IActionResult DeleteOwner([FromRoute] Guid ownerId)
         {
+            if (!_userService.PersonExistsCheckById(ownerId))
+                return BadRequest("Identifiants incorrects.");
+
             return (_userService.DeleteOwner(ownerId)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
         }
 
@@ -225,6 +266,9 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         [HttpDelete("DeleteAddress/{addressId}")]
         public IActionResult DeleteAddress([FromRoute] Guid addressId)
         {
+            if (!_userService.AddressExistsCheckById(addressId))
+                return BadRequest("Invalid Address");
+
             return (_userService.DeleteAddress(addressId)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
         }
 

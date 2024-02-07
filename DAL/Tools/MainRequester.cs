@@ -34,6 +34,21 @@ namespace DAL.Tools
         //                               GET                                //
         //******************************************************************//
 
+        public TResult? GetOneVarTResult<TResult, TBody>(string query, string bodyName, TBody body)
+        {
+            using (SqlConnection connection = new(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.CommandText = query;
+                command.Parameters.AddWithValue("@" + bodyName, body);
+
+                connection.Open();
+                TResult result = (TResult)command.ExecuteScalar();
+                connection.Close();
+                return result;
+            }
+        }
+
         public TResult? GetTResult<TResult, TBody>(string query, string bodyName, TBody body) where TResult : class
         {
             using (SqlConnection connection = new(_connectionString))
@@ -178,7 +193,7 @@ namespace DAL.Tools
         private static TResult Read<TResult>(SqlDataReader reader)
         {
             Type type = typeof(TResult);
-            TResult result = (TResult)Activator.CreateInstance(type);
+            TResult result = (TResult)Activator.CreateInstance(type)!;
 
             // Get the properties of the type once and cache them
             if (!propertyCache.ContainsKey(type))

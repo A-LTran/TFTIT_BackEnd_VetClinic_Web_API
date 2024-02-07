@@ -3,7 +3,7 @@
     public interface IAppointmentRepository_DAL
     {
         public IEnumerable<Appointment?> Get(int scope);
-        public IEnumerable<Appointment?> GetById(Guid appId);
+        public Appointment? GetById(Guid appId);
         public IEnumerable<Appointment?> GetByVeterinaryId(Guid id, int scope);
         public IEnumerable<Appointment?> GetByOwnerId(Guid id, int scope);
         public IEnumerable<Appointment?> GetByAnimalName(string name, int scope);

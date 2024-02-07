@@ -1,4 +1,5 @@
-﻿using DAL.Entities.Enumerations;
+﻿using DAL.Entities.DTO;
+using DAL.Entities.Enumerations;
 
 namespace DAL.Services
 {
@@ -108,14 +109,14 @@ namespace DAL.Services
         {
             return _mainRequester.GetTResult<User, Guid>("SELECT * FROM ClinicPerson CP JOIN ClinicUser CU " +
                                                         "ON CP.PersonId = CU.PersonId " +
-                                                        "WHERE CP.PersonRole != 1 AND CP.PersonId = @id", "id", id);
+                                                        "WHERE CP.PersonId = @id", "id", id);
         }
 
         public User? GetUserByMail(string mail)
         {
             return _mainRequester.GetTResult<User, string>("SELECT * FROM ClinicPerson CP JOIN ClinicUser CU " +
                                                             "ON CP.PersonId = CU.PersonId " +
-                                                            "WHERE CP.PersonRole != 1 AND Email = @mail", "mail", mail);
+                                                            "WHERE Email = @mail", "mail", mail);
         }
 
         // OWNER
@@ -135,7 +136,47 @@ namespace DAL.Services
                                                             "AND Email = @mail", "mail", mail);
         }
 
+        public UserTokenDto_DAL? GetUserDtoByMail(string mail)
+        {
+            return _mainRequester.GetTResult<UserTokenDto_DAL, string>("SELECT PersonId" +
+                                                                            ", LastName" +
+                                                                            ", Email" +
+                                                                            ", PersonRole " +
+                                                                        "FROM ClinicPerson " +
+                                                                        "WHERE Email = @mail", "mail", mail);
+        }
+
+        // Person Exists in DB (active and inactive
+
+        public bool PersonExistsCheckById(Guid personId)
+        {
+            return _mainRequester.GetOneVarTResult<Guid, Guid>("SELECT PersonId FROM ClinicPerson " +
+                                                            "WHERE PersonId = @personId", "personId", personId) != default;
+        }
+        public bool PersonExistsCheckByMail(string mail)
+        {
+            return _mainRequester.GetOneVarTResult<Guid, string>("SELECT PersonId FROM ClinicPerson " +
+                                                            "WHERE Email = @mail", "mail", mail) != default;
+        }
+
+        public bool AddressExistsCheckById(Guid id)
+        {
+            return _mainRequester.GetOneVarTResult<Guid, Guid>("SELECT AddressId FROM PersonAddress " +
+                                                            "WHERE AddressId = @id", "id", id) != default;
+        }
+
+        // Password
+
+        public string? GetUserPasswordByMail(string mail)
+        {
+            return _mainRequester.GetOneVarTResult<string, string>("SELECT UserPassword FROM ClinicUser " +
+                                                                "WHERE PersonId = ( SELECT PersonId " +
+                                                                                    "FROM ClinicPerson " +
+                                                                                    "WHERE Email = @mail) ", "mail", mail);
+        }
+
         // IS ACTIVE
+
         public bool GetIsActiveByMail(string mail)
         {
             return _mainRequester.GetTResult<Owner, string>("SELECT * FROM ClinicPerson " +

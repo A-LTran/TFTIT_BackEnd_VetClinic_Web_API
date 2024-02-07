@@ -56,34 +56,30 @@ namespace BLL.Services
 
         public bool Create(AddressRegisterForm form)
         {
-            List<Address?> addresses = _userService.GetAddressByAddressInfo(form.ToAddress()).ToList();
-            if (!ToolSet.ObjectExistsCheck(addresses.Count > 0, "Address"))
-                return false;
-
             if (!ToolSet.SucceessCheck(_userService.Create(form.ToAddress()), "Address", "created"))
                 return false;
 
             return true;
         }
 
-        public User? Login(UserLoginForm form)
+        public bool VerifyPassword(UserLoginForm form)
         {
-            User? u = _userService.GetUserByMail(form.Email);
-            if (u is null)
-                return null;
-            return BCrypt.Net.BCrypt.Verify(form.UserPassword, u.UserPassword) ? u : null;
+            string oldPassword = _userService.GetUserPasswordByMail(form.Email);
+            if (oldPassword.IsNullOrEmpty())
+                return false;
+            return BCrypt.Net.BCrypt.Verify(form.UserPassword, oldPassword) ? true : false;
         }
 
         //*****************************************************************************//
         //                                    GET                                      //
         //*****************************************************************************//
 
-        public IEnumerable<UserForDisplay?> Get()
+        public IEnumerable<UserDto?> Get()
         {
             foreach (User? u in _userService.Get())
                 yield return u?.ToUserForDisplay();
         }
-        public IEnumerable<UserForDisplay> GetPersonsByRole(int role)
+        public IEnumerable<UserDto> GetPersonsByRole(int role)
         {
             Role personRole = (Role)role;
 
@@ -91,9 +87,9 @@ namespace BLL.Services
                 yield return person.ToUserForDisplay();
         }
 
-        public UserForDisplay? GetUserById(Guid userId)
+        public UserDto? GetUserById(Guid userId)
         {
-            UserForDisplay? u = _userService.GetUserById(userId).ToUserForDisplay();
+            UserDto? u = _userService.GetUserById(userId).ToUserForDisplay();
             if (!ToolSet.ObjectExistsCheck(u is not null, "User"))
                 return null;
 
@@ -101,27 +97,39 @@ namespace BLL.Services
 
         }
 
-        public UserForDisplay? GetUserByMail(string mail)
+        public UserDto? GetUserByMail(string mail)
         {
-            UserForDisplay? u = _userService.GetUserByMail(mail).ToUserForDisplay();
+            UserDto? u = _userService.GetUserByMail(mail).ToUserForDisplay();
             if (!ToolSet.ObjectExistsCheck(u is not null, "User"))
                 return null;
 
             return u;
         }
 
-        public UserForDisplay? GetOwnerById(Guid ownerId)
+        public string? GetUserPasswordByMail(string mail)
         {
-            UserForDisplay? o = _userService.GetOwnerById(ownerId).ToUserForDisplay();
+            return _userService.GetUserPasswordByMail(mail);
+        }
+
+        public UserTokenDto? GetUserDtoByMail(string mail)
+        {
+            return _userService.GetUserDtoByMail(mail).ToUserTokenDto();
+        }
+
+        // OWNER
+
+        public UserDto? GetOwnerById(Guid ownerId)
+        {
+            UserDto? o = _userService.GetOwnerById(ownerId).ToUserForDisplay();
             if (!ToolSet.ObjectExistsCheck(o is not null, "Owner"))
                 return null;
 
             return o;
         }
 
-        public UserForDisplay? GetOwnerByMail(string mail)
+        public UserDto? GetOwnerByMail(string mail)
         {
-            UserForDisplay? o = _userService.GetOwnerByMail(mail).ToUserForDisplay();
+            UserDto? o = _userService.GetOwnerByMail(mail).ToUserForDisplay();
             if (!ToolSet.ObjectExistsCheck(o is not null, "Owner"))
                 return null;
 
@@ -141,15 +149,32 @@ namespace BLL.Services
             return a;
         }
 
+        public bool AddressExistsCheckById(Guid id)
+        {
+            return _userService.AddressExistsCheckById(id);
+        }
+
+        public bool AddressExistsCheckByAddressInfo(AddressRegisterForm form)
+        {
+            return _userService.GetAddressByAddressInfo(form.ToAddress()).ToList().Count > 0;
+        }
+
+        public bool PersonExistsCheckById(Guid id)
+        {
+            return _userService.PersonExistsCheckById(id);
+        }
+
+        public bool PersonExistsCheckByMail(string mail)
+        {
+            return _userService.PersonExistsCheckByMail(mail);
+        }
+
         //*****************************************************************************//
         //                                    PATCH                                    //
         //*****************************************************************************//
 
         public bool UpdateUser(UserEditForm form, Guid userId, Role role)
         {
-            if (!ToolSet.ObjectExistsCheck(_userService.GetUserById(userId) is not null, "User"))
-                return false;
-
             Address? address = _userService.GetAddressByPersonId(userId);
 
             if (!ToolSet.ObjectExistsCheck(address is not null, "Address"))
@@ -165,9 +190,6 @@ namespace BLL.Services
 
         public bool UpdateOwner(OwnerEditForm form, Guid ownerId)
         {
-            if (!ToolSet.ObjectExistsCheck(_userService.GetUserById(ownerId) is not null, "Owner"))
-                return false;
-
             Address? address = _userService.GetAddressByPersonId(ownerId);
 
             if (!ToolSet.ObjectExistsCheck(address is not null, "Address"))
@@ -181,9 +203,6 @@ namespace BLL.Services
 
         public bool UpdateAddress(AddressEditForm form, Guid addressId)
         {
-            if (!ToolSet.ObjectExistsCheck(_userService.GetAddressById(addressId) is not null, "Address"))
-                return false;
-
             if (!ToolSet.SucceessCheck(_userService.Update(form.ToAddress(addressId)), "Address", "updated"))
                 return false;
 
@@ -196,9 +215,6 @@ namespace BLL.Services
 
         public bool DeleteOwner(Guid ownerId)
         {
-            if (!ToolSet.ObjectExistsCheck(_userService.GetOwnerById(ownerId) is not null, "Owner"))
-                return false;
-
             if (!ToolSet.SucceessCheck(_userService.DeleteOwner(ownerId), "Owner", "deleted"))
                 return false;
 
@@ -206,9 +222,6 @@ namespace BLL.Services
         }
         public bool DeleteUser(Guid userId)
         {
-            if (!ToolSet.ObjectExistsCheck(_userService.GetUserById(userId) is not null, "User"))
-                return false;
-
             if (!ToolSet.SucceessCheck(_userService.DeleteUser(userId), "User", "deleted"))
                 return false;
 

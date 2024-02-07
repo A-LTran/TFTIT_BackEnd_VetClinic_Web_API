@@ -6,15 +6,30 @@ namespace BLL.Tools
     {
         public static string Message { get; set; } = default!;
 
+        /// <summary>
+        /// Checks if object exists
+        /// </summary>
+        /// <param name="objectExists">bool if object exists</param>
+        /// <param name="objectName">object being tested</param>
+        /// <param name="txt">If you want a specific message to be returned in both case (true/false)</param>
+        /// <returns>bool</returns>
         public static bool ObjectExistsCheck(bool objectExists, string objectName, string txt = "")
         {
-            return CheckTemplate(objectExists, objectName, "is not valid or doesn't exist!", "already exists!", txt);
+            return CheckTemplate(objectExists, objectName, "is not valid or doesn't exist!", "exists!", txt);
         }
 
-        public static bool SucceessCheck(bool creationSuccess, string objectName, string objectAction, string txt = "")
+        /// <summary>
+        /// Checks if action was successful
+        /// </summary>
+        /// <param name="creationSuccess">Bool from the result of the method to be tested</param>
+        /// <param name="objectName">In string, what object are we testing</param>
+        /// <param name="objectAction">What action has been test : "created", "updated",...</param>
+        /// <param name="txt">If you want a specific message to be returned in both case (true/false)</param>
+        /// <returns>bool</returns>
+        public static bool SucceessCheck(bool isSuccess, string objectName, string objectAction, string txt = "")
         {
 
-            return CheckTemplate(creationSuccess, objectName, $"has not been {objectAction}! Something went wrong!", $"has been {objectAction}!", txt);
+            return CheckTemplate(isSuccess, objectName, $"has/have not been {objectAction}!", $"has/have been {objectAction}!", txt);
         }
 
         private static bool CheckTemplate(bool check, string objectName, string ifFalse, string ifTrue, string txt = "")
