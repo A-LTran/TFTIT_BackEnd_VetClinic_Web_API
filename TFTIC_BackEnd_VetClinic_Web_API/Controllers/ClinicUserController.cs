@@ -5,9 +5,11 @@
     public class ClinicUserController : ControllerBase
     {
         private IUserRepository_BLL _userService;
+        private Func<string> _getMessage;
         public ClinicUserController(IUserRepository_BLL userService)
         {
             _userService = userService;
+            _getMessage += _userService.GetMessage;
         }
 
         //*******************************************************************//
@@ -40,7 +42,7 @@
         public IActionResult GetUserById([FromRoute] Guid userId)
         {
             UserDto? u = _userService.GetUserById(userId);
-            return (u is not null) ? Ok(u) : BadRequest(ToolSet.Message);
+            return (u is not null) ? Ok(u) : BadRequest(_getMessage?.Invoke());
         }
 
         [Authorize("veterinaryPolicy")]
@@ -48,7 +50,7 @@
         public IActionResult GetUserByMail([FromRoute] string mail)
         {
             UserDto? u = _userService.GetUserByMail(mail);
-            return (u is not null) ? Ok(u) : BadRequest(ToolSet.Message);
+            return (u is not null) ? Ok(u) : BadRequest(_getMessage?.Invoke());
         }
 
         [Authorize("veterinaryPolicy")]
@@ -63,7 +65,7 @@
         public IActionResult GetOwnerById([FromRoute] Guid ownerId)
         {
             UserDto? o = _userService.GetOwnerById(ownerId);
-            return (o is not null) ? Ok(o) : BadRequest(ToolSet.Message);
+            return (o is not null) ? Ok(o) : BadRequest(_getMessage?.Invoke());
         }
 
         [Authorize("adminAndVetPolicy")]
@@ -71,7 +73,7 @@
         public IActionResult GetOwnerByMail([FromRoute] string mail)
         {
             UserDto? o = _userService.GetOwnerByMail(mail);
-            return (o is not null) ? Ok(o) : BadRequest(ToolSet.Message);
+            return (o is not null) ? Ok(o) : BadRequest(_getMessage?.Invoke());
         }
 
         [Authorize("adminAndVetPolicy")]
@@ -85,7 +87,7 @@
         [HttpGet("GetAddresseByPersonId/{personId}")]
         public IActionResult GetAddresseByPersonId([FromRoute] Guid personId)
         {
-            return (_userService.GetAddressByPersonId(personId) is not null) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
+            return (_userService.GetAddressByPersonId(personId) is not null) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());
         }
 
         //*******************************************************************//
@@ -103,7 +105,7 @@
                 return BadRequest("Invalid Address");
 
             form.PersonRole = Role.Administrator;
-            return _userService.Create(form, addressId) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
+            return _userService.Create(form, addressId) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());
         }
 
         [Authorize("adminPolicy")]
@@ -117,7 +119,7 @@
                 return BadRequest("Invalid Address");
 
             form.PersonRole = Role.Veterinary;
-            return _userService.Create(form, addressId) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
+            return _userService.Create(form, addressId) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());
         }
 
         [Authorize("veterinaryPolicy")]
@@ -131,7 +133,7 @@
                 return BadRequest("Invalid Address");
 
             form.PersonRole = Role.Owner;
-            return _userService.Create(form, addressId) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
+            return _userService.Create(form, addressId) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());
         }
 
         [Authorize("adminAndVetPolicy")]
@@ -144,7 +146,7 @@
             if (_userService.AddressExistsCheckByAddressInfo(form))
                 return BadRequest("Address already exists");
 
-            return _userService.Create(form) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
+            return _userService.Create(form) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());
         }
 
         [HttpPost("Login")]
@@ -190,7 +192,7 @@
             if (!_userService.PersonExistsCheckById(userId))
                 return BadRequest("Identifiants incorrects.");
 
-            return (_userService.UpdateUser(form, userId, Role.Administrator)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
+            return (_userService.UpdateUser(form, userId, Role.Administrator)) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());
         }
 
         [Authorize("adminAndVetPolicy")]
@@ -209,7 +211,7 @@
             if (_userService.PersonExistsCheckById(userId))
                 return BadRequest("Identifiants incorrects.");
 
-            return (_userService.UpdateUser(form, userId, Role.Veterinary)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
+            return (_userService.UpdateUser(form, userId, Role.Veterinary)) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());
         }
 
         [Authorize("veterinaryPolicy")]
@@ -223,7 +225,7 @@
             if (!_userService.PersonExistsCheckById(ownerId))
                 return BadRequest("Identifiants incorrects.");
 
-            return (_userService.UpdateOwner(form, ownerId)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
+            return (_userService.UpdateOwner(form, ownerId)) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());
         }
 
         [Authorize("adminAndVetPolicy")]
@@ -236,7 +238,7 @@
             if (!_userService.AddressExistsCheckById(addressId))
                 return BadRequest("Invalid Address");
 
-            return (_userService.UpdateAddress(form, addressId)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
+            return (_userService.UpdateAddress(form, addressId)) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());
         }
 
         //**************************************************************************************//
@@ -250,7 +252,7 @@
             if (!_userService.PersonExistsCheckById(personId))
                 return BadRequest("Identifiants incorrects.");
 
-            return (_userService.DeleteUser(personId)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
+            return (_userService.DeleteUser(personId)) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());
         }
 
         [Authorize("veterinaryPolicy")]
@@ -260,7 +262,7 @@
             if (!_userService.PersonExistsCheckById(ownerId))
                 return BadRequest("Identifiants incorrects.");
 
-            return (_userService.DeleteOwner(ownerId)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
+            return (_userService.DeleteOwner(ownerId)) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());
         }
 
         [Authorize("veterinaryPolicy")]
@@ -270,9 +272,10 @@
             if (!_userService.AddressExistsCheckById(addressId))
                 return BadRequest("Invalid Address");
 
-            return (_userService.DeleteAddress(addressId)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
+            return (_userService.DeleteAddress(addressId)) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());
         }
 
+        #region TESTING
         //*******************************************************************//
         //                              TESTING                              // 
         //*******************************************************************//
@@ -322,5 +325,6 @@
 
             return Ok();
         }
+        #endregion
     }
 }

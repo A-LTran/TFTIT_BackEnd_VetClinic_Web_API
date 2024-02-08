@@ -2,9 +2,18 @@
 
 namespace BLL.Tools
 {
-    public static class ToolSet
+    public class ToolSet
     {
-        public static string Message { get; set; } = default!;
+        //public static string Message { get; set; } = default!;
+        private static Action<string> LogMessage { get; set; } = default!;
+        public ToolSet()
+        {
+
+        }
+        public ToolSet(Action<string> logMessage)
+        {
+            LogMessage = logMessage;
+        }
 
         /// <summary>
         /// Checks if object exists
@@ -13,7 +22,7 @@ namespace BLL.Tools
         /// <param name="objectName">object being tested</param>
         /// <param name="txt">If you want a specific message to be returned in both case (true/false)</param>
         /// <returns>bool</returns>
-        public static bool ObjectExistsCheck(bool objectExists, string objectName, string txt = "")
+        public bool ObjectExistsCheck(bool objectExists, string objectName, string txt = "")
         {
             return CheckTemplate(objectExists, objectName, "is not valid or doesn't exist!", "exists!", txt);
         }
@@ -26,7 +35,7 @@ namespace BLL.Tools
         /// <param name="objectAction">What action has been test : "created", "updated",...</param>
         /// <param name="txt">If you want a specific message to be returned in both case (true/false)</param>
         /// <returns>bool</returns>
-        public static bool SuccessCheck(bool isSuccess, string objectName, string objectAction, string txt = "")
+        public bool SuccessCheck(bool isSuccess, string objectName, string objectAction, string txt = "")
         {
 
             return CheckTemplate(isSuccess, objectName, $"has/have not been {objectAction}!", $"has/have been {objectAction}!", txt);
@@ -37,16 +46,16 @@ namespace BLL.Tools
             if (check)
             {
                 if (txt.IsNullOrEmpty())
-                    Message = objectName + " " + ifTrue;
+                    LogMessage?.Invoke(objectName + " " + ifTrue);
                 else
-                    Message = txt;
+                    LogMessage?.Invoke(txt);
                 return true;
             }
 
             if (txt.IsNullOrEmpty())
-                Message = objectName + " " + ifFalse;
+                LogMessage?.Invoke(objectName + " " + ifFalse);
             else
-                Message = txt;
+                LogMessage?.Invoke(txt);
             return false;
         }
     }

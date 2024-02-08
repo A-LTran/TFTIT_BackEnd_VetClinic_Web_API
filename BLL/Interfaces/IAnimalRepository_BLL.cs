@@ -2,6 +2,7 @@
 {
     public interface IAnimalRepository_BLL
     {
+        public string GetMessage();
         public bool Create(AnimalRegisterForm form);
         public IEnumerable<Animal?> Get();
         public IEnumerable<Animal?> GetByOwner(Guid ownerId);

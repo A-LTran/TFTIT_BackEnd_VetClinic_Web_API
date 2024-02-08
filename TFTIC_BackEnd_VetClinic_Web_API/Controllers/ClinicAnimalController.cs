@@ -5,9 +5,11 @@
     public class ClinicAnimalController : ControllerBase
     {
         private readonly IAnimalRepository_BLL _animalService;
+        private Func<string> _getMessage;
         public ClinicAnimalController(IAnimalRepository_BLL animalService)
         {
             _animalService = animalService;
+            _getMessage += _animalService.GetMessage;
         }
 
         //******************************************************//
@@ -30,10 +32,10 @@
 
         [Authorize("veterinaryPolicy")]
         [HttpGet("GetAnimalById/{animalId}")]
-        public IActionResult GetAnimalById([FromRoute] Guid AnimalId)
+        public IActionResult GetAnimalById([FromRoute] Guid animalId)
         {
-            Animal? a = _animalService.GetAnimal(AnimalId);
-            return (a is not null) ? Ok(a) : BadRequest(ToolSet.Message);
+            Animal? a = _animalService.GetAnimal(animalId);
+            return (a is not null) ? Ok(a) : BadRequest(_getMessage?.Invoke());
         }
 
         //******************************************************//
@@ -47,7 +49,7 @@
             if (!ModelState.IsValid)
                 return BadRequest("Invalid Model");
 
-            return (_animalService.Create(form)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
+            return (_animalService.Create(form)) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());
         }
 
         //******************************************************//
@@ -58,7 +60,7 @@
         [HttpPatch("EditAnimal/{animalId}")]
         public IActionResult Update([FromRoute] Guid animalId, [FromBody] AnimalEditForm form)
         {
-            return (_animalService.Update(form, animalId)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
+            return (_animalService.Update(form, animalId)) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());
         }
 
         //******************************************************//
@@ -69,9 +71,10 @@
         [HttpDelete("DeleteAnimal/{animalId}")]
         public IActionResult Delete([FromRoute] Guid animalId)
         {
-            return (_animalService.Delete(animalId)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
+            return (_animalService.Delete(animalId)) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());
         }
 
+        #region TESTING
         //******************************************************//
         //                        TESTING                       //   
         //******************************************************//
@@ -90,5 +93,6 @@
             _animalService.Create(animalRegisterForm);
             return Ok();
         }
+        #endregion
     }
 }

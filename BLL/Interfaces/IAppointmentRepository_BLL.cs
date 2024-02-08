@@ -4,6 +4,7 @@ namespace BLL.Interfaces
 {
     public interface IAppointmentRepository_BLL
     {
+        public string GetMessage();
         public IEnumerable<Appointment?> Get(int scope);
         public Appointment? GetById(Guid appId);
         public IEnumerable<Appointment?> GetByVeterinaryId(Guid vetId, int scope);

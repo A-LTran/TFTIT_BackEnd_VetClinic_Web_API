@@ -7,9 +7,11 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
     public class AppointmentController : ControllerBase
     {
         private readonly IAppointmentRepository_BLL _appointmentService;
+        private readonly Func<string> _getMessage;
         public AppointmentController(IAppointmentRepository_BLL appointmentService)
         {
             _appointmentService = appointmentService;
+            _getMessage += _appointmentService.GetMessage;
         }
 
         //******************************************************//
@@ -105,7 +107,7 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest("Invalid Form");
 
-            return (_appointmentService.Create(form)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
+            return (_appointmentService.Create(form)) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());
         }
 
         //******************************************************//
@@ -119,7 +121,7 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest("Invalid Form");
 
-            return (_appointmentService.Update(appId, form)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
+            return (_appointmentService.Update(appId, form)) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());
         }
 
         //******************************************************//
@@ -130,9 +132,10 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
         [HttpDelete("DeleteAppointment/{appId}")]
         public IActionResult Delete([FromRoute] Guid appId)
         {
-            return (_appointmentService.Delete(appId)) ? Ok(ToolSet.Message) : BadRequest(ToolSet.Message);
+            return (_appointmentService.Delete(appId)) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());
         }
 
+        #region TESTING
         //******************************************************//
         //                        TESTING                       //   
         //******************************************************//
@@ -152,5 +155,6 @@ namespace TFTIC_BackEnd_VetClinic_Web_API.Controllers
             _appointmentService.Create(appointmentRegisterForm);
             return Ok();
         }
+        #endregion
     }
 }

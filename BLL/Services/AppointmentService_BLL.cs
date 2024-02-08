@@ -5,10 +5,30 @@ namespace BLL.Services
     public class AppointmentService_BLL : IAppointmentRepository_BLL
     {
         private readonly IAppointmentRepository_DAL _appointmentService;
+        private readonly ToolSet _toolSet;
 
+        //public string Message { get; set; } = default!;
+        private string _message;
+
+        public string Message
+        {
+            get { return _message; }
+            set { _message = value; }
+        }
         public AppointmentService_BLL(IAppointmentRepository_DAL appointmentService)
         {
             _appointmentService = appointmentService;
+            _toolSet = new ToolSet(LogMessage);
+        }
+
+        private void LogMessage(string message)
+        {
+            Message = message;
+        }
+
+        public string GetMessage()
+        {
+            return Message;
         }
 
         //*****************************************************************************//
@@ -23,7 +43,7 @@ namespace BLL.Services
         public Appointment? GetById(Guid appId)
         {
             Appointment? app = _appointmentService.GetById(appId);
-            if (!ObjectExistsCheck(app is not null, "Appointment"))
+            if (!_toolSet.ObjectExistsCheck(app is not null, "Appointment"))
                 return null;
 
             return app;
@@ -60,10 +80,10 @@ namespace BLL.Services
 
         public bool Create(AppointmentRegisterForm form)
         {
-            if (SuccessCheck(GetByAppointmentAvailability(form), "", "", "Cette plage horaire n'est pas disponible."))
+            if (_toolSet.SuccessCheck(GetByAppointmentAvailability(form), "", "", "Cette plage horaire n'est pas disponible."))
                 return false;
 
-            if (!SuccessCheck(_appointmentService.Create(form.ToAppointment()), "Appointment", "created"))
+            if (!_toolSet.SuccessCheck(_appointmentService.Create(form.ToAppointment()), "Appointment", "created"))
                 return false;
 
             return true;
@@ -76,7 +96,7 @@ namespace BLL.Services
         public bool Update(Guid id, AppointmentEditForm form)
         {
             Appointment? currentApp = _appointmentService.GetById(id)!;
-            if (!ObjectExistsCheck(currentApp is not null, "Appointment"))
+            if (!_toolSet.ObjectExistsCheck(currentApp is not null, "Appointment"))
                 return false;
 
             Appointment? newApp = form.ToAppointment(id);
@@ -90,7 +110,7 @@ namespace BLL.Services
                 }
             }
 
-            if (!SuccessCheck(_appointmentService.Update(currentApp), "Appointment", "updated"))
+            if (!_toolSet.SuccessCheck(_appointmentService.Update(currentApp), "Appointment", "updated"))
                 return false;
 
             return true;
@@ -102,9 +122,9 @@ namespace BLL.Services
 
         public bool Delete(Guid id)
         {
-            if (!ObjectExistsCheck(_appointmentService.GetById(id) is not null, "Appointment"))
+            if (!_toolSet.ObjectExistsCheck(_appointmentService.GetById(id) is not null, "Appointment"))
                 return false;
-            if (!SuccessCheck(_appointmentService.Delete(id), "Appointment", "deleted"))
+            if (!_toolSet.SuccessCheck(_appointmentService.Delete(id), "Appointment", "deleted"))
                 return false;
 
             return true;

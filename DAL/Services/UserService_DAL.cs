@@ -159,11 +159,6 @@ namespace DAL.Services
                                                             "WHERE Email = @mail", "mail", mail) != default;
         }
 
-        public bool AddressExistsCheckById(Guid id)
-        {
-            return _mainRequester.GetOneVarTResult<Guid, Guid>("SELECT AddressId FROM PersonAddress " +
-                                                            "WHERE AddressId = @id", "id", id) != default;
-        }
 
         // Password
 
@@ -184,7 +179,16 @@ namespace DAL.Services
                                                             "AND Email = @mail", "mail", mail) is not null;
         }
 
+        // Address exists
+
+        public bool AddressExistsCheckById(Guid id)
+        {
+            return _mainRequester.GetOneVarTResult<Guid, Guid>("SELECT AddressId FROM PersonAddress " +
+                                                            "WHERE AddressId = @id", "id", id) != default;
+        }
+
         // GET ADDRESS
+
         public IEnumerable<Address?> GetAddresses()
         {
             return _mainRequester.GetEnumTResult<Address, string>("SELECT * FROM PersonAddress " +
@@ -221,6 +225,7 @@ namespace DAL.Services
         //                                    PATCH                                    //
         //*****************************************************************************//
 
+        // OWNER
         public bool Update(Owner owner)
         {
             string query = "UPDATE ClinicPerson " +
@@ -237,6 +242,7 @@ namespace DAL.Services
             return _mainRequester.Update(query, owner);
         }
 
+        // USER
         public bool Update(User user)
         {
             string query = "UPDATE ClinicPerson " +
@@ -256,6 +262,7 @@ namespace DAL.Services
             return _mainRequester.Update(query, user);
         }
 
+        // ADDRESS
         public bool Update(Address address)
         {
             string query = "UPDATE PersonAddress " +
@@ -268,6 +275,7 @@ namespace DAL.Services
             return _mainRequester.Update(query, address);
         }
 
+        // ISACTIVE
         public bool SetIsActiveOn(Guid personId)
         {
             return _mainRequester.Update("UPDATE ClinicPerson SET IsActive = 1 WHERE PersonId = @personId", "personId", personId);
