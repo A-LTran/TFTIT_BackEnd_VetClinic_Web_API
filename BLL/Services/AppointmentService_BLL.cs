@@ -7,13 +7,12 @@ namespace BLL.Services
         private readonly IAppointmentRepository_DAL _appointmentService;
         private readonly ToolSet _toolSet;
 
-        //public string Message { get; set; } = default!;
         private string _message;
 
         public string Message
         {
             get { return _message; }
-            set { _message = value; }
+            private set { _message = value; }
         }
         public AppointmentService_BLL(IAppointmentRepository_DAL appointmentService)
         {

@@ -1,0 +1,316 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TFTIC_BackEnd_VetClinic_Web_API</name>
+    </assembly>
+    <members>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.AppointmentController.Get">
+            <summary>
+            Get all appointments
+            </summary>
+            <returns>IEnumerable&lt;Appointment&gt;</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.AppointmentController.GetHistory">
+            <summary>
+            Get old appointments
+            </summary>
+            <returns>IEnumerable&lt;Appointment&gt;</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.AppointmentController.GetById(System.Guid)">
+            <summary>
+            Get appointment by id
+            </summary>
+            <param name="appId">Guid - AppointmentId</param>
+            <returns>Appointment</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.AppointmentController.GetByVet(System.Guid)">
+            <summary>
+            Get active appointments by veterinary
+            </summary>
+            <param name="vetId">Guid - PersonId</param>
+            <returns>IEnumerable&lt;Appointment&gt;</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.AppointmentController.GetHistoryByVet(System.Guid)">
+            <summary>
+            Get old appointments by veterinary
+            </summary>
+            <param name="vetId">Guid - PersonId</param>
+            <returns>IEnumerable&lt;Appointment&gt;</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.AppointmentController.GetByOwner(System.Guid)">
+            <summary>
+            Get active appointments by owner
+            </summary>
+            <param name="ownerId">Guid - OwnerId</param>
+            <returns>IEnumerable&lt;Appointment&gt;</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.AppointmentController.GetHistoryByOwner(System.Guid)">
+            <summary>
+            Get old appointments by owner
+            </summary>
+            <param name="ownerId">Guid - OwnerId</param>
+            <returns>IEnumerable&lt;Appointment&gt;</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.AppointmentController.GetByAnimal(System.String)">
+            <summary>
+            Get active appointments by animal
+            </summary>
+            <param name="name">string - AnimalName</param>
+            <returns>IEnumerable&lt;Appointment&gt;</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.AppointmentController.GetHistoryByAnimal(System.String)">
+            <summary>
+            Get old appointments by animal name
+            </summary>
+            <param name="name">string - AnimalName</param>
+            <returns>IEnumerable&lt;Appointment&gt;</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.AppointmentController.GetByAnimal(System.Guid)">
+            <summary>
+            Get active appointments by animalId
+            </summary>
+            <param name="animalId">Guid - AnimalId</param>
+            <returns>IEnumerable&lt;Appointment&gt;</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.AppointmentController.GetHistoryByAnimal(System.Guid)">
+            <summary>
+            Get old appointments by animalId
+            </summary>
+            <param name="animalId">Guid - AnimalId</param>
+            <returns>IEnumerable&lt;Appointment&gt;</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.AppointmentController.Create(BLL.Entities.AppointmentForms.AppointmentRegisterForm)">
+            <summary>
+            Create an appointment
+            </summary>
+            <param name="form">AppointmentRegisterForm</param>
+            <returns>void</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.AppointmentController.Update(System.Guid,BLL.Entities.AppointmentForms.AppointmentEditForm)">
+            <summary>
+            Update an appointment
+            </summary>
+            <param name="appId">Guid - AppointmentId</param>
+            <param name="form">AppointmentEditForm</param>
+            <returns>void</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.AppointmentController.Delete(System.Guid)">
+            <summary>
+            Delete an appointment
+            </summary>
+            <param name="appId">Guid - AppointmentId</param>
+            <returns>void</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.AppointmentController.GenerateSomeAppointments">
+            <summary>
+            Populate database with appointments
+            </summary>
+            <returns>void</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicAnimalController.GetAnimals">
+            <summary>
+            Get all animals
+            </summary>
+            <returns>IEnumerable&lt;Animal&gt;</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicAnimalController.GetAnimals(System.Guid)">
+            <summary>
+            Get animals by owner
+            </summary>
+            <param name="ownerId">Guid - PersonId</param>
+            <returns>IEnumerable&lt;Address&gt;</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicAnimalController.GetAnimalById(System.Guid)">
+            <summary>
+            Get animal by Id
+            </summary>
+            <param name="animalId">Guid - AnimalId</param>
+            <returns>Animal</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicAnimalController.Create(BLL.Entities.AnimalForms.AnimalRegisterForm)">
+            <summary>
+            Create an animal
+            </summary>
+            <param name="form">AnimalRegisterForm</param>
+            <returns>void</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicAnimalController.Update(System.Guid,BLL.Entities.AnimalForms.AnimalEditForm)">
+            <summary>
+            Update an animal
+            </summary>
+            <param name="animalId">Guid - AnimalId</param>
+            <param name="form">AnimalEditForm</param>
+            <returns>void</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicAnimalController.Delete(System.Guid)">
+            <summary>
+            Delete an animal
+            </summary>
+            <param name="animalId">Guid - AnimalId</param>
+            <returns>void</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.Get">
+            <summary>
+            Get all active users
+            </summary>
+            <returns>IEnumerable&lt;UserDto?&gt;</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.GetByRole(System.Int32)">
+            <summary>
+            Get active persons by role
+            </summary>
+            <param name="role">Enum UserRole Parsed to int</param>
+            <returns>IEnumerable&lt;UserDto?&gt;</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.GetVeterinarians">
+            <summary>
+            Get all active veterinarians
+            </summary>
+            <returns>IEnumerable&lt;UserDto?&gt;</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.GetUserById(System.Guid)">
+            <summary>
+            Get a veterinary by PersonId
+            </summary>
+            <param name="userId">Guid - PersonId</param>
+            <returns>UserDto</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.GetUserByMail(System.String)">
+            <summary>
+            Get veterinary by Email addresss
+            </summary>
+            <param name="mail">string - Email</param>
+            <returns>UserDto</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.GetOwners">
+            <summary>
+            Get all active owners
+            </summary>
+            <returns>IEnumerable&lt;UserDto?&gt;</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.GetOwnerById(System.Guid)">
+            <summary>
+            Get owner by PersonId
+            </summary>
+            <param name="ownerId">Guid - PersonId</param>
+            <returns>UserDto</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.GetOwnerByMail(System.String)">
+            <summary>
+            Get owner by Email address
+            </summary>
+            <param name="mail">string - Email</param>
+            <returns>UserDto</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.GetAddresses">
+            <summary>
+            Get all active addresses
+            </summary>
+            <returns>IEnumerable&lt;Address&gt;</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.GetAddressByPersonId(System.Guid)">
+            <summary>
+            Get address by PersonId
+            </summary>
+            <param name="personId">Guid - PersonId</param>
+            <returns>Address</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.CreateAdmin(BLL.Entities.PersonForms.UserRegisterForm,System.Guid)">
+            <summary>
+            Create an administrator
+            </summary>
+            <param name="form">UserRegisterForm</param>
+            <param name="addressId">Guid - AddressId</param>
+            <returns>void</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.CreateVeterinary(BLL.Entities.PersonForms.UserRegisterForm,System.Guid)">
+            <summary>
+            Create a veterinary
+            </summary>
+            <param name="form">UserRegisterForm</param>
+            <param name="addressId">Guid - AddressId</param>
+            <returns>void</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.CreateOwner(BLL.Entities.PersonForms.OwnerRegisterForm,System.Guid)">
+            <summary>
+            Create an owner
+            </summary>
+            <param name="form">OwnerRegisterForm</param>
+            <param name="addressId">Guid - AddressId</param>
+            <returns>void</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.CreateAddress(BLL.Entities.AddressForms.AddressRegisterForm)">
+            <summary>
+            Create an address
+            </summary>
+            <param name="form">AddressRegisterForm</param>
+            <returns>void</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.Login(BLL.Entities.PersonForms.UserLoginForm)">
+            <summary>
+            Log into the webAPI
+            </summary>
+            <param name="form">UserLoginForm</param>
+            <returns>string - token</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.UpdateAdmin(BLL.Entities.PersonForms.UserEditForm,System.Guid)">
+            <summary>
+            Update an administrator
+            </summary>
+            <param name="form">UserEditForm</param>
+            <param name="userId">Guid - PersonId</param>
+            <returns>void</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.UpdateVeterinary(BLL.Entities.PersonForms.UserEditForm,System.Guid)">
+            <summary>
+            Update a veterinary
+            </summary>
+            <param name="form">UserEditForm</param>
+            <param name="userId">Guid - PersonId</param>
+            <returns>void</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.EditOwner(BLL.Entities.PersonForms.OwnerEditForm,System.Guid)">
+            <summary>
+            Update an owner
+            </summary>
+            <param name="form">OwnerEditForm</param>
+            <param name="ownerId">Guid - PersonId</param>
+            <returns>void</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.UpdateAddress(BLL.Entities.AddressForms.AddressEditForm,System.Guid)">
+            <summary>
+            Update an address
+            </summary>
+            <param name="form">AddressEditForm</param>
+            <param name="addressId">Guid - AddressId</param>
+            <returns>void</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.DeleteUser(System.Guid)">
+            <summary>
+            Delete a person
+            </summary>
+            <param name="personId">Guid - PersonId</param>
+            <returns>void</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.DeleteOwner(System.Guid)">
+            <summary>
+            Delete an owner
+            </summary>
+            <param name="ownerId">Guid - PersonId</param>
+            <returns>void</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.DeleteAddress(System.Guid)">
+            <summary>
+            Delete an address
+            </summary>
+            <param name="addressId">Guid - AddressId</param>
+            <returns>void</returns>
+        </member>
+        <member name="M:TFTIC_BackEnd_VetClinic_Web_API.Controllers.ClinicUserController.GenerateSomePersons">
+            <summary>
+            Populate some persons
+            </summary>
+            <returns>void</returns>
+        </member>
+    </members>
+</doc>

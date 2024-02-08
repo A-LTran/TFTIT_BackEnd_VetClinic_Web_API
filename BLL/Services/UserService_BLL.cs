@@ -8,15 +8,13 @@ namespace BLL.Services
         private readonly IUserRepository_DAL _userService;
         private readonly ToolSet _toolSet;
 
-        //public string Message { get; set; } = default!;
         private string _message;
 
         public string Message
         {
             get { return _message; }
-            set { _message = value; }
+            private set { _message = value; }
         }
-
 
         public UserService_BLL(IUserRepository_DAL userRepository)
         {

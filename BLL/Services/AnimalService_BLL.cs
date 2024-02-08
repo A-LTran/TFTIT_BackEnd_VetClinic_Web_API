@@ -5,13 +5,12 @@
         private readonly IAnimalRepository_DAL _animalService;
         private readonly ToolSet _toolSet;
 
-        //public string Message { get; set; } = default!;
         private string _message;
 
         public string Message
         {
             get { return _message; }
-            set { _message = value; }
+            private set { _message = value; }
         }
         private void LogMessage(string message)
         {

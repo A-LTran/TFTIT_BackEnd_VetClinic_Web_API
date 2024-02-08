@@ -16,6 +16,10 @@
         //                          GET                         //   
         //******************************************************//
 
+        /// <summary>
+        /// Get all animals
+        /// </summary>
+        /// <returns>IEnumerable&lt;Animal&gt;</returns>
         [Authorize("veterinaryPolicy")]
         [HttpGet("GetAnimals")]
         public IActionResult GetAnimals()
@@ -23,6 +27,11 @@
             return Ok(_animalService.Get());
         }
 
+        /// <summary>
+        /// Get animals by owner
+        /// </summary>
+        /// <param name="ownerId">Guid - PersonId</param>
+        /// <returns>IEnumerable&lt;Address&gt;</returns>
         [Authorize("veterinaryPolicy")]
         [HttpGet("GetAnimalsByOwner/{ownerId}")]
         public IActionResult GetAnimals([FromRoute] Guid ownerId)
@@ -30,6 +39,11 @@
             return Ok(_animalService.GetByOwner(ownerId));
         }
 
+        /// <summary>
+        /// Get animal by Id
+        /// </summary>
+        /// <param name="animalId">Guid - AnimalId</param>
+        /// <returns>Animal</returns>
         [Authorize("veterinaryPolicy")]
         [HttpGet("GetAnimalById/{animalId}")]
         public IActionResult GetAnimalById([FromRoute] Guid animalId)
@@ -42,6 +56,11 @@
         //                         POST                         //   
         //******************************************************//
 
+        /// <summary>
+        /// Create an animal
+        /// </summary>
+        /// <param name="form">AnimalRegisterForm</param>
+        /// <returns>void</returns>
         [Authorize("veterinaryPolicy")]
         [HttpPost("AddAnimal")]
         public IActionResult Create([FromBody] AnimalRegisterForm form)
@@ -56,6 +75,12 @@
         //                         PATCH                        //   
         //******************************************************//
 
+        /// <summary>
+        /// Update an animal
+        /// </summary>
+        /// <param name="animalId">Guid - AnimalId</param>
+        /// <param name="form">AnimalEditForm</param>
+        /// <returns>void</returns>
         [Authorize("veterinaryPolicy")]
         [HttpPatch("EditAnimal/{animalId}")]
         public IActionResult Update([FromRoute] Guid animalId, [FromBody] AnimalEditForm form)
@@ -67,6 +92,11 @@
         //                        DELETE                        //   
         //******************************************************//
 
+        /// <summary>
+        /// Delete an animal
+        /// </summary>
+        /// <param name="animalId">Guid - AnimalId</param>
+        /// <returns>void</returns>
         [Authorize("veterinaryPolicy")]
         [HttpDelete("DeleteAnimal/{animalId}")]
         public IActionResult Delete([FromRoute] Guid animalId)
