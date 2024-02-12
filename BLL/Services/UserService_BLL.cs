@@ -5,23 +5,24 @@ namespace BLL.Services
 {
     public class UserService_BLL : IUserRepository_BLL
     {
+        #region Injection&Ctor
         private readonly IUserRepository_DAL _userService;
         private readonly ToolSet _toolSet;
-
-        private string _message;
-
-        public string Message
-        {
-            get { return _message; }
-            private set { _message = value; }
-        }
 
         public UserService_BLL(IUserRepository_DAL userRepository)
         {
             _userService = userRepository;
             _toolSet = new(LogMessage);
         }
+        #endregion
 
+        #region MessageHandling
+        private string _message;
+        public string Message
+        {
+            get { return _message; }
+            private set { _message = value; }
+        }
         private void LogMessage(string message)
         {
             Message = message;
@@ -31,7 +32,9 @@ namespace BLL.Services
         {
             return Message;
         }
+        #endregion
 
+        #region POST
         //*****************************************************************************//
         //                                    POST                                     //
         //*****************************************************************************//
@@ -72,7 +75,6 @@ namespace BLL.Services
             return true;
         }
 
-
         public bool Create(AddressRegisterForm form)
         {
             if (!_toolSet.SuccessCheck(_userService.Create(form.ToAddress()), "Address", "created"))
@@ -92,7 +94,9 @@ namespace BLL.Services
 
             return true;
         }
+        #endregion
 
+        #region GET
         //*****************************************************************************//
         //                                    GET                                      //
         //*****************************************************************************//
@@ -110,6 +114,7 @@ namespace BLL.Services
                 yield return person.ToUserForDisplay();
         }
 
+        #region USER
         public UserDto? GetUserById(Guid userId)
         {
             UserDto? u = _userService.GetUserById(userId).ToUserForDisplay();
@@ -138,8 +143,9 @@ namespace BLL.Services
         {
             return _userService.GetUserDtoByMail(mail).ToUserTokenDto();
         }
+        #endregion
 
-        // OWNER
+        #region OWNER       
 
         public UserDto? GetOwnerById(Guid ownerId)
         {
@@ -158,7 +164,9 @@ namespace BLL.Services
 
             return o;
         }
+        #endregion
 
+        #region ADDRESS
         public IEnumerable<Address> GetAddresses()
         {
             return _userService.GetAddresses()!;
@@ -181,7 +189,9 @@ namespace BLL.Services
         {
             return _userService.GetAddressByAddressInfo(form.ToAddress()).ToList().Count > 0;
         }
+        #endregion
 
+        #region PERSON EXISTS
         public bool PersonExistsCheckById(Guid id)
         {
             return _userService.PersonExistsCheckById(id);
@@ -191,7 +201,10 @@ namespace BLL.Services
         {
             return _userService.PersonExistsCheckByMail(mail);
         }
+        #endregion
+        #endregion
 
+        #region PATCH
         //*****************************************************************************//
         //                                    PATCH                                    //
         //*****************************************************************************//
@@ -267,7 +280,9 @@ namespace BLL.Services
 
             return true;
         }
+        #endregion
 
+        #region DELETE
         //*****************************************************************************//
         //                                   DELETE                                    //
         //*****************************************************************************//
@@ -297,5 +312,6 @@ namespace BLL.Services
 
             return true;
         }
+        #endregion
     }
 }

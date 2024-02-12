@@ -1,4 +1,5 @@
 
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using TFTIC_BackEnd_VetClinic_Web_API.Tools.ExceptionHandler;
@@ -56,15 +57,11 @@ namespace TFTIC_BackEnd_VetClinic_Web_API
                }
             );
 
-            builder.Services.AddAuthorization(option =>
-            {
-                // Pour les points d'entrée accessible aux "admins"
-                option.AddPolicy("adminPolicy", p => p.RequireRole("administrator"));
-                option.AddPolicy("veterinaryPolicy", p => p.RequireRole("veterinary"));
-                option.AddPolicy("adminAndVetPolicy", p => p.RequireRole("administrator", "veterinary"));
-                // User must be authenticated
-                option.AddPolicy("connected", p => p.RequireAuthenticatedUser());
-            });
+            builder.Services.AddAuthorizationBuilder()
+                .AddPolicy("adminPolicy", p => p.RequireRole("administrator"))
+                .AddPolicy("veterinaryPolicy", p => p.RequireRole("veterinary"))
+                .AddPolicy("adminAndVetPolicy", p => p.RequireRole("administrator", "veterinary"))
+                .AddPolicy("connected", p => p.RequireAuthenticatedUser());
 
             var app = builder.Build();
 
@@ -74,6 +71,8 @@ namespace TFTIC_BackEnd_VetClinic_Web_API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
 
             app.UseHttpsRedirection();
 

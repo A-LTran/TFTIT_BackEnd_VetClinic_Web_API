@@ -12,6 +12,7 @@ namespace DAL.Services
             _mainRequester = new MainRequester(connectionString);
         }
 
+        #region POST
         //*****************************************************************************//
         //                                    POST                                     //
         //*****************************************************************************//
@@ -31,7 +32,7 @@ namespace DAL.Services
                                                 "VALUES (@personId" +
                                                         ", @firstName" +
                                                         ", @lastName" +
-                                                        ",@email" +
+                                                        ", @email" +
                                                         ", @phone" +
                                                         ", @mobile" +
                                                         ", @birthdate" +
@@ -65,24 +66,27 @@ namespace DAL.Services
 
         public bool Create(Address address)
         {
-            return _mainRequester.Create<Address>("INSERT INTO PersonAddress (AddressId, " +
-                                                                                "Address1, " +
-                                                                                "Address2, " +
-                                                                                "City, " +
-                                                                                "Country, " +
-                                                                                "PostalCode) " +
-                                                    "VALUES (@addressId, " +
-                                                            "@address1, " +
-                                                            "@address2, " +
-                                                            "@city, " +
-                                                            "@country, " +
-                                                            "@postalCode);", address);
+            return _mainRequester.Create<Address>("INSERT INTO PersonAddress (AddressId" +
+                                                                                ", Address1" +
+                                                                                ", Address2" +
+                                                                                ", City" +
+                                                                                ", Country" +
+                                                                                ", PostalCode) " +
+                                                    "VALUES (@addressId" +
+                                                            ", @address1" +
+                                                            ", @address2" +
+                                                            ", @city" +
+                                                            ", @country" +
+                                                            ", @postalCode);", address);
         }
+        #endregion
 
+        #region GET
         //*****************************************************************************//
         //                                     GET                                     //
         //*****************************************************************************//
 
+        #region GET ACTIVE
         public IEnumerable<User?> Get()
         {
             return _mainRequester.GetEnumTResult<User, Guid>("EXECUTE GetActivePersons", "@personId", Guid.Empty);
@@ -101,8 +105,10 @@ namespace DAL.Services
                 default:
                     return null;
             }
-        }
+        } 
+        #endregion
 
+        #region USER
         // USER
 
         public User? GetUserById(Guid id)
@@ -117,8 +123,10 @@ namespace DAL.Services
             return _mainRequester.GetTResult<User, string>("SELECT * FROM ClinicPerson CP JOIN ClinicUser CU " +
                                                             "ON CP.PersonId = CU.PersonId " +
                                                             "WHERE Email = @mail", "mail", mail);
-        }
+        } 
+        #endregion
 
+        #region OWNER
         // OWNER
         public Owner? GetOwnerById(Guid ownerId)
         {
@@ -144,8 +152,10 @@ namespace DAL.Services
                                                                             ", PersonRole " +
                                                                         "FROM ClinicPerson " +
                                                                         "WHERE Email = @mail", "mail", mail);
-        }
+        } 
+        #endregion
 
+        #region PERSON EXISTS
         // Person Exists in DB (active and inactive
 
         public bool PersonExistsCheckById(Guid personId)
@@ -153,13 +163,15 @@ namespace DAL.Services
             return _mainRequester.GetOneVarTResult<Guid, Guid>("SELECT PersonId FROM ClinicPerson " +
                                                             "WHERE PersonId = @personId", "personId", personId) != default;
         }
+
         public bool PersonExistsCheckByMail(string mail)
         {
             return _mainRequester.GetOneVarTResult<Guid, string>("SELECT PersonId FROM ClinicPerson " +
                                                             "WHERE Email = @mail", "mail", mail) != default;
-        }
+        } 
+        #endregion
 
-
+        #region PASSWORD
         // Password
 
         public string? GetUserPasswordByMail(string mail)
@@ -169,7 +181,9 @@ namespace DAL.Services
                                                                                     "FROM ClinicPerson " +
                                                                                     "WHERE Email = @mail) ", "mail", mail);
         }
+        #endregion
 
+        #region IS ACTIVE
         // IS ACTIVE
 
         public bool GetIsActiveByMail(string mail)
@@ -178,6 +192,9 @@ namespace DAL.Services
                                                             "WHERE IsActive = 1 " +
                                                             "AND Email = @mail", "mail", mail) is not null;
         }
+        #endregion
+
+        #region ADDRESS
 
         // Address exists
 
@@ -220,7 +237,10 @@ namespace DAL.Services
                                                                 "AND Country = @country " +
                                                                 "AND PostalCode = @postalCode", address);
         }
+        #endregion
+        #endregion
 
+        #region PATCH
         //*****************************************************************************//
         //                                    PATCH                                    //
         //*****************************************************************************//
@@ -285,7 +305,9 @@ namespace DAL.Services
         {
             return _mainRequester.Update("UPDATE ClinicPerson SET IsActive = 0 WHERE PersonId = @personId", "personId", personId);
         }
+        #endregion
 
+        #region DELETE
         //*****************************************************************************//
         //                                    DELETE                                   //
         //*****************************************************************************//
@@ -307,5 +329,6 @@ namespace DAL.Services
             return _mainRequester.Delete<Guid>("DELETE FROM [PersonAddress] " +
                                                 "WHERE AddressId = @addressId; ", "addressId", addressId);
         }
+        #endregion
     }
 }
