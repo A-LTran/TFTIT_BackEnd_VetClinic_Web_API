@@ -89,7 +89,7 @@ namespace DAL.Services
         #region GET ACTIVE
         public IEnumerable<User?> Get()
         {
-            return _mainRequester.GetEnumTResult<User, Guid>("EXECUTE GetActivePersons", "@personId", Guid.Empty);
+            return _mainRequester.GetEnumTResult<User, string>("EXECUTE GetActivePersons", "");
         }
 
         public IEnumerable<Person?> GetPersonsByRole(Role personRole)
@@ -97,15 +97,15 @@ namespace DAL.Services
             switch (personRole)
             {
                 case Role.Owner:
-                    return _mainRequester.GetEnumTResult<Owner, string>("EXECUTE GetActiveOwners", "", "");
+                    return _mainRequester.GetEnumTResult<Owner, string>("EXECUTE GetActiveOwners", "");
                 case Role.Veterinary:
-                    return _mainRequester.GetEnumTResult<User, string>("EXECUTE GetActiveVeterinarians", "", "");
+                    return _mainRequester.GetEnumTResult<User, string>("EXECUTE GetActiveVeterinarians", "");
                 case Role.Administrator:
-                    return _mainRequester.GetEnumTResult<User, string>("EXECUTE GetActiveAdmins", "", "");
+                    return _mainRequester.GetEnumTResult<User, string>("EXECUTE GetActiveAdmins", "");
                 default:
                     return null;
             }
-        } 
+        }
         #endregion
 
         #region USER
@@ -123,7 +123,7 @@ namespace DAL.Services
             return _mainRequester.GetTResult<User, string>("SELECT * FROM ClinicPerson CP JOIN ClinicUser CU " +
                                                             "ON CP.PersonId = CU.PersonId " +
                                                             "WHERE Email = @mail", "mail", mail);
-        } 
+        }
         #endregion
 
         #region OWNER
@@ -131,16 +131,16 @@ namespace DAL.Services
         public Owner? GetOwnerById(Guid ownerId)
         {
             return _mainRequester.GetTResult<Owner, Guid>("SELECT * FROM ClinicPerson " +
-                                                            "WHERE IsActive = 1 " +
-                                                            "AND PersonRole = 4 " +
+                                                            //"WHERE IsActive = 1 " +
+                                                            "WHERE PersonRole = 4 " +
                                                             "AND PersonId = @personId", "personId", ownerId);
         }
 
         public Owner? GetOwnerByMail(string mail)
         {
             return _mainRequester.GetTResult<Owner, string>("SELECT * FROM ClinicPerson " +
-                                                            "WHERE IsActive = 1 " +
-                                                            "AND PersonRole = 4 " +
+                                                            //"WHERE IsActive = 1 " +
+                                                            "WHERE PersonRole = 4 " +
                                                             "AND Email = @mail", "mail", mail);
         }
 
@@ -152,7 +152,7 @@ namespace DAL.Services
                                                                             ", PersonRole " +
                                                                         "FROM ClinicPerson " +
                                                                         "WHERE Email = @mail", "mail", mail);
-        } 
+        }
         #endregion
 
         #region PERSON EXISTS
@@ -160,15 +160,15 @@ namespace DAL.Services
 
         public bool PersonExistsCheckById(Guid personId)
         {
-            return _mainRequester.GetOneVarTResult<Guid, Guid>("SELECT PersonId FROM ClinicPerson " +
+            return _mainRequester.GetTResult<Guid, Guid>("SELECT PersonId FROM ClinicPerson " +
                                                             "WHERE PersonId = @personId", "personId", personId) != default;
         }
 
         public bool PersonExistsCheckByMail(string mail)
         {
-            return _mainRequester.GetOneVarTResult<Guid, string>("SELECT PersonId FROM ClinicPerson " +
+            return _mainRequester.GetTResult<Guid, string>("SELECT PersonId FROM ClinicPerson " +
                                                             "WHERE Email = @mail", "mail", mail) != default;
-        } 
+        }
         #endregion
 
         #region PASSWORD
@@ -176,7 +176,7 @@ namespace DAL.Services
 
         public string? GetUserPasswordByMail(string mail)
         {
-            return _mainRequester.GetOneVarTResult<string, string>("SELECT UserPassword FROM ClinicUser " +
+            return _mainRequester.GetTResult<string, string>("SELECT UserPassword FROM ClinicUser " +
                                                                 "WHERE PersonId = ( SELECT PersonId " +
                                                                                     "FROM ClinicPerson " +
                                                                                     "WHERE Email = @mail) ", "mail", mail);
@@ -188,9 +188,16 @@ namespace DAL.Services
 
         public bool GetIsActiveByMail(string mail)
         {
-            return _mainRequester.GetTResult<Owner, string>("SELECT * FROM ClinicPerson " +
+            return _mainRequester.GetTResult<Person, string>("SELECT * FROM ClinicPerson " +
                                                             "WHERE IsActive = 1 " +
                                                             "AND Email = @mail", "mail", mail) is not null;
+        }
+
+        public bool GetIsActiveById(Guid id)
+        {
+            return _mainRequester.GetTResult<Person, Guid>("SELECT * FROM ClinicPerson " +
+                                                            "WHERE IsActive = 1 " +
+                                                            "AND PersonId = @id", "id", id) is not null;
         }
         #endregion
 
@@ -200,7 +207,7 @@ namespace DAL.Services
 
         public bool AddressExistsCheckById(Guid id)
         {
-            return _mainRequester.GetOneVarTResult<Guid, Guid>("SELECT AddressId FROM PersonAddress " +
+            return _mainRequester.GetTResult<Guid, Guid>("SELECT AddressId FROM PersonAddress " +
                                                             "WHERE AddressId = @id", "id", id) != default;
         }
 
@@ -209,7 +216,7 @@ namespace DAL.Services
         public IEnumerable<Address?> GetAddresses()
         {
             return _mainRequester.GetEnumTResult<Address, string>("SELECT * FROM PersonAddress " +
-                                                                    "WHERE IsActive = 1", "", "");
+                                                                    "WHERE IsActive = 1", "");
         }
 
         public Address? GetAddressByPersonId(Guid personId)
@@ -298,12 +305,12 @@ namespace DAL.Services
         // ISACTIVE
         public bool SetIsActiveOn(Guid personId)
         {
-            return _mainRequester.Update("UPDATE ClinicPerson SET IsActive = 1 WHERE PersonId = @personId", "personId", personId);
+            return _mainRequester.Update("UPDATE ClinicPerson SET IsActive = 1 WHERE PersonId = @personId", personId, "personId");
         }
 
         public bool SetIsActiveOff(Guid personId)
         {
-            return _mainRequester.Update("UPDATE ClinicPerson SET IsActive = 0 WHERE PersonId = @personId", "personId", personId);
+            return _mainRequester.Update("UPDATE ClinicPerson SET IsActive = 0 WHERE PersonId = @personId", personId, "personId");
         }
         #endregion
 

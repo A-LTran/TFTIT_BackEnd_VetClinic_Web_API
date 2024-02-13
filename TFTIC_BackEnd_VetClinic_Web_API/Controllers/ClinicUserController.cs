@@ -294,7 +294,7 @@
             if (!ModelState.IsValid)
                 return BadRequest("Invalid Form");
 
-            if (_userService.PersonExistsCheckById(userId))
+            if (!_userService.PersonExistsCheckById(userId))
                 return BadRequest("Identifiants incorrects.");
 
             return (_userService.UpdateUser(form, userId, Role.Veterinary)) ? Ok(_getMessage?.Invoke()) : BadRequest(_getMessage?.Invoke());

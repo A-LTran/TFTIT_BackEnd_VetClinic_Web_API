@@ -17,7 +17,7 @@
 
         public IEnumerable<Appointment?> Get(int scope)
         {
-            return _mainRequester.GetEnumTResult<Appointment, string>(AppointmentDateScope.SetScope("SELECT * FROM Appointment", scope, -1), "", "");
+            return _mainRequester.GetEnumTResult<Appointment, string>(AppointmentDateScope.SetScope("SELECT * FROM Appointment", scope, -1), "");
 
         }
 
@@ -30,7 +30,7 @@
         public IEnumerable<Appointment?> GetByVeterinaryId(Guid id, int scope)
         {
             return _mainRequester.GetEnumTResult<Appointment, Guid>(AppointmentDateScope.SetScope("SELECT * FROM Appointment " +
-                                                                                                    "WHERE VeterinaryId = @id", scope, 1), "id", id);
+                                                                                                    "WHERE VeterinaryId = @id", scope, 1), id, "id");
         }
 
         public IEnumerable<Appointment?> GetByOwnerId(Guid id, int scope)
@@ -39,7 +39,7 @@
                                                                                                 "WHERE AnimalId IN " +
                                                                                                     "(SELECT AnimalID " +
                                                                                                     "FROM ClinicAnimal " +
-                                                                                                    "WHERE OwnerId = @id)", scope, 1), "id", id);
+                                                                                                    "WHERE OwnerId = @id)", scope, 1), id, "id");
         }
 
         public IEnumerable<Appointment?> GetByAnimalName(string name, int scope)
@@ -47,13 +47,13 @@
             return _mainRequester.GetEnumTResult<Appointment, string>(AppointmentDateScope.SetScope("SELECT * FROM Appointment " +
                                                                                         "WHERE AnimalId = (SELECT AnimalID " +
                                                                                             "FROM ClinicAnimal " +
-                                                                                            "WHERE AnimalName = @name)", scope, 1), "name", name);
+                                                                                            "WHERE AnimalName = @name)", scope, 1), name, "name");
         }
 
         public IEnumerable<Appointment?> GetByAnimalId(Guid id, int scope)
         {
             return _mainRequester.GetEnumTResult<Appointment, Guid>(AppointmentDateScope.SetScope("SELECT * FROM Appointment " +
-                                                                                    "WHERE AnimalId = @id", scope, 1), "id", id);
+                                                                                    "WHERE AnimalId = @id", scope, 1), id, "id");
         }
 
         public IEnumerable<Appointment?> GetByAppointmentRange(Guid vetId, DateTime date, int durationMinutes = 30)
@@ -64,7 +64,7 @@
                             "OR DATEADD(minute, DurationMinutes, AppointmentDate) " +
                             "BETWEEN @appointmentDate and DATEADD(minute, " + durationMinutes + ", @appointmentDate))";
 
-            return _mainRequester.GetEnumTResult<Appointment, DateTime>(sql, "appointmentDate", date);
+            return _mainRequester.GetEnumTResult<Appointment, DateTime>(sql, date, "appointmentDate");
         }
 
         //******************************************************************************//

@@ -36,14 +36,14 @@
         public IEnumerable<Animal?> Get()
         {
             return _mainRequester.GetEnumTResult<Animal, string>("SELECT * FROM ClinicAnimal " +
-                                                                "WHERE IsActive = 1 ", "", "");
+                                                                "WHERE IsActive = 1 ", "");
         }
 
         public IEnumerable<Animal?> GetByOwner(Guid ownerId)
         {
             return _mainRequester.GetEnumTResult<Animal, Guid>("SELECT * FROM ClinicAnimal " +
                                                                 "WHERE IsActive = 1 " +
-                                                                "AND OwnerId = @ownerId;", "ownerId", ownerId);
+                                                                "AND OwnerId = @ownerId;", ownerId, "ownerId");
         }
 
         public Animal? GetAnimal(Guid animalId)

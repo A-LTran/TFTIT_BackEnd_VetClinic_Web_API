@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
 
 namespace DAL.Tools
 {
@@ -33,7 +34,22 @@ namespace DAL.Tools
         //                               GET                                //
         //******************************************************************//
 
-        public TResult? GetOneVarTResult<TResult, TBody>(string query, string bodyName, TBody body)
+        //public TResult? GetOneVarTResult<TResult, TBody>(string query, string bodyName, TBody body)
+        //{
+        //    using (SqlConnection connection = new(_connectionString))
+        //    using (SqlCommand command = connection.CreateCommand())
+        //    {
+        //        command.CommandText = query;
+        //        command.Parameters.AddWithValue("@" + bodyName, body);
+
+        //        connection.Open();
+        //        TResult result = (TResult)command.ExecuteScalar();
+        //        connection.Close();
+        //        return result;
+        //    }
+        //}
+
+        public TResult? GetTResult<TResult, TBody>(string query, string bodyName, TBody body)
         {
             using (SqlConnection connection = new(_connectionString))
             using (SqlCommand command = connection.CreateCommand())
@@ -42,63 +58,61 @@ namespace DAL.Tools
                 command.Parameters.AddWithValue("@" + bodyName, body);
 
                 connection.Open();
-                TResult result = (TResult)command.ExecuteScalar();
-                connection.Close();
-                return result;
-            }
-        }
-
-        public TResult? GetTResult<TResult, TBody>(string query, string bodyName, TBody body) where TResult : class
-        {
-            using (SqlConnection connection = new(_connectionString))
-            using (SqlCommand command = connection.CreateCommand())
-            {
-                command.CommandText = query;
-                command.Parameters.AddWithValue("@" + bodyName, body);
-
-                connection.Open();
-                using (SqlDataReader reader = command.ExecuteReader())
+                if (typeof(TResult).IsClass && typeof(TResult) != typeof(string))
                 {
-                    if (reader.Read())
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        return Read<TResult>(reader);
-                    }
-                    else
-                    {
-                        connection.Close();
-                        return null;
+                        if (reader.Read())
+                        {
+                            return Read<TResult>(reader);
+                        }
+                        else
+                        {
+                            connection.Close();
+                            return default;
+                        }
                     }
                 }
-            }
-        }
-
-        public IEnumerable<TResult?> GetEnumTResult<TResult, TBody>(string query, string bodyName, TBody body) where TResult : class
-        {
-            using (SqlConnection connection = new(_connectionString))
-            using (SqlCommand command = connection.CreateCommand())
-            {
-                command.CommandText = query;
-                command.Parameters.AddWithValue("@" + bodyName, body);
-
-                connection.Open();
-                using (SqlDataReader reader = command.ExecuteReader())
+                else
                 {
-                    while (reader.Read())
-                    {
-                        yield return Read<TResult>(reader);
-                    }
+                    TResult result = (TResult)command.ExecuteScalar();
+                    connection.Close();
+                    return result;
                 }
-                connection.Close();
+
             }
         }
 
-        public IEnumerable<TResult?> GetEnumTResult<TResult, TBody>(string query, TBody body) where TResult : class
+        //public IEnumerable<TResult?> GetEnumTResult<TResult, TBody>(string query, string bodyName, TBody body) where TResult : class
+        //{
+        //    using (SqlConnection connection = new(_connectionString))
+        //    using (SqlCommand command = connection.CreateCommand())
+        //    {
+        //        command.CommandText = query;
+        //        command.Parameters.AddWithValue("@" + bodyName, body);
+
+        //        connection.Open();
+        //        using (SqlDataReader reader = command.ExecuteReader())
+        //        {
+        //            while (reader.Read())
+        //            {
+        //                yield return Read<TResult>(reader);
+        //            }
+        //        }
+        //        connection.Close();
+        //    }
+        //}
+
+        public IEnumerable<TResult?> GetEnumTResult<TResult, TBody>(string query, TBody body, string bodyName = "myParam") where TResult : class
         {
             using (SqlConnection connection = new(_connectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
                 command.CommandText = query;
-                command.Parameters.AddRange(GetParameters(body));
+                if (typeof(TBody).IsClass && !body.ToString().IsNullOrEmpty())
+                    command.Parameters.AddRange(GetParameters(body));
+                else
+                    command.Parameters.AddWithValue("@" + bodyName, body);
 
                 connection.Open();
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -116,13 +130,16 @@ namespace DAL.Tools
         //                              UPDATE                              //
         //******************************************************************//
 
-        public bool Update<TBody>(string query, TBody body)
+        public bool Update<TBody>(string query, TBody body, string bodyName = "myParam")
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
                 command.CommandText = query;
-                command.Parameters.AddRange(GetParameters(body));
+                if (typeof(TBody).IsClass && !body.ToString().IsNullOrEmpty())
+                    command.Parameters.AddRange(GetParameters(body));
+                else
+                    command.Parameters.AddWithValue("@myParam", body);
 
                 connection.Open();
                 int rowsAffected = command.ExecuteNonQuery();
@@ -131,20 +148,20 @@ namespace DAL.Tools
             }
         }
 
-        public bool Update<TBody>(string query, string bodyName, TBody body)
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            using (SqlCommand command = connection.CreateCommand())
-            {
-                command.CommandText = query;
-                command.Parameters.AddWithValue("@" + bodyName, body);
+        //public bool Update<TBody>(string query, string bodyName, TBody body)
+        //{
+        //    using (SqlConnection connection = new SqlConnection(_connectionString))
+        //    using (SqlCommand command = connection.CreateCommand())
+        //    {
+        //        command.CommandText = query;
+        //        command.Parameters.AddWithValue("@" + bodyName, body);
 
-                connection.Open();
-                int rowsAffected = command.ExecuteNonQuery();
-                connection.Close();
-                return rowsAffected > 0;
-            }
-        }
+        //        connection.Open();
+        //        int rowsAffected = command.ExecuteNonQuery();
+        //        connection.Close();
+        //        return rowsAffected > 0;
+        //    }
+        //}
 
         //******************************************************************//
         //                              DELETE                              //
@@ -179,7 +196,7 @@ namespace DAL.Tools
                 if (value is not null && value != default)
                 {
                     if (prop.Name == "PersonRole")
-                        parameters.Add(new SqlParameter("@" + prop.Name, (int)prop.GetValue(body)));
+                        parameters.Add(new SqlParameter("@" + prop.Name, (int)prop.GetValue(body)!));
                     else
                         parameters.Add(new SqlParameter("@" + prop.Name, prop.GetValue(body)));
                 }

@@ -66,8 +66,16 @@ namespace BLL.Services
 
         public bool Create(OwnerRegisterForm form, Guid addressId)
         {
-            if (_toolSet.ObjectExistsCheck(_userService.GetOwnerByMail(form.Email) is not null, "Owner"))
-                return false;
+            Owner? o = _userService.GetOwnerByMail(form.Email);
+            if (o is not null)
+            {
+                bool isActive = _userService.GetIsActiveByMail(o.Email);
+                if (_toolSet.ObjectExistsCheck(isActive, "Owner"))
+                    return false;
+
+                if (!_toolSet.ObjectExistsCheck(isActive, "Owner", "Owner has been reactivated! Please update your information."))
+                    return false;
+            }
 
             if (!_toolSet.SuccessCheck(_userService.Create(form.ToOwner(addressId)!), "Owner", "created"))
                 return false;
@@ -194,12 +202,22 @@ namespace BLL.Services
         #region PERSON EXISTS
         public bool PersonExistsCheckById(Guid id)
         {
-            return _userService.PersonExistsCheckById(id);
+            if (!_toolSet.ObjectExistsCheck(_userService.PersonExistsCheckById(id), "Person"))
+                return false;
+            if (!_toolSet.SuccessCheck(_userService.GetIsActiveById(id), "Person", "Activated"))
+                return false;
+
+            return true;
         }
 
         public bool PersonExistsCheckByMail(string mail)
         {
-            return _userService.PersonExistsCheckByMail(mail);
+            if (!_toolSet.ObjectExistsCheck(_userService.PersonExistsCheckByMail(mail), "Person"))
+                return false;
+            if (!_toolSet.SuccessCheck(_userService.GetIsActiveByMail(mail), "Person", "Activated"))
+                return false;
+
+            return true;
         }
         #endregion
         #endregion

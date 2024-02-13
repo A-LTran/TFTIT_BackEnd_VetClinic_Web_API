@@ -37,5 +37,7 @@ namespace DAL.Interfaces
         public bool PersonExistsCheckByMail(string mail);
         public bool AddressExistsCheckById(Guid id);
         public bool GetIsActiveByMail(string mail);
+        public bool GetIsActiveById(Guid id);
+
     }
 }
